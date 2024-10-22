@@ -201,7 +201,7 @@ void XRClient :: Stop()
 
 void XRClient :: new_packet(trigger_t &)
 {
-	if(traces_on) printf("%f - XRClient %d : Uplink Packet generated (tau = %f)\n",SimTime(),id,tau);
+	// if(traces_on) printf("%f - XRClient %d : Uplink Packet generated (tau = %f)\n",SimTime(),id,tau);
 
 	generated_packets++; 
 

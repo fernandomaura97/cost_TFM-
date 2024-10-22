@@ -9,7 +9,9 @@
 #include "FIFO.h"
 #include "PHY_model.h"
 #include <fstream>
-
+#include <vector>
+#include <iomanip>
+#include <iostream>
 
 
 component AccessPoint : public TypeII
@@ -147,9 +149,7 @@ void AccessPoint :: Stop()
 
 	}
 
-
-
-	std::ostringstream filename; 
+    std::ostringstream filename;
 
 	filename << "T" << std::fixed << std::setprecision(0) << StopTime() << "CSV_AMPDU.csv"; 
 	// std::string filename = "CSV_AMPDU_.csv"
@@ -255,7 +255,7 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 					//for(int n=0;n<NumberStations;n++) 
 					//{	
 						//printf("%f - AP tranmits packet to STA %d (Video packet = %d)\n",SimTime(),frame_test.destination,frame_test.num_packet_in_the_frame);
-						PRINTF_COLOR(RED , "%.6f [AP OUT]  	(%d/%d) Packet %.0f to STA %d (Video packet = %d)\n",SimTime(), q + 1, current_ampdu_size, frame_test.ID_packet ,frame_test.destination,frame_test.num_packet_in_the_frame);
+						PRINTF_COLOR(RED , "%.6f [AP OUT W]  (%d/%d) Packet %.0f to STA %d \n",SimTime(), q, current_ampdu_size, frame_test.ID_packet ,frame_test.destination);
 						out_to_wireless[frame_test.destination](frame_test); // We send each packet to all stations (no broadcast)		
 					//}
 				}
@@ -386,19 +386,18 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 			frame.T_q = queue_delay_per_packet; 
 
 			//printf("%f - AP %d Transmits | Destination %d | AMPDU =  %d | Duration = %f | TotalBits = %f\n",SimTime(),id,current_destination,current_ampdu_size_sta,T,TotalBitsToBeTransmitted);
-
-			out_packet(frame); // To the channel!!!
 			attempts++; 
 			device_has_transmitted=1;
 			transmission_attempts++; // stat
 			int q_size = MAC_queue.QueueSize(); 
 
 			update_stats_AMPDU(frame, q_size); //al dequeued packets get statistics
+			out_packet(frame); // To the channel!!!
+
 		}
 		else
 		{
 			backoff_counter--;
-
 		}
 	}
 
@@ -539,7 +538,7 @@ void AccessPoint::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
     double T_q = ampdu_packet.T_q; 
 	double throughput = AMPDU_L / (T_s + T_q); 
 
-	PRINTF_COLOR(RED, "%.6f [DBG STATS]    Packet %.0f from src %d to dest %d | T_s = %.3f, T_q = %.3f (ms), L_AMPDU = %.1f \n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
+	printf("%.6f [DBG STATS]    Packet %.0f from src %d to dest %d | T_s = %.3f, T_q = %.3f (ms), L_AMPDU = %.1f \n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
 
 	sinkcsv.timestamp.push_back(now); 
     sinkcsv.L_ampdu.push_back(AMPDU_L);

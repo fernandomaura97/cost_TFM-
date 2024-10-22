@@ -17,6 +17,7 @@
 #include "./Models/CSMACAChannel1.h"
 #include "./Models/XRServer.h"
 #include "./Models/XRClient.h"
+#include "./Models/Sink.h"
 
 //int test_global[100];
 
@@ -48,8 +49,10 @@ struct input_arg_t { 			//struct for passing input args to server:
 			double gamma; 
 			double T_update; 
 		}st_input_args;
-component XRWiFisim : public CostSimEng
 
+
+
+component XRWiFisim : public CostSimEng
 {
 	public:
 		void Setup(int NXR, int fps, double LoadXR, int LXR, int NBG, double BGLoad, int LBG, int BG_mode,int x, int RCA, input_arg_t st);
@@ -64,6 +67,8 @@ component XRWiFisim : public CostSimEng
 		XRClient [] XRc;
 		TrafficGeneratorApp [] TGApp;
 		Network Net;
+
+		Sink sink; // with in(data_packet &packet); 
 
 		// Input parameters
 		int distance_ = 0;
@@ -328,7 +333,7 @@ void XRWiFisim:: Stop()
 	printf("########################################################################\n");
 	printf("------------------------ XRWi-Fisim Results ----------------------------\n");
 	printf("AP: RSSI = %f | Packet AP Delay = %f\n",RSSI[0],AP[0].queueing_service_delay/AP[0].successful);
-	printf("RTT = %f | Blocking Prob AP = %f\n",XRs[0].avRTT/XRs[0].received_packets,AP[0].blocking_prob/AP[0].arrived);
+	// printf("RTT = %f | Blocking Prob AP = %f\n",XRs[0].avRTT/XRs[0].received_packets,AP[0].blocking_prob/AP[0].arrived);
 	printf("########################################################################\n");
 
 	// Video Frame Delay (mean, 99th)
@@ -340,7 +345,6 @@ void XRWiFisim:: Stop()
 	// Transmission prob
 	// Collision prob
 	// RSSI
-
 	printf("-------------- Results only for stream '0' --------------\n");
 	printf("Input parameters: NXR = %d | distance = %d | LoadXR = %f | NBG = %d | LoadBG = %f | BGmode = %d\n",NXR_,distance_,LoadXR_,NBG_,BGLoad_,BG_mode_);
 	printf("Video Frame Delay: Average = %f | 99th = %f | S = %f | Thoughput = %f\n",XRc[0].mean_VFD,XRc[0].p99th_VFD,XRc[0].VideoFramesFullReceived/XRc[0].VideoFramesReceived,XRc[0].avRxPacketSize/SimTime());

@@ -29,11 +29,11 @@
 #define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
 #define MAGENTA "\033[35m"    // Magenta (closer to red)
 #define RED     "\033[31m"    // Red
+#define YELLOW 	"\033[33m]"
 
 
 
-
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 #if DEBUG_PRINTS
     #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
 #else
