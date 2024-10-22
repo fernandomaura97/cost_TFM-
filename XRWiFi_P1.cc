@@ -232,7 +232,6 @@ void XRWiFisim :: Setup(int NXR, int fps, double LoadXR, int LXR, int NBG, doubl
 	// // Background STAs
 	for(int n=NXR;n<NumberStations;n++)
 	{	
-		
 		STA[n].id = n;
 		STA[n].x=STA_X[sta_counter];  // use the 2 STAs same as simulation
 		STA[n].y=0;
@@ -264,15 +263,12 @@ void XRWiFisim :: Setup(int NXR, int fps, double LoadXR, int LXR, int NBG, doubl
 	channel1.NumNodes = 1+NXR+NBG;
 	channel1.out_slot.SetSize(1+NXR+NBG);
 
-
 	// APPs to Network
-
 	for(int n=0;n<NXR;n++)
 	{
 		connect XRs[n].out,Net.in_from_apps;
 		connect Net.out_to_apps[n],XRs[n].in;
 	}
-
 
 	for(int n=0;n<NBG;n++)
 	{
@@ -280,9 +276,7 @@ void XRWiFisim :: Setup(int NXR, int fps, double LoadXR, int LXR, int NBG, doubl
 		connect Net.out_to_apps[NXR+n],TGApp[n].in;
 	}
 
-
 	// Net to APP
-
 	connect Net.out_to_APs[0],AP[0].in_from_network;	
 	connect AP[0].out_to_network,Net.in_from_APs;
 
@@ -293,7 +287,6 @@ void XRWiFisim :: Setup(int NXR, int fps, double LoadXR, int LXR, int NBG, doubl
 		connect AP[0].out_to_wireless[n],STA[n].in_from_wireless;
 		connect STA[n].out_to_wireless[0],AP[0].in_from_wireless;	
 	}
-
 
 	// Connections STAs to APPs
 

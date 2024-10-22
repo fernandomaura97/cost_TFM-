@@ -56,10 +56,12 @@ void TrafficGeneratorApp :: Setup()
 void TrafficGeneratorApp :: Start()
 {
 	printf("Traffic Generation APP Source Start()\n");
+	
 
+	double epsilon = 0.1* Random(); //to prevent STAs from starting at the same time
 	tau = (double) L_data/Load;
 	printf("%f\n",tau);
-	inter_packet_timer.Set(SimTime()+Exponential(tau));
+	inter_packet_timer.Set(SimTime()+Exponential(tau) + epsilon );
 
 };
 	
@@ -98,7 +100,7 @@ void TrafficGeneratorApp :: new_packet(trigger_t &)
 
 void TrafficGeneratorApp :: in(data_packet &packet)
 {
-	// if(traces_on) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet Received from %d \n",SimTime(),id,packet.source);
+	if(traces_on) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f Received from %d \n",SimTime(),id,packet.ID_packet, packet.source);
 	received_packets++;
 	avDelay += SimTime() - packet.sent_time;
 	//avLreceived += packet.L;

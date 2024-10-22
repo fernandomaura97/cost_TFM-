@@ -33,7 +33,7 @@
 
 
 
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 #if DEBUG_PRINTS
     #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
 #else
