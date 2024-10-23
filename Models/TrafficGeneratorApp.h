@@ -79,14 +79,12 @@ void TrafficGeneratorApp :: Stop()
 void TrafficGeneratorApp :: new_packet(trigger_t &)
 {
 	data_packet new_gen_packet;
+
+	new_gen_packet.L_data = L_data;   								// deterministic packet size
+	new_gen_packet.L = 100 + L_data;
 	
-	
-	// deterministic size
-	// new_gen_packet.L_data = L_data;
-	// new_gen_packet.L = 100 + L_data;
-	
-	new_gen_packet.L_data = MAX(1, Exponential(L_data) ) ;
-	new_gen_packet.L = 100 + new_gen_packet.L_data;
+	// new_gen_packet.L_data = MAX(1, (int) Exponential(L_data) ) ; // exponentially distributed packet size
+	// new_gen_packet.L = 100 + new_gen_packet.L_data;
 	
 	new_gen_packet.source = node_attached;
 	new_gen_packet.destination = destination;
@@ -95,7 +93,7 @@ void TrafficGeneratorApp :: new_packet(trigger_t &)
 	new_gen_packet.sent_time = SimTime();
 
 	new_gen_packet.ID_packet = generated_packets; 
-	if(traces_on==1) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] New Packet %.0f generated,to STA %d and app %d\n",SimTime(),id, new_gen_packet.ID_packet , destination,destination_app);
+	if(traces_on==1) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f generated, destination STA %d and app %d\n",SimTime(),id, new_gen_packet.ID_packet , destination,destination_app);
 
 	generated_packets++;
 	out(new_gen_packet);

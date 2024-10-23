@@ -64,7 +64,6 @@ struct data_packet
 	double L_header; // Header Length
 	double L; // Total length
 
-	double T_q; //time in queue, new
 
 	int AMPDU_size; // Number of aggregated packets
 
@@ -87,6 +86,8 @@ struct data_packet
 	// To be used by the channel
 	double T; // Transmission time, include DIFS, SIFS, etc.
 	double T_c; //
+	double T_q; //time in queue, new
+
 
 	// For the XR server and client communication
 	int first_video_frame_packet;

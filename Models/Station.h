@@ -141,7 +141,7 @@ void Station :: Stop()
 
 void Station :: in_from_app(data_packet &packet)
 {
-	//printf("%f - New packet (to %d) arrives to Station %d. Packets in the buffer = %d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",SimTime(),packet.destination,id,(int)MAC_queue.size());
+	//printf("%f - New packet (to %d) arrives to Station %d. Packets in the buffer = %d \n",SimTime(),packet.destination,id,(int)MAC_queue.size());
 
 	arrived++;
 	int QueueSize = MAC_queue.size();

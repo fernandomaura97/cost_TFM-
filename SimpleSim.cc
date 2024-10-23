@@ -34,7 +34,7 @@ bool traces_on = true;
 
 component SimplifiedWiFiSim : public CostSimEng {
     public:
-        void Setup(double BGLoad, int LBG, input_arg_t st);
+        void Setup(double BGLoad, int LBG, input_arg_t st, double distance);
         void Start();
         void Stop();
 
@@ -48,12 +48,14 @@ component SimplifiedWiFiSim : public CostSimEng {
 
         // Input parameters
         double BGLoad_ = 0;
+        double distance_X = 0; 
 };
 
-void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st) {
+void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double distance) {
     BGLoad_ = BGLoad;
-    printf("---- Simplified Wi-Fi sim : Setup ----\n");
+    distance_X = distance; 
 
+    printf("---- Simplified Wi-Fi sim : Setup ----\n");
     
     // Single background traffic source
     TGApp.SetSize(1);
@@ -91,7 +93,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st) {
     // Single Station setup
     STA.SetSize(1);
     STA[0].id = 0;
-    STA[0].x = 30;  // 30m distance from AP
+    STA[0].x = distance_X;  //distance dependent on input arg
     STA[0].y = 0;
     STA[0].z = 2;
     STA[0].NumberStations = 1;
@@ -178,6 +180,8 @@ int main(int argc, char *argv[]) {
     double BGLoad = atof(argv[3]);
     int LBG = atoi(argv[4]);
 
+    double distance_X = atof(argv[5]); 
+
     st_input_args.seed = seed;
     st_input_args.STime = STime;
     st_input_args.BGLoad = BGLoad;
@@ -189,7 +193,7 @@ int main(int argc, char *argv[]) {
     SimplifiedWiFiSim sim;
     sim.Seed = seed;
     sim.StopTime(STime);
-    sim.Setup(BGLoad, LBG, st_input_args);
+    sim.Setup(BGLoad, LBG, st_input_args, distance_X);
 
     printf("Run\n");
     sim.Run();

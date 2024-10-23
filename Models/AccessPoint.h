@@ -95,8 +95,6 @@ component AccessPoint : public TypeII
 			std::vector <double> throughput;  
         }sinkcsv; 
 
-		data_packet aux_AMPDU_serving; 
-
 };
 
 void AccessPoint :: Setup()
@@ -191,7 +189,7 @@ void AccessPoint :: Stop()
 void AccessPoint :: in_from_network(data_packet &packet)
 {
 
-	if(traces_on) PRINTF_COLOR(LIGHT_MAGENTA,"%.6f [AP IN]     New packet %.0f from network %d directed to STA %d | AP Tx Buffer = %d \n",SimTime(),packet.ID_packet ,packet.source, packet.destination,MAC_queue.QueueSize());
+	if(traces_on) PRINTF_COLOR(LIGHT_MAGENTA,"%.6f [AP IN]     Packet %.0f from network %d directed to STA %d | AP Tx Buffer = %d \n",SimTime(),packet.ID_packet ,packet.source, packet.destination,MAC_queue.QueueSize());
 
 	arrived++;
 	int QueueSize = MAC_queue.QueueSize();
@@ -212,6 +210,7 @@ void AccessPoint :: in_from_network(data_packet &packet)
 	}
 	else
 	{
+		PRINTF_COLOR(LIGHT_MAGENTA, "%.6f [AP IN]     Packet %.0f dropped!\n", SimTime(), packet.ID_packet); 
 		blocking_prob++;
 	}
 
@@ -256,11 +255,13 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 
 					//for(int n=0;n<NumberStations;n++) 
 					//{	
-						//printf("%f - AP tranmits packet to STA %d (Video packet = %d)\n",SimTime(),frame_test.destination,frame_test.num_packet_in_the_frame);
-						PRINTF_COLOR(RED , "%.6f [AP OUT W]  (%d/%d) Packet %.0f to STA %d \n",SimTime(), q, current_ampdu_size, frame_test.ID_packet ,frame_test.destination);
-						update_stats_AMPDU(aux_AMPDU_serving, MAC_queue.QueueSize()); //al dequeued packets get statistics
 						
-						out_to_wireless[frame_test.destination](frame_test); // We send each packet to all stations (no broadcast)		
+					//printf("%f - AP tranmits packet to STA %d (Video packet = %d)\n",SimTime(),frame_test.destination,frame_test.num_packet_in_the_frame);
+					PRINTF_COLOR(RED , "%.6f [AP OUT W]   (%d/%d) Packet %.0f to STA %d \n",SimTime(), q, current_ampdu_size, frame_test.ID_packet ,frame_test.destination);
+					
+					update_stats_AMPDU(frame_test, MAC_queue.QueueSize()); //al dequeued packets get statistics
+					
+					out_to_wireless[frame_test.destination](frame_test); // We send each packet to all stations (no broadcast)		
 					//}
 				}
 				else
@@ -329,7 +330,6 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 			// Time to sent a frame
 			current_ampdu_size = MIN(MAC_queue.QueueSize(),MAX_AMPDU);
 
-			int BufferSize = MAC_queue.QueueSize();			
 
 			// 1. Pick the first AMPDU packet in the buffer. Identify the STA.
 			data_packet first_packet_in_buffer = MAC_queue.GetFirstPacket();
@@ -350,7 +350,7 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 			
 			double queue_delay_per_packet = 0;
 
-			for(int q=0;q<BufferSize;q++)
+			for(int q=0; q< MAC_queue.QueueSize(); q++) // iterate through whole queue
 			{
 				data_packet packet_to_check = MAC_queue.GetPacketAt(q); 
 
@@ -359,16 +359,15 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 					// packet_to_check.exit_queue_time = SimTime();  
 
 					queue_delay_per_packet += (SimTime() - (packet_to_check.in_queue_time)); 
+					packet_to_check.T_q = SimTime() - packet_to_check.in_queue_time; 
 
 					MAC_queue.DeletePacketIn(q);
 					MAC_queue.PutPacketIn(packet_to_check,current_ampdu_size_per_station);		
-					//printf("************** Removed from %d, and added to %d\n",q,current_ampdu_size_per_station);					
 					TotalBitsToBeTransmitted+=packet_to_check.L;
 					current_ampdu_size_per_station++;
 				}
 			}
 			int current_ampdu_size_sta = MIN(current_ampdu_size_per_station,MAX_AMPDU);	
-
 
 			/*
 			// Check MCS for the station 
@@ -387,14 +386,23 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 			frame.T_c = T_c;
 			frame.T_q = queue_delay_per_packet; 
 
-			PRINTF_COLOR(BG_CYAN ,"%f - AP %d Transmits | Destination %d | AMPDU =  %d | Duration = %f | TotalBits = %f\n",SimTime(),id,current_destination,current_ampdu_size_sta,T,TotalBitsToBeTransmitted);
+
+			// PRINTF_COLOR(BG_YELLOW, "queue_before\n" ); 
+			// MAC_queue.PrintQueueContents();   
+
+			for(int q = 0; q < current_ampdu_size_sta; q++ ){		// make it so all packets have same service time
+				data_packet packet = MAC_queue.GetPacketAt(q);  
+				packet.T = frame.T; 
+				MAC_queue.DeletePacketIn(q); 
+				MAC_queue.PutPacketIn(packet, q); // put in the same position as before with changed field
+			}
+
+			PRINTF_COLOR(BG_CYAN ,"%.6f [AP_TXOP%d]    Packet %.0f, AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), attempts,  frame.ID_packet, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
 			attempts++; 
 			device_has_transmitted=1;
 			transmission_attempts++; // stat
-			aux_AMPDU_serving = frame; 
+
 			out_packet(frame); // To the channel!!!
-
-
 		}
 		else
 		{
@@ -539,7 +547,7 @@ void AccessPoint::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
     double T_q = ampdu_packet.T_q; 
 	double throughput = AMPDU_L / (T_s + T_q); 
 
-	PRINTF_COLOR(BG_RED, "%.6f [DBG STATS] Packet %.0f from src %d to dest %d | T_s = %.3f, T_q = %.3f (ms), L_AMPDU = %.1f \n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
+	PRINTF_COLOR(BG_RED, "%.6f [DBG STATS]    Packet %.0f from src %d to dest %d | T_s = %.3f ms, T_q = %.3f ms | L_packet = %.0f\n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
 
 	sinkcsv.timestamp.push_back(now); 
     sinkcsv.L_ampdu.push_back(AMPDU_L);
@@ -549,8 +557,5 @@ void AccessPoint::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
     sinkcsv.source.push_back(ampdu_packet.source);
 	sinkcsv.queue_size.push_back(queue_size); 
 	sinkcsv.throughput.push_back(throughput);
-
 } 
-
-
 #endif

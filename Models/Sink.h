@@ -96,8 +96,7 @@ void Sink :: Stop()
 
 void Sink :: in(data_packet &ampdu_packet) // AMPDU version
 {	
-	PRINTF_COLOR(YELLOW,"%.6f [DBG SINK] AMPDU %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source);
-
+	PRINTF_COLOR(YELLOW,"%.6f [DBG SINK] Packet %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source);
 	// for (const auto& packet : ampdu_packet.mpdu_packets) { // iterate through each received packet! 
 
 	// 	system_time += SimTime() - packet.STA_send_time;
@@ -113,7 +112,6 @@ void Sink :: in(data_packet &ampdu_packet) // AMPDU version
 	// 	service_time_total += service_time;
 	// 	total_qs_time += total_time; 
     // }
-
 };
 
 

@@ -66,7 +66,7 @@ void Network :: Stop()
 void Network :: in_from_apps(data_packet &packet)
 {
 	
-	PRINTF_COLOR(CYAN, "%.6f [NET]     New packet %.0f from %d (DL) arrives to the Network. Packets in the buffer = %lu\n",SimTime(), packet.ID_packet ,packet.source, TxBuffer_UL.size()) ;
+	PRINTF_COLOR(CYAN, "%.6f [NET]     Packet %.0f from %d (DL) arrives to the Network. Packets in the buffer = %lu\n",SimTime(), packet.ID_packet ,packet.source, TxBuffer_UL.size()) ;
 
 	////if(TxBuffer.QueueSize() < MaxPackets)
 	if(TxBuffer_DL.size() < MaxPackets)	

@@ -27,6 +27,7 @@ component FIFO : public TypeII
 		void PutPacketFront(data_packet &packet);	
 		void PutPacketIn(data_packet &packet, int);	
 		int QueueSize();
+		void PrintQueueContents(); 
 };
 
 data_packet FIFO :: GetFirstPacket()
@@ -69,6 +70,17 @@ void FIFO :: DeletePacketIn(int i)
 {
 	m_queue.erase(m_queue.begin()+i);
 };
+
+void FIFO :: PrintQueueContents()
+{
+	 std::cout << "Packet IDs in the queue:" << std::endl;
+    for (size_t i = 0; i < m_queue.size(); ++i)
+    {
+        std::cout << "Packet " << i + 1 << ", ID: " << m_queue[i].ID_packet 
+				  << ", T_q: " << std::setprecision(3) << m_queue[i].T_q << ", T_s: "<< std::setprecision(3) << m_queue[i].T << std::endl;
+    }
+}; 
+
 
 
 #endif
