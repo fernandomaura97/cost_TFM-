@@ -2918,15 +2918,15 @@ struct info
 #line 15 "SimpleSim.cc"
 
 
+
 double x_AP[1];
 double y_AP[1];
 double z_AP[1];
 
-double x_[1];
-double y_[1];
-double z_[1];
-
-double RSSI[1];
+double x_[2];  
+double y_[2];  
+double z_[2];  
+double RSSI[2];
 
 struct input_arg_t {
     int seed;
@@ -3402,13 +3402,12 @@ class compcxx_SimplifiedWiFiSim_14 : public compcxx_component, public CostSimEng
 
     public:
         compcxx_array<compcxx_AccessPoint_8 >AP;
-        compcxx_array<compcxx_Station_9 >STA;
+        compcxx_array<compcxx_Station_9 >STA;  
         compcxx_CSMACAChannel1_10 channel1;
-        compcxx_array<compcxx_TrafficGeneratorApp_11 >TGApp;
+        compcxx_array<compcxx_TrafficGeneratorApp_11 >TGApp;  
         compcxx_Network_12 Net;
         compcxx_Sink_13 sink;
 
-        
         double BGLoad_ = 0;
         double distance_X = 0; 
 };
@@ -4889,7 +4888,7 @@ void compcxx_Sink_13 :: in(data_packet &ampdu_packet)
 	
     
 }
-#line 54 "SimpleSim.cc"
+#line 53 "SimpleSim.cc"
 void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st, double distance) {
     BGLoad_ = BGLoad;
     distance_X = distance; 
@@ -4897,15 +4896,17 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
     printf("---- Simplified Wi-Fi sim : Setup ----\n");
     
     
-    TGApp.SetSize(1);
-    TGApp[0].Load = BGLoad;
-    TGApp[0].L_data = LBG;
-    TGApp[0].id = 0;
-    TGApp[0].node_attached = 0;
-    TGApp[0].destination = 0;  
-    TGApp[0].mode = 0;
-    TGApp[0].source_app = 0;
-    TGApp[0].destination_app = 0;
+    TGApp.SetSize(2);
+    for(int i = 0; i < 2; i++) {
+        TGApp[i].Load = BGLoad;
+        TGApp[i].L_data = LBG;
+        TGApp[i].id = i;
+        TGApp[i].node_attached = i;
+        TGApp[i].destination = 0;  
+        TGApp[i].mode = 0;
+        TGApp[i].source_app = i;
+        TGApp[i].destination_app = i;
+    }
 
     
     AP.SetSize(1);
@@ -4913,91 +4914,118 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
     AP[0].x = 0;
     AP[0].y = 0;
     AP[0].z = 2;
-    AP[0].NumberStations = 1;
-    AP[0].Pt = 20;  
+    AP[0].NumberStations = 2;  
+    AP[0].Pt = 20;
     AP[0].qmin = 1;
     AP[0].QL = 10000;
     AP[0].MAX_AMPDU = 128;
     AP[0].CWmin = 15;
     AP[0].max_BEB_stages = 6;
     AP[0].pe = 0;
-    AP[0].channel_width = 80;  
+    AP[0].channel_width = 80;
     AP[0].SU_spatial_streams = 2;
-    AP[0].out_to_wireless.SetSize(1);
+    AP[0].out_to_wireless.SetSize(2);  
     
     x_AP[0] = AP[0].x;
     y_AP[0] = AP[0].y;
     z_AP[0] = AP[0].z;
 
     
-    STA.SetSize(1);
-    STA[0].id = 0;
-    STA[0].x = distance_X;  
-    STA[0].y = 0;
-    STA[0].z = 2;
-    STA[0].NumberStations = 1;
-    STA[0].Pt = 20;  
-    STA[0].qmin = 1;
-    STA[0].QL = 150;
-    STA[0].MAX_AMPDU = 64;
-    STA[0].CWmin = 15;
-    STA[0].max_BEB_stages = 6;
-    STA[0].pe = 0;
-    STA[0].channel_width = 80;  
-    STA[0].SU_spatial_streams = 2;
-    STA[0].out_to_wireless.SetSize(1);
+    STA.SetSize(2);
 
-    x_[0] = STA[0].x;
-    y_[0] = STA[0].y;
-    z_[0] = STA[0].z;
+
+    
+
+    for(int i = 0; i < 2; i++) {
+        STA[i].id = i;
+        if (i == 0) {
+            STA[i].x = 1;  
+        }
+        else{
+            STA[i].x = distance_X;  
+
+        }
+        STA[i].y = 0;
+        STA[i].z = 2;
+        STA[i].NumberStations = 2;  
+        STA[i].Pt = 20;
+        STA[i].qmin = 1;
+        STA[i].QL = 150;
+        STA[i].MAX_AMPDU = 64;
+        STA[i].CWmin = 15;
+        STA[i].max_BEB_stages = 6;
+        STA[i].pe = 0;
+        STA[i].channel_width = 80;
+        STA[i].SU_spatial_streams = 2;
+        STA[i].out_to_wireless.SetSize(1);
+
+        x_[i] = STA[i].x;
+        y_[i] = STA[i].y;
+        z_[i] = STA[i].z;
+    }
 
     
     Net.Rate = 1000E6;
-    Net.out_to_apps.SetSize(1);
+    Net.out_to_apps.SetSize(2);  
     Net.out_to_APs.SetSize(1);
 
     
-    channel1.NumNodes = 2;  
-    channel1.out_slot.SetSize(2);
+    channel1.NumNodes = 3;  
+    channel1.out_slot.SetSize(3);  
 
     
     
     
-    TGApp[0].out_f.Connect(Net,(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Network_12::in_from_apps) /*connect TGApp[0].out, Net.in_from_apps*/;
-    Net.out_to_apps[0].Connect(TGApp[0],(compcxx_component::Network_out_to_apps_f_t)&compcxx_TrafficGeneratorApp_11::in) /*connect Net.out_to_apps[0], TGApp[0].in*/;
+    for(int i = 0; i < 2; i++) {
+        TGApp[i].out_f.Connect(Net,(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Network_12::in_from_apps) /*connect TGApp[i].out, Net.in_from_apps*/;
+        Net.out_to_apps[i].Connect(TGApp[i],(compcxx_component::Network_out_to_apps_f_t)&compcxx_TrafficGeneratorApp_11::in) /*connect Net.out_to_apps[i], TGApp[i].in*/;
+    }
 
     
     Net.out_to_APs[0].Connect(AP[0],(compcxx_component::Network_out_to_APs_f_t)&compcxx_AccessPoint_8::in_from_network) /*connect Net.out_to_APs[0], AP[0].in_from_network*/;
     AP[0].out_to_network_f.Connect(Net,(compcxx_component::AccessPoint_out_to_network_f_t)&compcxx_Network_12::in_from_APs) /*connect AP[0].out_to_network, Net.in_from_APs*/;
 
     
-    AP[0].out_to_wireless[0].Connect(STA[0],(compcxx_component::AccessPoint_out_to_wireless_f_t)&compcxx_Station_9::in_from_wireless) /*connect AP[0].out_to_wireless[0], STA[0].in_from_wireless*/;
-    STA[0].out_to_wireless[0].Connect(AP[0],(compcxx_component::Station_out_to_wireless_f_t)&compcxx_AccessPoint_8::in_from_wireless) /*connect STA[0].out_to_wireless[0], AP[0].in_from_wireless*/;
+    for(int i = 0; i < 2; i++) {
+        AP[0].out_to_wireless[i].Connect(STA[i],(compcxx_component::AccessPoint_out_to_wireless_f_t)&compcxx_Station_9::in_from_wireless) /*connect AP[0].out_to_wireless[i], STA[i].in_from_wireless*/;
+        STA[i].out_to_wireless[0].Connect(AP[0],(compcxx_component::Station_out_to_wireless_f_t)&compcxx_AccessPoint_8::in_from_wireless) /*connect STA[i].out_to_wireless[0], AP[0].in_from_wireless*/;
+    }
 
     
-    STA[0].out_to_app_f.Connect(sink,(compcxx_component::Station_out_to_app_f_t)&compcxx_Sink_13::in) /*connect STA[0].out_to_app, sink.in*/;
+    for(int i = 0; i < 2; i++) {
+        STA[i].out_to_app_f.Connect(sink,(compcxx_component::Station_out_to_app_f_t)&compcxx_Sink_13::in) /*connect STA[i].out_to_app, sink.in*/;
+    }
 
     
     AP[0].out_packet_f.Connect(channel1,(compcxx_component::AccessPoint_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect AP[0].out_packet, channel1.in_frame*/;
     channel1.out_slot[0].Connect(AP[0],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_AccessPoint_8::in_slot) /*connect channel1.out_slot[0], AP[0].in_slot*/;
-    STA[0].out_packet_f.Connect(channel1,(compcxx_component::Station_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect STA[0].out_packet, channel1.in_frame*/;
-    channel1.out_slot[1].Connect(STA[0],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_Station_9::in_slot) /*connect channel1.out_slot[1], STA[0].in_slot*/;
+    for(int i = 0; i < 2; i++) {
+        STA[i].out_packet_f.Connect(channel1,(compcxx_component::Station_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect STA[i].out_packet, channel1.in_frame*/;
+        channel1.out_slot[i+1].Connect(STA[i],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_Station_9::in_slot) /*connect channel1.out_slot[i+1], STA[i].in_slot*/;
+    }
 
     printf("----- Simplified Wi-FiSim Setup completed -----\n");
 }
 
 
-#line 150 "SimpleSim.cc"
+#line 171 "SimpleSim.cc"
 void compcxx_SimplifiedWiFiSim_14::Start() {
     printf("Start\n");
 }
 
 
-#line 154 "SimpleSim.cc"
+#line 175 "SimpleSim.cc"
 void compcxx_SimplifiedWiFiSim_14::Stop() {
     printf("########################################################################\n");
     printf("------------------------ Simplified Wi-Fisim Results ----------------------------\n");
-    printf("AP: RSSI = %f | Packet AP Delay = %f\n", RSSI[0], AP[0].queueing_service_delay/AP[0].successful);
+    
+    
+    for(int i = 0; i < 2; i++) {
+        printf("STA%d: RSSI = %f | Packet AP Delay = %f\n", 
+               i, RSSI[i], AP[0].queueing_service_delay/AP[0].successful);
+    }
+    
+    printf("AP Stats:\n");
     printf("Av A-MPDU size = %f | Tx prob = %f | Coll prob = %f | Buffer size = %f\n",
            AP[0].avAMPDU_size/AP[0].successful,
            AP[0].transmission_attempts/AP[0].slots,
@@ -5006,25 +5034,29 @@ void compcxx_SimplifiedWiFiSim_14::Stop() {
 
     FILE *results;
     results = fopen("Results/SimplifiedWiFiSim.txt", "at");
-    fprintf(results, "%f %f %f %f %f %f %f\n",
-            BGLoad_,
-            AP[0].queueing_service_delay/AP[0].successful,
-            AP[0].avAMPDU_size/AP[0].successful,
-            AP[0].transmission_attempts/AP[0].slots,
-            AP[0].collisions/AP[0].transmission_attempts,
-            AP[0].queue_occupation/AP[0].arrived,
-            RSSI[0]);
+    
+    for(int i = 0; i < 2; i++) {
+        fprintf(results, "%f %f %f %f %f %f %f %d\n",
+                BGLoad_,
+                AP[0].queueing_service_delay/AP[0].successful,
+                AP[0].avAMPDU_size/AP[0].successful,
+                AP[0].transmission_attempts/AP[0].slots,
+                AP[0].collisions/AP[0].transmission_attempts,
+                AP[0].queue_occupation/AP[0].arrived,
+                RSSI[i],
+                i);  
+    }
     fclose(results);
 }
 
 
-#line 177 "SimpleSim.cc"
+
+#line 210 "SimpleSim.cc"
 int main(int argc, char *argv[]) {
     int seed = atoi(argv[1]);
     double STime = atof(argv[2]);
     double BGLoad = atof(argv[3]);
     int LBG = atoi(argv[4]);
-
     double distance_X = atof(argv[5]); 
 
     st_input_args.seed = seed;
