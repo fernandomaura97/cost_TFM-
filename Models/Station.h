@@ -378,7 +378,7 @@ double Station :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_
 		//printf("************************* There is no conectivity ************************* [We assume MCS 1 and pe = 1]\n");
 		BitsSymbol[station_id] = 1;
 		CodingRate[station_id] = (double) 1/2;
-		pe = 0.9;
+		// pe = 0.9;
 	}
 
 	if( Pr >= -82 && Pr < -79)

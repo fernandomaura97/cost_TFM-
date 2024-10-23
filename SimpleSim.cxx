@@ -1266,47 +1266,41 @@ void CostSimEng::Run()
 #define DIFS 31E-6
 #define SIFS 16E-6
 
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
+	#define RESET   "\033[0m"
+	#define BLUE    "\033[34m"    // Blue
+	#define CYAN    "\033[36m"    // Cyan (between blue and green)
+	#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+	#define MAGENTA "\033[35m"    // Magenta (closer to red)
+	#define RED     "\033[31m"    // Red
+	#define YELLOW 	"\033[33m]"
+	
+	#define LIGHT_RED    "\033[91m"     // Light Red
+	#define LIGHT_GREEN  "\033[92m"     // Light Green
+	#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+	#define LIGHT_BLUE   "\033[94m"     // Light Blue
+	#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+	#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+	#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+	
+	#define BG_BLACK     "\033[40m"     // Black background
+	#define BG_RED       "\033[41m"     // Red background
+	#define BG_GREEN     "\033[42m"     // Green background
+	#define BG_YELLOW    "\033[43m"     // Yellow background
+	#define BG_BLUE      "\033[44m"     // Blue background
+	#define BG_MAGENTA   "\033[45m"     // Magenta background
+	#define BG_CYAN      "\033[46m"     // Cyan background
+	#define BG_WHITE     "\033[47m"     // White background
 
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-#define LIGHT_RED    "\033[91m"     // Light Red
-#define LIGHT_GREEN  "\033[92m"     // Light Green
-#define LIGHT_YELLOW "\033[93m"     // Light Yellow
-#define LIGHT_BLUE   "\033[94m"     // Light Blue
-#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
-#define LIGHT_CYAN   "\033[96m"     // Light Cyan
-#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
-
-
-#define BG_BLACK     "\033[40m"     // Black background
-#define BG_RED       "\033[41m"     // Red background
-#define BG_GREEN     "\033[42m"     // Green background
-#define BG_YELLOW    "\033[43m"     // Yellow background
-#define BG_BLUE      "\033[44m"     // Blue background
-#define BG_MAGENTA   "\033[45m"     // Magenta background
-#define BG_CYAN      "\033[46m"     // Cyan background
-#define BG_WHITE     "\033[47m"     // White background
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+	#if DEBUG_PRINTS
+		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+	#else
+		#define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
 #endif
+
+
+
 
 
 struct data_packet
@@ -1374,7 +1368,31 @@ struct data_packet
 	
 	double packets_received;
 }; 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; 
+    int total_length; 
+	int dest_ID; 
+	int size;
 
+	
+    void print() const {
+		#if DEBUG_PRINTS
+			PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+				size, dest_ID, total_length);
+			for (const auto& packet : mpdu_packets) {
+				PRINTF_COLOR(BG_GREEN, "\t\t\t\t\t\t\t- Packet ID: %.0f\n", packet.ID_packet);
+			}
+		#endif
+	}
+	 
+    void reset() {
+			mpdu_packets.clear();        
+			total_length = 0;            
+			size = 0;                    
+			dest_ID = -1;                 
+		
+	}
+}; 
 struct sliding_window_t {
 
 			data_packet Packet;
@@ -1433,47 +1451,41 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
+	#define RESET   "\033[0m"
+	#define BLUE    "\033[34m"    // Blue
+	#define CYAN    "\033[36m"    // Cyan (between blue and green)
+	#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+	#define MAGENTA "\033[35m"    // Magenta (closer to red)
+	#define RED     "\033[31m"    // Red
+	#define YELLOW 	"\033[33m]"
+	
+	#define LIGHT_RED    "\033[91m"     // Light Red
+	#define LIGHT_GREEN  "\033[92m"     // Light Green
+	#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+	#define LIGHT_BLUE   "\033[94m"     // Light Blue
+	#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+	#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+	#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+	
+	#define BG_BLACK     "\033[40m"     // Black background
+	#define BG_RED       "\033[41m"     // Red background
+	#define BG_GREEN     "\033[42m"     // Green background
+	#define BG_YELLOW    "\033[43m"     // Yellow background
+	#define BG_BLUE      "\033[44m"     // Blue background
+	#define BG_MAGENTA   "\033[45m"     // Magenta background
+	#define BG_CYAN      "\033[46m"     // Cyan background
+	#define BG_WHITE     "\033[47m"     // White background
 
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-#define LIGHT_RED    "\033[91m"     // Light Red
-#define LIGHT_GREEN  "\033[92m"     // Light Green
-#define LIGHT_YELLOW "\033[93m"     // Light Yellow
-#define LIGHT_BLUE   "\033[94m"     // Light Blue
-#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
-#define LIGHT_CYAN   "\033[96m"     // Light Cyan
-#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
-
-
-#define BG_BLACK     "\033[40m"     // Black background
-#define BG_RED       "\033[41m"     // Red background
-#define BG_GREEN     "\033[42m"     // Green background
-#define BG_YELLOW    "\033[43m"     // Yellow background
-#define BG_BLUE      "\033[44m"     // Blue background
-#define BG_MAGENTA   "\033[45m"     // Magenta background
-#define BG_CYAN      "\033[46m"     // Cyan background
-#define BG_WHITE     "\033[47m"     // White background
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+	#if DEBUG_PRINTS
+		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+	#else
+		#define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
 #endif
+
+
+
 
 
 struct data_packet
@@ -1541,7 +1553,31 @@ struct data_packet
 	
 	double packets_received;
 }; 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; 
+    int total_length; 
+	int dest_ID; 
+	int size;
 
+	
+    void print() const {
+		#if DEBUG_PRINTS
+			PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+				size, dest_ID, total_length);
+			for (const auto& packet : mpdu_packets) {
+				PRINTF_COLOR(BG_GREEN, "\t\t\t\t\t\t\t- Packet ID: %.0f\n", packet.ID_packet);
+			}
+		#endif
+	}
+	 
+    void reset() {
+			mpdu_packets.clear();        
+			total_length = 0;            
+			size = 0;                    
+			dest_ID = -1;                 
+		
+	}
+}; 
 struct sliding_window_t {
 
 			data_packet Packet;
@@ -1632,47 +1668,41 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
+	#define RESET   "\033[0m"
+	#define BLUE    "\033[34m"    // Blue
+	#define CYAN    "\033[36m"    // Cyan (between blue and green)
+	#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+	#define MAGENTA "\033[35m"    // Magenta (closer to red)
+	#define RED     "\033[31m"    // Red
+	#define YELLOW 	"\033[33m]"
+	
+	#define LIGHT_RED    "\033[91m"     // Light Red
+	#define LIGHT_GREEN  "\033[92m"     // Light Green
+	#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+	#define LIGHT_BLUE   "\033[94m"     // Light Blue
+	#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+	#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+	#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+	
+	#define BG_BLACK     "\033[40m"     // Black background
+	#define BG_RED       "\033[41m"     // Red background
+	#define BG_GREEN     "\033[42m"     // Green background
+	#define BG_YELLOW    "\033[43m"     // Yellow background
+	#define BG_BLUE      "\033[44m"     // Blue background
+	#define BG_MAGENTA   "\033[45m"     // Magenta background
+	#define BG_CYAN      "\033[46m"     // Cyan background
+	#define BG_WHITE     "\033[47m"     // White background
 
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-#define LIGHT_RED    "\033[91m"     // Light Red
-#define LIGHT_GREEN  "\033[92m"     // Light Green
-#define LIGHT_YELLOW "\033[93m"     // Light Yellow
-#define LIGHT_BLUE   "\033[94m"     // Light Blue
-#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
-#define LIGHT_CYAN   "\033[96m"     // Light Cyan
-#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
-
-
-#define BG_BLACK     "\033[40m"     // Black background
-#define BG_RED       "\033[41m"     // Red background
-#define BG_GREEN     "\033[42m"     // Green background
-#define BG_YELLOW    "\033[43m"     // Yellow background
-#define BG_BLUE      "\033[44m"     // Blue background
-#define BG_MAGENTA   "\033[45m"     // Magenta background
-#define BG_CYAN      "\033[46m"     // Cyan background
-#define BG_WHITE     "\033[47m"     // White background
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+	#if DEBUG_PRINTS
+		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+	#else
+		#define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
 #endif
+
+
+
 
 
 struct data_packet
@@ -1740,7 +1770,31 @@ struct data_packet
 	
 	double packets_received;
 }; 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; 
+    int total_length; 
+	int dest_ID; 
+	int size;
 
+	
+    void print() const {
+		#if DEBUG_PRINTS
+			PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+				size, dest_ID, total_length);
+			for (const auto& packet : mpdu_packets) {
+				PRINTF_COLOR(BG_GREEN, "\t\t\t\t\t\t\t- Packet ID: %.0f\n", packet.ID_packet);
+			}
+		#endif
+	}
+	 
+    void reset() {
+			mpdu_packets.clear();        
+			total_length = 0;            
+			size = 0;                    
+			dest_ID = -1;                 
+		
+	}
+}; 
 struct sliding_window_t {
 
 			data_packet Packet;
@@ -1821,47 +1875,41 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
+	#define RESET   "\033[0m"
+	#define BLUE    "\033[34m"    // Blue
+	#define CYAN    "\033[36m"    // Cyan (between blue and green)
+	#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+	#define MAGENTA "\033[35m"    // Magenta (closer to red)
+	#define RED     "\033[31m"    // Red
+	#define YELLOW 	"\033[33m]"
+	
+	#define LIGHT_RED    "\033[91m"     // Light Red
+	#define LIGHT_GREEN  "\033[92m"     // Light Green
+	#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+	#define LIGHT_BLUE   "\033[94m"     // Light Blue
+	#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+	#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+	#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+	
+	#define BG_BLACK     "\033[40m"     // Black background
+	#define BG_RED       "\033[41m"     // Red background
+	#define BG_GREEN     "\033[42m"     // Green background
+	#define BG_YELLOW    "\033[43m"     // Yellow background
+	#define BG_BLUE      "\033[44m"     // Blue background
+	#define BG_MAGENTA   "\033[45m"     // Magenta background
+	#define BG_CYAN      "\033[46m"     // Cyan background
+	#define BG_WHITE     "\033[47m"     // White background
 
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-#define LIGHT_RED    "\033[91m"     // Light Red
-#define LIGHT_GREEN  "\033[92m"     // Light Green
-#define LIGHT_YELLOW "\033[93m"     // Light Yellow
-#define LIGHT_BLUE   "\033[94m"     // Light Blue
-#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
-#define LIGHT_CYAN   "\033[96m"     // Light Cyan
-#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
-
-
-#define BG_BLACK     "\033[40m"     // Black background
-#define BG_RED       "\033[41m"     // Red background
-#define BG_GREEN     "\033[42m"     // Green background
-#define BG_YELLOW    "\033[43m"     // Yellow background
-#define BG_BLUE      "\033[44m"     // Blue background
-#define BG_MAGENTA   "\033[45m"     // Magenta background
-#define BG_CYAN      "\033[46m"     // Cyan background
-#define BG_WHITE     "\033[47m"     // White background
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+	#if DEBUG_PRINTS
+		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+	#else
+		#define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
 #endif
+
+
+
 
 
 struct data_packet
@@ -1929,7 +1977,31 @@ struct data_packet
 	
 	double packets_received;
 }; 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; 
+    int total_length; 
+	int dest_ID; 
+	int size;
 
+	
+    void print() const {
+		#if DEBUG_PRINTS
+			PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+				size, dest_ID, total_length);
+			for (const auto& packet : mpdu_packets) {
+				PRINTF_COLOR(BG_GREEN, "\t\t\t\t\t\t\t- Packet ID: %.0f\n", packet.ID_packet);
+			}
+		#endif
+	}
+	 
+    void reset() {
+			mpdu_packets.clear();        
+			total_length = 0;            
+			size = 0;                    
+			dest_ID = -1;                 
+		
+	}
+}; 
 struct sliding_window_t {
 
 			data_packet Packet;
@@ -1985,47 +2057,41 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
+	#define RESET   "\033[0m"
+	#define BLUE    "\033[34m"    // Blue
+	#define CYAN    "\033[36m"    // Cyan (between blue and green)
+	#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+	#define MAGENTA "\033[35m"    // Magenta (closer to red)
+	#define RED     "\033[31m"    // Red
+	#define YELLOW 	"\033[33m]"
+	
+	#define LIGHT_RED    "\033[91m"     // Light Red
+	#define LIGHT_GREEN  "\033[92m"     // Light Green
+	#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+	#define LIGHT_BLUE   "\033[94m"     // Light Blue
+	#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+	#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+	#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+	
+	#define BG_BLACK     "\033[40m"     // Black background
+	#define BG_RED       "\033[41m"     // Red background
+	#define BG_GREEN     "\033[42m"     // Green background
+	#define BG_YELLOW    "\033[43m"     // Yellow background
+	#define BG_BLUE      "\033[44m"     // Blue background
+	#define BG_MAGENTA   "\033[45m"     // Magenta background
+	#define BG_CYAN      "\033[46m"     // Cyan background
+	#define BG_WHITE     "\033[47m"     // White background
 
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-#define LIGHT_RED    "\033[91m"     // Light Red
-#define LIGHT_GREEN  "\033[92m"     // Light Green
-#define LIGHT_YELLOW "\033[93m"     // Light Yellow
-#define LIGHT_BLUE   "\033[94m"     // Light Blue
-#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
-#define LIGHT_CYAN   "\033[96m"     // Light Cyan
-#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
-
-
-#define BG_BLACK     "\033[40m"     // Black background
-#define BG_RED       "\033[41m"     // Red background
-#define BG_GREEN     "\033[42m"     // Green background
-#define BG_YELLOW    "\033[43m"     // Yellow background
-#define BG_BLUE      "\033[44m"     // Blue background
-#define BG_MAGENTA   "\033[45m"     // Magenta background
-#define BG_CYAN      "\033[46m"     // Cyan background
-#define BG_WHITE     "\033[47m"     // White background
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+	#if DEBUG_PRINTS
+		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+	#else
+		#define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
 #endif
+
+
+
 
 
 struct data_packet
@@ -2093,7 +2159,31 @@ struct data_packet
 	
 	double packets_received;
 }; 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; 
+    int total_length; 
+	int dest_ID; 
+	int size;
 
+	
+    void print() const {
+		#if DEBUG_PRINTS
+			PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+				size, dest_ID, total_length);
+			for (const auto& packet : mpdu_packets) {
+				PRINTF_COLOR(BG_GREEN, "\t\t\t\t\t\t\t- Packet ID: %.0f\n", packet.ID_packet);
+			}
+		#endif
+	}
+	 
+    void reset() {
+			mpdu_packets.clear();        
+			total_length = 0;            
+			size = 0;                    
+			dest_ID = -1;                 
+		
+	}
+}; 
 struct sliding_window_t {
 
 			data_packet Packet;
@@ -2227,39 +2317,39 @@ double PathLoss(double d)
 
 
 
-#line 104 "./Models/AccessPoint.h"
+#line 109 "./Models/AccessPoint.h"
 ;
 
 
-#line 131 "./Models/AccessPoint.h"
+#line 138 "./Models/AccessPoint.h"
 ;
 
 
-#line 184 "./Models/AccessPoint.h"
-;
-
-
-
-#line 215 "./Models/AccessPoint.h"
+#line 191 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 410 "./Models/AccessPoint.h"
+#line 222 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 423 "./Models/AccessPoint.h"
-;
-
-
-#line 536 "./Models/AccessPoint.h"
+#line 454 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 558 "./Models/AccessPoint.h"
+#line 467 "./Models/AccessPoint.h"
+;
+
+
+#line 580 "./Models/AccessPoint.h"
+;
+
+
+
+#line 602 "./Models/AccessPoint.h"
 #endif
 
 #line 12 "SimpleSim.cc"
@@ -2292,47 +2382,41 @@ double PathLoss(double d)
 #define DIFS 31E-6
 #define SIFS 16E-6
 
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
+	#define RESET   "\033[0m"
+	#define BLUE    "\033[34m"    // Blue
+	#define CYAN    "\033[36m"    // Cyan (between blue and green)
+	#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+	#define MAGENTA "\033[35m"    // Magenta (closer to red)
+	#define RED     "\033[31m"    // Red
+	#define YELLOW 	"\033[33m]"
+	
+	#define LIGHT_RED    "\033[91m"     // Light Red
+	#define LIGHT_GREEN  "\033[92m"     // Light Green
+	#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+	#define LIGHT_BLUE   "\033[94m"     // Light Blue
+	#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+	#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+	#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+	
+	#define BG_BLACK     "\033[40m"     // Black background
+	#define BG_RED       "\033[41m"     // Red background
+	#define BG_GREEN     "\033[42m"     // Green background
+	#define BG_YELLOW    "\033[43m"     // Yellow background
+	#define BG_BLUE      "\033[44m"     // Blue background
+	#define BG_MAGENTA   "\033[45m"     // Magenta background
+	#define BG_CYAN      "\033[46m"     // Cyan background
+	#define BG_WHITE     "\033[47m"     // White background
 
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-#define LIGHT_RED    "\033[91m"     // Light Red
-#define LIGHT_GREEN  "\033[92m"     // Light Green
-#define LIGHT_YELLOW "\033[93m"     // Light Yellow
-#define LIGHT_BLUE   "\033[94m"     // Light Blue
-#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
-#define LIGHT_CYAN   "\033[96m"     // Light Cyan
-#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
-
-
-#define BG_BLACK     "\033[40m"     // Black background
-#define BG_RED       "\033[41m"     // Red background
-#define BG_GREEN     "\033[42m"     // Green background
-#define BG_YELLOW    "\033[43m"     // Yellow background
-#define BG_BLUE      "\033[44m"     // Blue background
-#define BG_MAGENTA   "\033[45m"     // Magenta background
-#define BG_CYAN      "\033[46m"     // Cyan background
-#define BG_WHITE     "\033[47m"     // White background
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+	#if DEBUG_PRINTS
+		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+	#else
+		#define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
 #endif
+
+
+
 
 
 struct data_packet
@@ -2400,7 +2484,31 @@ struct data_packet
 	
 	double packets_received;
 }; 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; 
+    int total_length; 
+	int dest_ID; 
+	int size;
 
+	
+    void print() const {
+		#if DEBUG_PRINTS
+			PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+				size, dest_ID, total_length);
+			for (const auto& packet : mpdu_packets) {
+				PRINTF_COLOR(BG_GREEN, "\t\t\t\t\t\t\t- Packet ID: %.0f\n", packet.ID_packet);
+			}
+		#endif
+	}
+	 
+    void reset() {
+			mpdu_packets.clear();        
+			total_length = 0;            
+			size = 0;                    
+			dest_ID = -1;                 
+		
+	}
+}; 
 struct sliding_window_t {
 
 			data_packet Packet;
@@ -2544,47 +2652,41 @@ double PathLoss(double d)
 #define DIFS 31E-6
 #define SIFS 16E-6
 
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
+	#define RESET   "\033[0m"
+	#define BLUE    "\033[34m"    // Blue
+	#define CYAN    "\033[36m"    // Cyan (between blue and green)
+	#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+	#define MAGENTA "\033[35m"    // Magenta (closer to red)
+	#define RED     "\033[31m"    // Red
+	#define YELLOW 	"\033[33m]"
+	
+	#define LIGHT_RED    "\033[91m"     // Light Red
+	#define LIGHT_GREEN  "\033[92m"     // Light Green
+	#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+	#define LIGHT_BLUE   "\033[94m"     // Light Blue
+	#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+	#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+	#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+	
+	#define BG_BLACK     "\033[40m"     // Black background
+	#define BG_RED       "\033[41m"     // Red background
+	#define BG_GREEN     "\033[42m"     // Green background
+	#define BG_YELLOW    "\033[43m"     // Yellow background
+	#define BG_BLUE      "\033[44m"     // Blue background
+	#define BG_MAGENTA   "\033[45m"     // Magenta background
+	#define BG_CYAN      "\033[46m"     // Cyan background
+	#define BG_WHITE     "\033[47m"     // White background
 
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-#define LIGHT_RED    "\033[91m"     // Light Red
-#define LIGHT_GREEN  "\033[92m"     // Light Green
-#define LIGHT_YELLOW "\033[93m"     // Light Yellow
-#define LIGHT_BLUE   "\033[94m"     // Light Blue
-#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
-#define LIGHT_CYAN   "\033[96m"     // Light Cyan
-#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
-
-
-#define BG_BLACK     "\033[40m"     // Black background
-#define BG_RED       "\033[41m"     // Red background
-#define BG_GREEN     "\033[42m"     // Green background
-#define BG_YELLOW    "\033[43m"     // Yellow background
-#define BG_BLUE      "\033[44m"     // Blue background
-#define BG_MAGENTA   "\033[45m"     // Magenta background
-#define BG_CYAN      "\033[46m"     // Cyan background
-#define BG_WHITE     "\033[47m"     // White background
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+	#if DEBUG_PRINTS
+		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+	#else
+		#define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
 #endif
+
+
+
 
 
 struct data_packet
@@ -2652,7 +2754,31 @@ struct data_packet
 	
 	double packets_received;
 }; 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; 
+    int total_length; 
+	int dest_ID; 
+	int size;
 
+	
+    void print() const {
+		#if DEBUG_PRINTS
+			PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+				size, dest_ID, total_length);
+			for (const auto& packet : mpdu_packets) {
+				PRINTF_COLOR(BG_GREEN, "\t\t\t\t\t\t\t- Packet ID: %.0f\n", packet.ID_packet);
+			}
+		#endif
+	}
+	 
+    void reset() {
+			mpdu_packets.clear();        
+			total_length = 0;            
+			size = 0;                    
+			dest_ID = -1;                 
+		
+	}
+}; 
 struct sliding_window_t {
 
 			data_packet Packet;
@@ -2730,47 +2856,41 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
+#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
+	#define RESET   "\033[0m"
+	#define BLUE    "\033[34m"    // Blue
+	#define CYAN    "\033[36m"    // Cyan (between blue and green)
+	#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+	#define MAGENTA "\033[35m"    // Magenta (closer to red)
+	#define RED     "\033[31m"    // Red
+	#define YELLOW 	"\033[33m]"
+	
+	#define LIGHT_RED    "\033[91m"     // Light Red
+	#define LIGHT_GREEN  "\033[92m"     // Light Green
+	#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+	#define LIGHT_BLUE   "\033[94m"     // Light Blue
+	#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+	#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+	#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+	
+	#define BG_BLACK     "\033[40m"     // Black background
+	#define BG_RED       "\033[41m"     // Red background
+	#define BG_GREEN     "\033[42m"     // Green background
+	#define BG_YELLOW    "\033[43m"     // Yellow background
+	#define BG_BLUE      "\033[44m"     // Blue background
+	#define BG_MAGENTA   "\033[45m"     // Magenta background
+	#define BG_CYAN      "\033[46m"     // Cyan background
+	#define BG_WHITE     "\033[47m"     // White background
 
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-#define LIGHT_RED    "\033[91m"     // Light Red
-#define LIGHT_GREEN  "\033[92m"     // Light Green
-#define LIGHT_YELLOW "\033[93m"     // Light Yellow
-#define LIGHT_BLUE   "\033[94m"     // Light Blue
-#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
-#define LIGHT_CYAN   "\033[96m"     // Light Cyan
-#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
-
-
-#define BG_BLACK     "\033[40m"     // Black background
-#define BG_RED       "\033[41m"     // Red background
-#define BG_GREEN     "\033[42m"     // Green background
-#define BG_YELLOW    "\033[43m"     // Yellow background
-#define BG_BLUE      "\033[44m"     // Blue background
-#define BG_MAGENTA   "\033[45m"     // Magenta background
-#define BG_CYAN      "\033[46m"     // Cyan background
-#define BG_WHITE     "\033[47m"     // White background
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+	#if DEBUG_PRINTS
+		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+	#else
+		#define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
 #endif
+
+
+
 
 
 struct data_packet
@@ -2838,7 +2958,31 @@ struct data_packet
 	
 	double packets_received;
 }; 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; 
+    int total_length; 
+	int dest_ID; 
+	int size;
 
+	
+    void print() const {
+		#if DEBUG_PRINTS
+			PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+				size, dest_ID, total_length);
+			for (const auto& packet : mpdu_packets) {
+				PRINTF_COLOR(BG_GREEN, "\t\t\t\t\t\t\t- Packet ID: %.0f\n", packet.ID_packet);
+			}
+		#endif
+	}
+	 
+    void reset() {
+			mpdu_packets.clear();        
+			total_length = 0;            
+			size = 0;                    
+			dest_ID = -1;                 
+		
+	}
+}; 
 struct sliding_window_t {
 
 			data_packet Packet;
@@ -2992,6 +3136,9 @@ class compcxx_AccessPoint_8 : public compcxx_component, public TypeII
 		double BitsSymbol[20];
 		double CodingRate[20];
 
+		const double MAX_T_AGG = 4.85E-3; 
+
+
 		compcxx_FIFO_5 MAC_queue;
 		int qmin; 
 		int CWmin;
@@ -3003,6 +3150,8 @@ class compcxx_AccessPoint_8 : public compcxx_component, public TypeII
 		int current_ampdu_size; 
 		int current_destination;
 		int NumberStations;
+
+		AMPDU_packet_t aux_ampdu; 
 
 	private:
 		int mode; 
@@ -3463,13 +3612,13 @@ void compcxx_FIFO_5 :: PrintQueueContents()
 				  << ", T_q: " << std::setprecision(3) << m_queue[i].T_q << ", T_s: "<< std::setprecision(3) << m_queue[i].T << std::endl;
     }
 }
-#line 100 "./Models/AccessPoint.h"
+#line 105 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: Setup()
 {
 	printf("Access Point Setup()\n");
 
 }
-#line 106 "./Models/AccessPoint.h"
+#line 111 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: Start()
 {
 	printf("Access Point Start()\n");
@@ -3495,8 +3644,10 @@ void compcxx_AccessPoint_8 :: Start()
 	avAMPDU_size=0;
 	queue_occupation=0;
 
+	aux_ampdu.reset(); 
+
 }
-#line 133 "./Models/AccessPoint.h"
+#line 140 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: Stop()
 {
 
@@ -3549,7 +3700,7 @@ void compcxx_AccessPoint_8 :: Stop()
     printf("Global CSV file has been created successfully.\n");
 
 }
-#line 187 "./Models/AccessPoint.h"
+#line 194 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_from_network(data_packet &packet)
 {
 
@@ -3579,7 +3730,7 @@ void compcxx_AccessPoint_8 :: in_from_network(data_packet &packet)
 	}
 
 }
-#line 218 "./Models/AccessPoint.h"
+#line 225 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 {
 
@@ -3602,38 +3753,53 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 			device_has_transmitted = 0; 
 			avAMPDU_size+=current_ampdu_size; 
 			
-			data_packet frame_test;
+			
 			double queueing_service_delay_aux=0; 
-			int packet_queue_index = 0;
-			for(int q=0;q<current_ampdu_size;q++)
-			{
+			double mpdu_counter = 0; 
+			for (auto& packet_iter : aux_ampdu.mpdu_packets)	
+			{	
+				mpdu_counter += 1; 
+				if (Random() > pe){
+					queueing_service_delay_aux += (SimTime() - packet_iter.queueing_service_delay - SLOT); 
+					update_stats_AMPDU(packet_iter, MAC_queue.QueueSize() - mpdu_counter); 
 				
-				frame_test = MAC_queue.GetPacketAt(packet_queue_index);				
-				if(Random()>=pe)
-				{				
-					
-					
-					MAC_queue.DeletePacketIn(packet_queue_index);
-					queueing_service_delay_aux += (SimTime()-frame_test.queueing_service_delay-SLOT);
+					PRINTF_COLOR(RED , "%.6f [AP OUT W]      Packet %.0f from STA %d (%.0f/%d)\n",SimTime(), packet_iter.ID_packet ,packet_iter.destination, mpdu_counter, current_ampdu_size);
 
-					
-					
-						
-					
-					PRINTF_COLOR(RED , "%.6f [AP OUT W]      Packet %.0f from STA %d (%d/%d)\n",SimTime(), frame_test.ID_packet ,frame_test.destination, q, current_ampdu_size);
-					
-					update_stats_AMPDU(frame_test, MAC_queue.QueueSize()); 
-					
-					out_to_wireless[frame_test.destination](frame_test); 
-					
+					out_to_wireless[packet_iter.destination](packet_iter); 
 				}
-				else
-				{
-					packet_queue_index++;
-					
+				else{
+					printf("%f - AP - Packet to STA %d with errors (packet ID = %.0f, PER = %.2f)\n",SimTime(),packet_iter.destination,packet_iter.ID_packet, pe );
 				}
-
 			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			
+			
+						
+			
+			
+					
+			
+					
+			
+			
+			
+			
+			
+			
+			
+			
+
+			
 
 			queueing_service_delay_aux = queueing_service_delay_aux / current_ampdu_size;
 			queueing_service_delay += queueing_service_delay_aux;
@@ -3691,13 +3857,16 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 		if(backoff_counter==0)
 		{
 			
+
+			aux_ampdu.reset();
+
 			current_ampdu_size = MIN(MAC_queue.QueueSize(),MAX_AMPDU);
-
-
 			
 			data_packet first_packet_in_buffer = MAC_queue.GetFirstPacket();
 			
-			
+
+			aux_ampdu.dest_ID = first_packet_in_buffer.destination; 
+
 
 			current_destination = first_packet_in_buffer.destination; 
 			
@@ -3719,16 +3888,30 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 
 				if(current_destination == packet_to_check.destination && current_ampdu_size_per_station < MAX_AMPDU)
 				{				
-					
-
 					queue_delay_per_packet += (SimTime() - (packet_to_check.in_queue_time)); 
 					packet_to_check.T_q = SimTime() - packet_to_check.in_queue_time; 
 
+					FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_per_station,current_destination);
+
+					if(T >= MAX_T_AGG){ 
+						break; 
+					}
+					
 					MAC_queue.DeletePacketIn(q);
-					MAC_queue.PutPacketIn(packet_to_check,current_ampdu_size_per_station);		
+					q -= 1; 
+					
+					aux_ampdu.mpdu_packets.push_back(packet_to_check); 
+					aux_ampdu.total_length += packet_to_check.L ; 
+					aux_ampdu.size += 1; 
+
+					
 					TotalBitsToBeTransmitted+=packet_to_check.L;
 					current_ampdu_size_per_station++;
 				}
+			}
+
+			for (auto& packet : aux_ampdu.mpdu_packets) {
+				packet.scheduled_time = SimTime() + T;  
 			}
 			int current_ampdu_size_sta = MIN(current_ampdu_size_per_station,MAX_AMPDU);	
 
@@ -3749,17 +3932,22 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 			frame.T_c = T_c;
 			frame.T_q = queue_delay_per_packet; 
 
-			
-			
-
-			for(int q = 0; q < current_ampdu_size_sta; q++ ){		
-				data_packet packet = MAC_queue.GetPacketAt(q);  
-				packet.T = frame.T; 
-				MAC_queue.DeletePacketIn(q); 
-				MAC_queue.PutPacketIn(packet, q); 
+		 	for (auto& packet : aux_ampdu.mpdu_packets) {
+				packet.T = frame.T;
 			}
 
+			
+			
+
+			
+				
+				
+				
+				
+			
+
 			PRINTF_COLOR(BG_CYAN ,"%.6f [AP_TXOP%d]    AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), attempts, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
+			aux_ampdu.print(); 
 			attempts++; 
 			device_has_transmitted=1;
 			transmission_attempts++; 
@@ -3773,7 +3961,7 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 	}
 
 }
-#line 413 "./Models/AccessPoint.h"
+#line 457 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
 {
 	
@@ -3781,13 +3969,13 @@ void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
 }
 
 
-#line 419 "./Models/AccessPoint.h"
+#line 463 "./Models/AccessPoint.h"
 int compcxx_AccessPoint_8 :: BinaryExponentialBackoff(int attempt)
 {
 	int CW = Random(MIN(pow(2,attempt),pow(2,max_BEB_stages))*(CWmin+1));
 	return CW;	
 }
-#line 425 "./Models/AccessPoint.h"
+#line 469 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
 {	
 
@@ -3900,7 +4088,7 @@ void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmi
 
 	
 }
-#line 539 "./Models/AccessPoint.h"
+#line 583 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
 
     double AMPDU_L = ampdu_packet.L; 
