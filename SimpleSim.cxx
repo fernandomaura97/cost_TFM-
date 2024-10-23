@@ -6,6 +6,7 @@
 #include <math.h>
 #include <iostream>
 
+
 #line 1 "./COST/cost.h"
 
 
@@ -1243,10 +1244,9 @@ void CostSimEng::Run()
 
 
 
-#line 6 "SimpleSim.cc"
+#line 7 "SimpleSim.cc"
 
 #include <deque>
-
 
 #line 1 "./Models/definitions.h"
 #ifndef _DEFINITIONS_
@@ -1282,6 +1282,23 @@ void CostSimEng::Run()
 #define RED     "\033[31m"    // Red
 #define YELLOW 	"\033[33m]"
 
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+
+
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
 
 
 #define DEBUG_PRINTS 1 // to set up fancy output packet per packet
@@ -1431,6 +1448,23 @@ struct info
 #define RED     "\033[31m"    // Red
 #define YELLOW 	"\033[33m]"
 
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+
+
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
 
 
 #define DEBUG_PRINTS 1 // to set up fancy output packet per packet
@@ -1569,6 +1603,194 @@ struct info
 #line 10 "SimpleSim.cc"
 
 
+#line 1 "./Models/TrafficGeneratorApp.h"
+
+
+
+
+#ifndef _TRAFFICGENERATOR_
+#define _TRAFFICGENERATOR_
+		
+
+#line 1 "./Models/definitions.h"
+#ifndef _DEFINITIONS_
+#define _DEFINITIONS_
+
+
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
+
+
+
+#define SLOT 9E-6 // microseconds
+
+#define Legacy_PHY_duration 20E-6
+#define PHY_duration 100E-6
+#define DIFS 31E-6
+#define SIFS 16E-6
+
+
+
+
+
+
+
+
+
+#define RESET   "\033[0m"
+#define BLUE    "\033[34m"    // Blue
+#define CYAN    "\033[36m"    // Cyan (between blue and green)
+#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
+#define MAGENTA "\033[35m"    // Magenta (closer to red)
+#define RED     "\033[31m"    // Red
+#define YELLOW 	"\033[33m]"
+
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+
+
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
+
+
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
+#if DEBUG_PRINTS
+    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
+#else
+    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
+#endif
+
+
+struct data_packet
+{
+	double L_data; 
+	double L_header; 
+	double L; 
+
+	double T_q; 
+
+	int AMPDU_size; 
+
+	
+	double sent_time; 
+	double scheduled_time; 
+	double queueing_service_delay;
+
+
+	double in_queue_time; 
+
+	double ID_packet; 
+	double num_seq;	
+	int destination; 
+	int source; 
+
+	int source_app;
+	int destination_app;
+	
+	
+	double T; 
+	double T_c; 
+
+	
+	int first_video_frame_packet;
+	int last_video_frame_packet;
+	int num_packet_in_the_frame;
+	double frame_generation_time;
+	int NumPacketsPerFrame;
+	double TimeSentAtTheServer;
+	double TimeReceivedAtTheClient;
+	double video_frame_seq;
+	double frames_received;
+
+
+
+	bool feedback;
+	bool rtt;
+
+	double m_owdg;
+	double threshold_gamma; 
+
+
+	bool sliding_rx_frame_loss; 
+	double frame_numseq; 
+	
+	struct Kalman_t{
+				double OW_Delay;
+				double K_gain;
+				double m_current; 
+				double m_prev; 
+				double residual_z;
+			}Kalman_p; 
+
+	
+	double packets_received;
+}; 
+
+struct sliding_window_t {
+
+			data_packet Packet;
+			double      Timestamp; 
+			double 		RTT; 
+			double 		num_seq;
+			
+		}; 
+
+struct SLOT_indicator
+{
+	int status;
+};
+
+struct info
+{
+	int x;
+	int y;
+	int z;
+	int ap_id;
+	int station_id;
+};
+
+
+#endif
+
+#line 8 "./Models/TrafficGeneratorApp.h"
+
+
+
+#line 54 "./Models/TrafficGeneratorApp.h"
+;
+
+
+#line 66 "./Models/TrafficGeneratorApp.h"
+;
+	
+
+#line 76 "./Models/TrafficGeneratorApp.h"
+;
+
+
+
+#line 105 "./Models/TrafficGeneratorApp.h"
+;
+
+
+#line 118 "./Models/TrafficGeneratorApp.h"
+#endif
+
+#line 11 "SimpleSim.cc"
+
+
 #line 1 "./Models/AccessPoint.h"
 
 
@@ -1612,6 +1834,23 @@ struct info
 #define RED     "\033[31m"    // Red
 #define YELLOW 	"\033[33m]"
 
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+
+
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
 
 
 #define DEBUG_PRINTS 1 // to set up fancy output packet per packet
@@ -1758,6 +1997,23 @@ struct info
 #define RED     "\033[31m"    // Red
 #define YELLOW 	"\033[33m]"
 
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+
+
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
 
 
 #define DEBUG_PRINTS 1 // to set up fancy output packet per packet
@@ -1961,42 +2217,42 @@ double PathLoss(double d)
 
 
 
-#line 104 "./Models/AccessPoint.h"
+#line 106 "./Models/AccessPoint.h"
 ;
 
 
-#line 133 "./Models/AccessPoint.h"
+#line 135 "./Models/AccessPoint.h"
 ;
 
 
-#line 186 "./Models/AccessPoint.h"
-;
-
-
-
-#line 216 "./Models/AccessPoint.h"
+#line 188 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 404 "./Models/AccessPoint.h"
+#line 218 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 417 "./Models/AccessPoint.h"
-;
-
-
-#line 530 "./Models/AccessPoint.h"
+#line 405 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 555 "./Models/AccessPoint.h"
+#line 418 "./Models/AccessPoint.h"
+;
+
+
+#line 531 "./Models/AccessPoint.h"
+;
+
+
+
+#line 556 "./Models/AccessPoint.h"
 #endif
 
-#line 11 "SimpleSim.cc"
+#line 12 "SimpleSim.cc"
 
 
 #line 1 "./Models/Station.h"
@@ -2042,6 +2298,23 @@ double PathLoss(double d)
 #define RED     "\033[31m"    // Red
 #define YELLOW 	"\033[33m]"
 
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+
+
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
 
 
 #define DEBUG_PRINTS 1 // to set up fancy output packet per packet
@@ -2230,7 +2503,7 @@ double PathLoss(double d)
 
 #endif
 
-#line 12 "SimpleSim.cc"
+#line 13 "SimpleSim.cc"
 
 
 #line 1 "./Models/CSMACAChannel1.h"
@@ -2276,6 +2549,23 @@ double PathLoss(double d)
 #define RED     "\033[31m"    // Red
 #define YELLOW 	"\033[33m]"
 
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+
+
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
 
 
 #define DEBUG_PRINTS 1 // to set up fancy output packet per packet
@@ -2398,7 +2688,7 @@ struct info
 #line 127 "./Models/CSMACAChannel1.h"
 #endif
 
-#line 13 "SimpleSim.cc"
+#line 14 "SimpleSim.cc"
 
 
 #line 1 "./Models/Sink.h"
@@ -2444,6 +2734,23 @@ struct info
 #define RED     "\033[31m"    // Red
 #define YELLOW 	"\033[33m]"
 
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
+
+
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
 
 
 #define DEBUG_PRINTS 1 // to set up fancy output packet per packet
@@ -2595,177 +2902,6 @@ struct info
 
 #endif
 
-#line 14 "SimpleSim.cc"
-
-
-#line 1 "./Models/TrafficGeneratorApp.h"
-
-
-
-
-#ifndef _TRAFFICGENERATOR_
-#define _TRAFFICGENERATOR_
-		
-
-#line 1 "./Models/definitions.h"
-#ifndef _DEFINITIONS_
-#define _DEFINITIONS_
-
-
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
-
-
-
-#define SLOT 9E-6 // microseconds
-
-#define Legacy_PHY_duration 20E-6
-#define PHY_duration 100E-6
-#define DIFS 31E-6
-#define SIFS 16E-6
-
-
-
-
-
-
-
-
-
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m"    // Blue
-#define CYAN    "\033[36m"    // Cyan (between blue and green)
-#define LIGHT_MAGENTA "\033[95m" // Light Magenta (purple hue, mix of red and blue)
-#define MAGENTA "\033[35m"    // Magenta (closer to red)
-#define RED     "\033[31m"    // Red
-#define YELLOW 	"\033[33m]"
-
-
-
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
-#if DEBUG_PRINTS
-    #define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
-#else
-    #define PRINTF_COLOR(color, format, ...) (void)0 // do nothing
-#endif
-
-
-struct data_packet
-{
-	double L_data; 
-	double L_header; 
-	double L; 
-
-	double T_q; 
-
-	int AMPDU_size; 
-
-	
-	double sent_time; 
-	double scheduled_time; 
-	double queueing_service_delay;
-
-
-	double in_queue_time; 
-
-	double ID_packet; 
-	double num_seq;	
-	int destination; 
-	int source; 
-
-	int source_app;
-	int destination_app;
-	
-	
-	double T; 
-	double T_c; 
-
-	
-	int first_video_frame_packet;
-	int last_video_frame_packet;
-	int num_packet_in_the_frame;
-	double frame_generation_time;
-	int NumPacketsPerFrame;
-	double TimeSentAtTheServer;
-	double TimeReceivedAtTheClient;
-	double video_frame_seq;
-	double frames_received;
-
-
-
-	bool feedback;
-	bool rtt;
-
-	double m_owdg;
-	double threshold_gamma; 
-
-
-	bool sliding_rx_frame_loss; 
-	double frame_numseq; 
-	
-	struct Kalman_t{
-				double OW_Delay;
-				double K_gain;
-				double m_current; 
-				double m_prev; 
-				double residual_z;
-			}Kalman_p; 
-
-	
-	double packets_received;
-}; 
-
-struct sliding_window_t {
-
-			data_packet Packet;
-			double      Timestamp; 
-			double 		RTT; 
-			double 		num_seq;
-			
-		}; 
-
-struct SLOT_indicator
-{
-	int status;
-};
-
-struct info
-{
-	int x;
-	int y;
-	int z;
-	int ap_id;
-	int station_id;
-};
-
-
-#endif
-
-#line 8 "./Models/TrafficGeneratorApp.h"
-
-
-
-#line 54 "./Models/TrafficGeneratorApp.h"
-;
-
-
-#line 66 "./Models/TrafficGeneratorApp.h"
-;
-	
-
-#line 76 "./Models/TrafficGeneratorApp.h"
-;
-
-
-
-#line 99 "./Models/TrafficGeneratorApp.h"
-;
-
-
-#line 112 "./Models/TrafficGeneratorApp.h"
-#endif
-
 #line 15 "SimpleSim.cc"
 
 
@@ -2773,84 +2909,25 @@ double x_AP[1];
 double y_AP[1];
 double z_AP[1];
 
-double x_[2];
-double y_[2];
-double z_[2];
+double x_[1];
+double y_[1];
+double z_[1];
 
-int traces_on = 1;
-double RSSI[2];
+double RSSI[1];
+
+struct input_arg_t {
+    int seed;
+    double STime;
+    double BGLoad;
+} st_input_args;
+
+bool traces_on = true; 
 
 #include "compcxx_SimpleSim.h"
-class compcxx_TrafficGeneratorApp_13;/*template <class T> */
-#line 267 "./COST/cost.h"
-class compcxx_Timer_7 : public compcxx_component, public TimerBase
-{
- public:
-  struct event_t : public CostEvent { trigger_t data; };
-  
-
-  compcxx_Timer_7() { m_simeng = CostSimEng::Instance(); m_event.active= false; }
-  inline void Set(trigger_t const &, double );
-  inline void Set(double );
-  inline double GetTime() { return m_event.time; }
-  inline bool Active() { return m_event.active; }
-  inline trigger_t & GetData() { return m_event.data; }
-  inline void SetData(trigger_t const &d) { m_event.data = d; }
-  void Cancel();
-  /*outport void to_component(trigger_t &)*/;
-  void activate(CostEvent*);
- private:
-  CostSimEng* m_simeng;
-  event_t m_event;
-public:compcxx_TrafficGeneratorApp_13* p_compcxx_parent;};
-
-
-#line 10 "./Models/TrafficGeneratorApp.h"
-class compcxx_TrafficGeneratorApp_13 : public compcxx_component, public TypeII
-{
-	
-	public: 
-		void Setup();
-		void Start();
-		void Stop();
-
-	public: 
-		class my_TrafficGeneratorApp_out_f_t:public compcxx_functor<TrafficGeneratorApp_out_f_t>{ public:void  operator() (data_packet &packet) { for (unsigned int compcxx_i=1;compcxx_i<c.size();compcxx_i++)(c[compcxx_i]->*f[compcxx_i])(packet); return (c[0]->*f[0])(packet);};};my_TrafficGeneratorApp_out_f_t out_f;/*outport void out(data_packet &packet)*/;	
-		/*inport */void in(data_packet &packet);
-
-		
-		compcxx_Timer_7 /*<trigger_t> */inter_packet_timer;
-		/*inport */inline void new_packet(trigger_t& t); 
-
-		compcxx_TrafficGeneratorApp_13 () { inter_packet_timer.p_compcxx_parent=this /*connect inter_packet_timer.to_component,*/; }
-
-
-	public: 
-		int L_data;
-		int id; 
-		int destination;
-		double Load; 
-		int mode; 
-		int node_attached;
-		int source_app;
-		int destination_app;
-
-
-	private:
-		double tau; 
-
-	public:
-		double generated_packets = 0;
-		double received_packets = 0;
-		double avDelay = 0;
-		double avLreceived = 0;
-
-};
-
 /*template <class test>
 */
 #line 15 "./Models/FIFO.h"
-class compcxx_FIFO_4 : public compcxx_component, public TypeII
+class compcxx_FIFO_5 : public compcxx_component, public TypeII
 {	
 	private:
 		std::deque <data_packet> m_queue;
@@ -2901,7 +2978,7 @@ class compcxx_AccessPoint_8 : public compcxx_component, public TypeII
 		double BitsSymbol[20];
 		double CodingRate[20];
 
-		compcxx_FIFO_4 MAC_queue;
+		compcxx_FIFO_5 MAC_queue;
 		int qmin; 
 		int CWmin;
 		int max_BEB_stages;
@@ -2949,90 +3026,8 @@ class compcxx_AccessPoint_8 : public compcxx_component, public TypeII
 			std::vector <double> throughput;  
         }sinkcsv; 
 
-};
+		data_packet aux_AMPDU_serving; 
 
-class compcxx_CSMACAChannel1_10;/*template <class T> */
-#line 267 "./COST/cost.h"
-class compcxx_Timer_6 : public compcxx_component, public TimerBase
-{
- public:
-  struct event_t : public CostEvent { trigger_t data; };
-  
-
-  compcxx_Timer_6() { m_simeng = CostSimEng::Instance(); m_event.active= false; }
-  inline void Set(trigger_t const &, double );
-  inline void Set(double );
-  inline double GetTime() { return m_event.time; }
-  inline bool Active() { return m_event.active; }
-  inline trigger_t & GetData() { return m_event.data; }
-  inline void SetData(trigger_t const &d) { m_event.data = d; }
-  void Cancel();
-  /*outport void to_component(trigger_t &)*/;
-  void activate(CostEvent*);
- private:
-  CostSimEng* m_simeng;
-  event_t m_event;
-public:compcxx_CSMACAChannel1_10* p_compcxx_parent;};
-
-class compcxx_CSMACAChannel1_10;/*template <class T> */
-#line 267 "./COST/cost.h"
-class compcxx_Timer_5 : public compcxx_component, public TimerBase
-{
- public:
-  struct event_t : public CostEvent { trigger_t data; };
-  
-
-  compcxx_Timer_5() { m_simeng = CostSimEng::Instance(); m_event.active= false; }
-  inline void Set(trigger_t const &, double );
-  inline void Set(double );
-  inline double GetTime() { return m_event.time; }
-  inline bool Active() { return m_event.active; }
-  inline trigger_t & GetData() { return m_event.data; }
-  inline void SetData(trigger_t const &d) { m_event.data = d; }
-  void Cancel();
-  /*outport void to_component(trigger_t &)*/;
-  void activate(CostEvent*);
- private:
-  CostSimEng* m_simeng;
-  event_t m_event;
-public:compcxx_CSMACAChannel1_10* p_compcxx_parent;};
-
-
-#line 12 "./Models/CSMACAChannel1.h"
-class compcxx_CSMACAChannel1_10 : public compcxx_component, public TypeII
-{
-	public:
-		void Setup();
-		void Start();
-		void Stop();		
-
-	public:
-		int NumNodes;
-		void NextSlot();
-
-
-	private:
-		int sim_transmissions; 
-		int current_transmissions;
-		double tx_duration, collision_duration;
-		
-	
-	public:
-		
-		class my_CSMACAChannel1_out_slot_f_t:public compcxx_functor<CSMACAChannel1_out_slot_f_t>{ public:void  operator() (SLOT_indicator &slot) { for (unsigned int compcxx_i=1;compcxx_i<c.size();compcxx_i++)(c[compcxx_i]->*f[compcxx_i])(slot); return (c[0]->*f[0])(slot);};};compcxx_array<my_CSMACAChannel1_out_slot_f_t > out_slot;/*outport void out_slot(SLOT_indicator &slot)*/;	
-		/*inport */void in_frame(data_packet &packet);
-
-		
-		compcxx_Timer_5 /*<trigger_t> */slot_time;
-		compcxx_Timer_6 /*<trigger_t> */rx_time;
-
-		/*inport */inline void new_slot(trigger_t& t1);
-		/*inport */inline void reception_time(trigger_t& t2);
-
-		compcxx_CSMACAChannel1_10 () { 
-			slot_time.p_compcxx_parent=this /*connect slot_time.to_component,*/; 
-			rx_time.p_compcxx_parent=this /*connect rx_time.to_component,*/; }
-	
 };
 
 class compcxx_Network_12;/*template <class T> */
@@ -3122,41 +3117,6 @@ class compcxx_Network_12 : public compcxx_component, public TypeII
 };
 
 
-#line 11 "./Models/Sink.h"
-class compcxx_Sink_11 : public compcxx_component, public TypeII
-{
-	public:
-		
-		/*inport */void in(data_packet &packet);
-
-	public:
-		void Setup();
-		void Start();
-		void Stop();
-
-	public:
-		double system_time;
-		double received_packets;
-		double av_L; 
-
-		
-		double queue_time_total ; 
-		double service_time_total ; 
-		double total_qs_time; 
-
-		int subsample_timer; 
-
-        
-		
-        
-        
-        
-        
-        
-        
-};
-
-
 #line 13 "./Models/Station.h"
 class compcxx_Station_9 : public compcxx_component, public TypeII
 {
@@ -3235,192 +3195,259 @@ class compcxx_Station_9 : public compcxx_component, public TypeII
 		double queue_occupation;	
 };
 
+class compcxx_TrafficGeneratorApp_11;/*template <class T> */
+#line 267 "./COST/cost.h"
+class compcxx_Timer_4 : public compcxx_component, public TimerBase
+{
+ public:
+  struct event_t : public CostEvent { trigger_t data; };
+  
 
-#line 28 "SimpleSim.cc"
-class compcxx_SimpleSim_14 : public compcxx_component, public CostSimEng {
-    public:
-        void Setup(double STime, int seed, double BW_STA);
-        void Start();        
-        void Stop();
-    
-    public:
-        compcxx_array<compcxx_AccessPoint_8  >ap;
-        compcxx_array<compcxx_Station_9  >sta;
-        compcxx_CSMACAChannel1_10 channel;
-        compcxx_Sink_11 sink;
-        compcxx_Network_12 net;
-        compcxx_array<compcxx_TrafficGeneratorApp_13  >TGApp;  
+  compcxx_Timer_4() { m_simeng = CostSimEng::Instance(); m_event.active= false; }
+  inline void Set(trigger_t const &, double );
+  inline void Set(double );
+  inline double GetTime() { return m_event.time; }
+  inline bool Active() { return m_event.active; }
+  inline trigger_t & GetData() { return m_event.data; }
+  inline void SetData(trigger_t const &d) { m_event.data = d; }
+  void Cancel();
+  /*outport void to_component(trigger_t &)*/;
+  void activate(CostEvent*);
+ private:
+  CostSimEng* m_simeng;
+  event_t m_event;
+public:compcxx_TrafficGeneratorApp_11* p_compcxx_parent;};
+
+
+#line 10 "./Models/TrafficGeneratorApp.h"
+class compcxx_TrafficGeneratorApp_11 : public compcxx_component, public TypeII
+{
+	
+	public: 
+		void Setup();
+		void Start();
+		void Stop();
+
+	public: 
+		class my_TrafficGeneratorApp_out_f_t:public compcxx_functor<TrafficGeneratorApp_out_f_t>{ public:void  operator() (data_packet &packet) { for (unsigned int compcxx_i=1;compcxx_i<c.size();compcxx_i++)(c[compcxx_i]->*f[compcxx_i])(packet); return (c[0]->*f[0])(packet);};};my_TrafficGeneratorApp_out_f_t out_f;/*outport void out(data_packet &packet)*/;	
+		/*inport */void in(data_packet &packet);
+
+		
+		compcxx_Timer_4 /*<trigger_t> */inter_packet_timer;
+		/*inport */inline void new_packet(trigger_t& t); 
+
+		compcxx_TrafficGeneratorApp_11 () { inter_packet_timer.p_compcxx_parent=this /*connect inter_packet_timer.to_component,*/; }
+
+
+	public: 
+		int L_data;
+		int id; 
+		int destination;
+		double Load; 
+		int mode; 
+		int node_attached;
+		int source_app;
+		int destination_app;
+
+
+	private:
+		double tau; 
+
+	public:
+		double generated_packets = 0;
+		double received_packets = 0;
+		double avDelay = 0;
+		double avLreceived = 0;
+
+};
+
+class compcxx_CSMACAChannel1_10;/*template <class T> */
+#line 267 "./COST/cost.h"
+class compcxx_Timer_7 : public compcxx_component, public TimerBase
+{
+ public:
+  struct event_t : public CostEvent { trigger_t data; };
+  
+
+  compcxx_Timer_7() { m_simeng = CostSimEng::Instance(); m_event.active= false; }
+  inline void Set(trigger_t const &, double );
+  inline void Set(double );
+  inline double GetTime() { return m_event.time; }
+  inline bool Active() { return m_event.active; }
+  inline trigger_t & GetData() { return m_event.data; }
+  inline void SetData(trigger_t const &d) { m_event.data = d; }
+  void Cancel();
+  /*outport void to_component(trigger_t &)*/;
+  void activate(CostEvent*);
+ private:
+  CostSimEng* m_simeng;
+  event_t m_event;
+public:compcxx_CSMACAChannel1_10* p_compcxx_parent;};
+
+class compcxx_CSMACAChannel1_10;/*template <class T> */
+#line 267 "./COST/cost.h"
+class compcxx_Timer_6 : public compcxx_component, public TimerBase
+{
+ public:
+  struct event_t : public CostEvent { trigger_t data; };
+  
+
+  compcxx_Timer_6() { m_simeng = CostSimEng::Instance(); m_event.active= false; }
+  inline void Set(trigger_t const &, double );
+  inline void Set(double );
+  inline double GetTime() { return m_event.time; }
+  inline bool Active() { return m_event.active; }
+  inline trigger_t & GetData() { return m_event.data; }
+  inline void SetData(trigger_t const &d) { m_event.data = d; }
+  void Cancel();
+  /*outport void to_component(trigger_t &)*/;
+  void activate(CostEvent*);
+ private:
+  CostSimEng* m_simeng;
+  event_t m_event;
+public:compcxx_CSMACAChannel1_10* p_compcxx_parent;};
+
+
+#line 12 "./Models/CSMACAChannel1.h"
+class compcxx_CSMACAChannel1_10 : public compcxx_component, public TypeII
+{
+	public:
+		void Setup();
+		void Start();
+		void Stop();		
+
+	public:
+		int NumNodes;
+		void NextSlot();
+
+
+	private:
+		int sim_transmissions; 
+		int current_transmissions;
+		double tx_duration, collision_duration;
+		
+	
+	public:
+		
+		class my_CSMACAChannel1_out_slot_f_t:public compcxx_functor<CSMACAChannel1_out_slot_f_t>{ public:void  operator() (SLOT_indicator &slot) { for (unsigned int compcxx_i=1;compcxx_i<c.size();compcxx_i++)(c[compcxx_i]->*f[compcxx_i])(slot); return (c[0]->*f[0])(slot);};};compcxx_array<my_CSMACAChannel1_out_slot_f_t > out_slot;/*outport void out_slot(SLOT_indicator &slot)*/;	
+		/*inport */void in_frame(data_packet &packet);
+
+		
+		compcxx_Timer_6 /*<trigger_t> */slot_time;
+		compcxx_Timer_7 /*<trigger_t> */rx_time;
+
+		/*inport */inline void new_slot(trigger_t& t1);
+		/*inport */inline void reception_time(trigger_t& t2);
+
+		compcxx_CSMACAChannel1_10 () { 
+			slot_time.p_compcxx_parent=this /*connect slot_time.to_component,*/; 
+			rx_time.p_compcxx_parent=this /*connect rx_time.to_component,*/; }
+	
 };
 
 
-#line 288 "./COST/cost.h"
-
-#line 288 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_7/*<trigger_t >*/::Set(trigger_t const & data, double time)
+#line 11 "./Models/Sink.h"
+class compcxx_Sink_13 : public compcxx_component, public TypeII
 {
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.time = time;
-  m_event.data = data;
-  m_event.object = this;
-  m_event.active=true;
-  m_simeng->ScheduleEvent(&m_event);
-}
+	public:
+		
+		/*inport */void in(data_packet &packet);
+
+	public:
+		void Setup();
+		void Start();
+		void Stop();
+
+	public:
+		double system_time;
+		double received_packets;
+		double av_L; 
+
+		
+		double queue_time_total ; 
+		double service_time_total ; 
+		double total_qs_time; 
+
+		int subsample_timer; 
+
+        
+		
+        
+        
+        
+        
+        
+        
+};
 
 
-#line 300 "./COST/cost.h"
+#line 35 "SimpleSim.cc"
+class compcxx_SimplifiedWiFiSim_14 : public compcxx_component, public CostSimEng {
+    public:
+        void Setup(double BGLoad, int LBG, input_arg_t st);
+        void Start();
+        void Stop();
 
-#line 300 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_7/*<trigger_t >*/::Set(double time)
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.time = time;
-  m_event.object = this;
-  m_event.active=true;
-  m_simeng->ScheduleEvent(&m_event);
-}
+    public:
+        compcxx_array<compcxx_AccessPoint_8 >AP;
+        compcxx_array<compcxx_Station_9 >STA;
+        compcxx_CSMACAChannel1_10 channel1;
+        compcxx_array<compcxx_TrafficGeneratorApp_11 >TGApp;
+        compcxx_Network_12 Net;
+        compcxx_Sink_13 sink;
 
-
-#line 311 "./COST/cost.h"
-
-#line 311 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_7/*<trigger_t >*/::Cancel()
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.active = false;
-}
-
-
-#line 319 "./COST/cost.h"
-
-#line 319 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_7/*<trigger_t >*/::activate(CostEvent*e)
-{
-  assert(e==&m_event);
-  m_event.active=false;
-  (p_compcxx_parent->new_packet(m_event.data));
-}
-
-
-
-
-#line 24 "./Models/TrafficGeneratorApp.h"
-
-#line 51 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_13 :: Setup()
-{
-	printf("Traffic Generation APP Setup()\n");
-}
-#line 56 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_13 :: Start()
-{
-	printf("Traffic Generation APP Source Start()\n");
-	
-
-	double epsilon = 0.1* Random(); 
-	tau = (double) L_data/Load;
-	printf("%f\n",tau);
-	inter_packet_timer.Set(SimTime()+Exponential(tau) + epsilon );
-
-}
-#line 68 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_13 :: Stop()
-{
-	printf("------------------------ TGAPP %d Results ------------------------\n",id);
-	printf("GTAPP %d: Number of Generated Packets = %f | Number of Received Packets = %f\n",id,generated_packets,received_packets);
-	printf("GTAPP %d: Load = %f \n",id,generated_packets*L_data/SimTime());
-	printf("GTAPP %d: Received Traffic = %f \n",id,avLreceived/SimTime());
-	printf("Av. Packet Delay = %f\n",avDelay/received_packets);
-
-}
-#line 79 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_13 :: new_packet(trigger_t &)
-{
-	data_packet new_gen_packet;
-	new_gen_packet.L_data = L_data;
-	
-	new_gen_packet.L = 100 + L_data;
-	new_gen_packet.source = node_attached;
-	new_gen_packet.destination = destination;
-	new_gen_packet.source_app = source_app;
-	new_gen_packet.destination_app = destination_app;	
-	new_gen_packet.sent_time = SimTime();
-
-	new_gen_packet.ID_packet = generated_packets; 
-	if(traces_on==1) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] New Packet %.0f generated,to STA %d and app %d\n",SimTime(),id, new_gen_packet.ID_packet , destination,destination_app);
-
-	generated_packets++;
-	(out_f(new_gen_packet));
-
-	if(mode==0) inter_packet_timer.Set(SimTime()+Exponential(tau));	
-	else inter_packet_timer.Set(SimTime()+tau);
-}
-#line 101 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_13 :: in(data_packet &packet)
-{
-	if(traces_on) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f Received from %d \n",SimTime(),id,packet.ID_packet, packet.source);
-	received_packets++;
-	avDelay += SimTime() - packet.sent_time;
-	
-	avLreceived += packet.L_data;
-
-}
-
+        
+        double BGLoad_ = 0;
+};
 
 
 #line 32 "./Models/FIFO.h"
-data_packet compcxx_FIFO_4 :: GetFirstPacket()
+data_packet compcxx_FIFO_5 :: GetFirstPacket()
 {
 	return(m_queue.front());	
 }
 #line 37 "./Models/FIFO.h"
-data_packet compcxx_FIFO_4 :: GetPacketAt(int n)
+data_packet compcxx_FIFO_5 :: GetPacketAt(int n)
 {
 	return(m_queue.at(n));	
 }
 #line 43 "./Models/FIFO.h"
-void compcxx_FIFO_4 :: DelFirstPacket()
+void compcxx_FIFO_5 :: DelFirstPacket()
 {
 	m_queue.pop_front();
 }
 #line 48 "./Models/FIFO.h"
-void compcxx_FIFO_4 :: PutPacket(data_packet &packet)
+void compcxx_FIFO_5 :: PutPacket(data_packet &packet)
 {	
 	m_queue.push_back(packet);
 }
 #line 53 "./Models/FIFO.h"
-void compcxx_FIFO_4 :: PutPacketFront(data_packet &packet)
+void compcxx_FIFO_5 :: PutPacketFront(data_packet &packet)
 {	
 	m_queue.push_front(packet);
 }
 #line 58 "./Models/FIFO.h"
-int compcxx_FIFO_4 :: QueueSize()
+int compcxx_FIFO_5 :: QueueSize()
 {
 	return(m_queue.size());
 }
 #line 63 "./Models/FIFO.h"
-void compcxx_FIFO_4 :: PutPacketIn(data_packet &packet,int i)
+void compcxx_FIFO_5 :: PutPacketIn(data_packet &packet,int i)
 {
 	m_queue.insert(m_queue.begin()+i,packet);
 }
 #line 68 "./Models/FIFO.h"
-void compcxx_FIFO_4 :: DeletePacketIn(int i)
+void compcxx_FIFO_5 :: DeletePacketIn(int i)
 {
 	m_queue.erase(m_queue.begin()+i);
 }
-#line 100 "./Models/AccessPoint.h"
+#line 102 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: Setup()
 {
 	printf("Access Point Setup()\n");
 
 }
-#line 106 "./Models/AccessPoint.h"
+#line 108 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: Start()
 {
 	printf("Access Point Start()\n");
@@ -3449,7 +3476,7 @@ void compcxx_AccessPoint_8 :: Start()
 
 
 }
-#line 135 "./Models/AccessPoint.h"
+#line 137 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: Stop()
 {
 
@@ -3502,7 +3529,7 @@ void compcxx_AccessPoint_8 :: Stop()
     printf("Global CSV file has been created successfully.\n");
 
 }
-#line 189 "./Models/AccessPoint.h"
+#line 191 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_from_network(data_packet &packet)
 {
 
@@ -3531,7 +3558,7 @@ void compcxx_AccessPoint_8 :: in_from_network(data_packet &packet)
 	}
 
 }
-#line 219 "./Models/AccessPoint.h"
+#line 221 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 {
 
@@ -3571,7 +3598,9 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 					
 					
 						
-						PRINTF_COLOR(RED , "%.6f [AP OUT]  	(%d/%d) Packet %.0f to STA %d (Video packet = %d)\n",SimTime(), q, current_ampdu_size, frame_test.ID_packet ,frame_test.destination,frame_test.num_packet_in_the_frame);
+						PRINTF_COLOR(RED , "%.6f [AP OUT W]  (%d/%d) Packet %.0f to STA %d \n",SimTime(), q, current_ampdu_size, frame_test.ID_packet ,frame_test.destination);
+						update_stats_AMPDU(aux_AMPDU_serving, MAC_queue.QueueSize()); 
+						
 						out_to_wireless[frame_test.destination](frame_test); 
 					
 				}
@@ -3697,18 +3726,15 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 			frame.source=id;
 			frame.T = T;
 			frame.T_c = T_c;
-
-
 			frame.T_q = queue_delay_per_packet; 
 
-			
+			PRINTF_COLOR(BG_CYAN ,"%f - AP %d Transmits | Destination %d | AMPDU =  %d | Duration = %f | TotalBits = %f\n",SimTime(),id,current_destination,current_ampdu_size_sta,T,TotalBitsToBeTransmitted);
 			attempts++; 
 			device_has_transmitted=1;
 			transmission_attempts++; 
-			int q_size = MAC_queue.QueueSize(); 
-
-			update_stats_AMPDU(frame, q_size); 
+			aux_AMPDU_serving = frame; 
 			(out_packet_f(frame)); 
+
 
 		}
 		else
@@ -3718,7 +3744,7 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 	}
 
 }
-#line 407 "./Models/AccessPoint.h"
+#line 408 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
 {
 	
@@ -3726,13 +3752,13 @@ void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
 }
 
 
-#line 413 "./Models/AccessPoint.h"
+#line 414 "./Models/AccessPoint.h"
 int compcxx_AccessPoint_8 :: BinaryExponentialBackoff(int attempt)
 {
 	int CW = Random(MIN(pow(2,attempt),pow(2,max_BEB_stages))*(CWmin+1));
 	return CW;	
 }
-#line 419 "./Models/AccessPoint.h"
+#line 420 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
 {	
 
@@ -3845,7 +3871,7 @@ void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmi
 
 	
 }
-#line 533 "./Models/AccessPoint.h"
+#line 534 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
 
     double AMPDU_L = ampdu_packet.L; 
@@ -3854,7 +3880,7 @@ void compcxx_AccessPoint_8::update_stats_AMPDU(data_packet &ampdu_packet, int qu
     double T_q = ampdu_packet.T_q; 
 	double throughput = AMPDU_L / (T_s + T_q); 
 
-	PRINTF_COLOR(RED, "%.6f [DBG STATS]    Packet %.0f from src %d to dest %d | T_s = %.3f, T_q = %.3f (ms), L_AMPDU = %.1f \n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
+	PRINTF_COLOR(BG_RED, "%.6f [DBG STATS] Packet %.0f from src %d to dest %d | T_s = %.3f, T_q = %.3f (ms), L_AMPDU = %.1f \n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
 
 	sinkcsv.timestamp.push_back(now); 
     sinkcsv.L_ampdu.push_back(AMPDU_L);
@@ -3866,209 +3892,6 @@ void compcxx_AccessPoint_8::update_stats_AMPDU(data_packet &ampdu_packet, int qu
 	sinkcsv.throughput.push_back(throughput);
 
 } 
-
-
-
-#line 288 "./COST/cost.h"
-
-#line 288 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_6/*<trigger_t >*/::Set(trigger_t const & data, double time)
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.time = time;
-  m_event.data = data;
-  m_event.object = this;
-  m_event.active=true;
-  m_simeng->ScheduleEvent(&m_event);
-}
-
-
-#line 300 "./COST/cost.h"
-
-#line 300 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_6/*<trigger_t >*/::Set(double time)
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.time = time;
-  m_event.object = this;
-  m_event.active=true;
-  m_simeng->ScheduleEvent(&m_event);
-}
-
-
-#line 311 "./COST/cost.h"
-
-#line 311 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_6/*<trigger_t >*/::Cancel()
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.active = false;
-}
-
-
-#line 319 "./COST/cost.h"
-
-#line 319 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_6/*<trigger_t >*/::activate(CostEvent*e)
-{
-  assert(e==&m_event);
-  m_event.active=false;
-  (p_compcxx_parent->reception_time(m_event.data));
-}
-
-
-
-
-#line 288 "./COST/cost.h"
-
-#line 288 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_5/*<trigger_t >*/::Set(trigger_t const & data, double time)
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.time = time;
-  m_event.data = data;
-  m_event.object = this;
-  m_event.active=true;
-  m_simeng->ScheduleEvent(&m_event);
-}
-
-
-#line 300 "./COST/cost.h"
-
-#line 300 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_5/*<trigger_t >*/::Set(double time)
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.time = time;
-  m_event.object = this;
-  m_event.active=true;
-  m_simeng->ScheduleEvent(&m_event);
-}
-
-
-#line 311 "./COST/cost.h"
-
-#line 311 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_5/*<trigger_t >*/::Cancel()
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.active = false;
-}
-
-
-#line 319 "./COST/cost.h"
-
-#line 319 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_5/*<trigger_t >*/::activate(CostEvent*e)
-{
-  assert(e==&m_event);
-  m_event.active=false;
-  (p_compcxx_parent->new_slot(m_event.data));
-}
-
-
-
-
-#line 39 "./Models/CSMACAChannel1.h"
-
-#line 40 "./Models/CSMACAChannel1.h"
-
-#line 48 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: Setup()
-{
-	printf("CSMACAChannel1 Setup()\n");
-}
-#line 53 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: Start()
-{
-	printf("CSMACAChannel1 Start()\n");
-
-	current_transmissions = 0;
-	sim_transmissions = 0;
-	tx_duration = 0;
-	slot_time.Set(SimTime());	
-}
-#line 63 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: Stop()
-{
-	printf("CSMACAChannel1 Stop()\n");
-
-}
-#line 69 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: new_slot(trigger_t &)
-{
-	SLOT_indicator slot;
-
-	slot.status=sim_transmissions;
-
-	
-
-	sim_transmissions = 0; 
-	current_transmissions = 0;	
-	tx_duration=0;
-
-	for(int n=0;n<NumNodes;n++) out_slot[n](slot);
-
-	rx_time.Set(SimTime());		
-}
-
-
-#line 86 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: reception_time(trigger_t &)
-{
-	
-	if(sim_transmissions==0) slot_time.Set(SimTime()+SLOT);
-	if(sim_transmissions == 1) slot_time.Set(SimTime()+tx_duration);
-	if(sim_transmissions > 1) slot_time.Set(SimTime()+collision_duration);
-}
-
-
-
-#line 95 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: in_frame(data_packet &packet)
-{
-	
-	if(packet.AMPDU_size > current_transmissions) current_transmissions = packet.AMPDU_size;
-	
-	sim_transmissions++;
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-	if(tx_duration < packet.T) 
-	{	
-		tx_duration = packet.T;
-	}
-	
-	collision_duration = packet.T_c;	
-	
-
-}
 
 
 
@@ -4277,54 +4100,6 @@ void compcxx_Network_12 :: end_packet_transmission_UL(trigger_t &)
 		transmission_time_UL.Set(SimTime()+(tx_packet.L/Rate));
 	}
 
-
-}
-#line 44 "./Models/Sink.h"
-void compcxx_Sink_11 :: Setup()
-{
-
-}
-#line 49 "./Models/Sink.h"
-void compcxx_Sink_11 :: Start()
-{
-	system_time = 0;
-	received_packets = 0;
-	subsample_timer = 0; 
-
-	queue_time_total = 0; 
-	service_time_total = 0; 
-	total_qs_time = 0. ; 
-}
-#line 60 "./Models/Sink.h"
-void compcxx_Sink_11 :: Stop()
-{	
-	
-	
-	
-
-	
-        
-}
-#line 97 "./Models/Sink.h"
-void compcxx_Sink_11 :: in(data_packet &ampdu_packet) 
-{	
-	PRINTF_COLOR(YELLOW, "%.6f [DBG SINK] AMPDU %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source);
-
-	
-
-	
-	
-	
-
-	
-	
-	
-	
-
-	
-	
-	
-    
 
 }
 #line 90 "./Models/Station.h"
@@ -4711,184 +4486,534 @@ double compcxx_Station_9 :: FrameTransmissionDelay(double TotalBitsToBeTransmitt
 
 	return T;
 }
-#line 43 "SimpleSim.cc"
-void compcxx_SimpleSim_14::Setup(double STime, int seed, double BW_STA ) {
-    printf("---- Simplified Wi-Fi sim : Setup ----\n");
-    
-    ap.SetSize(1);
-    sta.SetSize(2);
-    TGApp.SetSize(4);  
+#line 288 "./COST/cost.h"
 
-    
-    ap[0].id = 0;
-    ap[0].x = 0;
-    ap[0].y = 0;
-    ap[0].z = 2;
-    ap[0].NumberStations = 2;
-    ap[0].Pt = 20;
-    ap[0].qmin = 1;
-    ap[0].QL = 10000;
-    ap[0].MAX_AMPDU = 64;
-    ap[0].CWmin = 15;
-    ap[0].max_BEB_stages = 6;
-    ap[0].pe = 0;
-    ap[0].channel_width = 80;
-    ap[0].SU_spatial_streams = 2;
-    ap[0].out_to_wireless.SetSize(2);
-
-    x_AP[0] = ap[0].x;
-    y_AP[0] = ap[0].y;
-    z_AP[0] = ap[0].z;
-
-    
-    
-    for(int n = 0; n < 2; n++) {
-        TGApp[n].Load = BW_STA;  
-        TGApp[n].L_data = 12000; 
-        TGApp[n].id = n;
-        TGApp[n].node_attached = 0;  
-        TGApp[n].destination = n;    
-        TGApp[n].mode = 0;
-        TGApp[n].source_app = n;
-        TGApp[n].destination_app = n;
-    }
-
-    
-    for(int n = 0; n < 2; n++) {
-        TGApp[n+2].Load = BW_STA;  
-        TGApp[n+2].L_data = 12000;
-        TGApp[n+2].id = n+2;
-        TGApp[n+2].node_attached = n;  
-        TGApp[n+2].destination = 0;    
-        TGApp[n+2].mode = 0;
-        TGApp[n+2].source_app = n;
-        TGApp[n+2].destination_app = n;
-    }
-
-    
-    double STA_X[2] = {1.0, 30.0};
-    
-    for(int n = 0; n < 2; n++) {
-        sta[n].id = n;
-        sta[n].x = STA_X[n];
-        sta[n].y = 0;
-        sta[n].z = 2;
-        sta[n].NumberStations = 1;
-        sta[n].Pt = 20;
-        sta[n].qmin = 1;
-        sta[n].QL = 150;
-        sta[n].MAX_AMPDU = 64;
-        sta[n].CWmin = 15;
-        sta[n].max_BEB_stages = 6;
-        sta[n].pe = 0;
-        sta[n].channel_width = 80;
-        sta[n].SU_spatial_streams = 2;
-        sta[n].out_to_wireless.SetSize(1);
-
-        x_[n] = sta[n].x;
-        y_[n] = sta[n].y;
-        z_[n] = sta[n].z;
-    }
-
-    
-    net.Rate = 1000E6;
-    net.out_to_APs.SetSize(1);
-    net.out_to_apps.SetSize(2);  
-
-    
-    channel.NumNodes = 3;  
-    channel.out_slot.SetSize(3);
-
-    
-    for(int n = 0; n < 2; n++) {
-        TGApp[n].out_f.Connect(net,(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Network_12::in_from_apps) /*connect TGApp[n].out, net.in_from_apps*/;
-        net.out_to_apps[n].Connect(TGApp[n],(compcxx_component::Network_out_to_apps_f_t)&compcxx_TrafficGeneratorApp_13::in) /*connect net.out_to_apps[n], TGApp[n].in*/;
-    }
-
-    
-    net.out_to_APs[0].Connect(ap[0],(compcxx_component::Network_out_to_APs_f_t)&compcxx_AccessPoint_8::in_from_network) /*connect net.out_to_APs[0], ap[0].in_from_network*/;
-    ap[0].out_to_network_f.Connect(net,(compcxx_component::AccessPoint_out_to_network_f_t)&compcxx_Network_12::in_from_APs) /*connect ap[0].out_to_network, net.in_from_APs*/;
-
-    
-    for(int n = 0; n < 2; n++) {
-        ap[0].out_to_wireless[n].Connect(sta[n],(compcxx_component::AccessPoint_out_to_wireless_f_t)&compcxx_Station_9::in_from_wireless) /*connect ap[0].out_to_wireless[n], sta[n].in_from_wireless*/;
-        sta[n].out_to_wireless[0].Connect(ap[0],(compcxx_component::Station_out_to_wireless_f_t)&compcxx_AccessPoint_8::in_from_wireless) /*connect sta[n].out_to_wireless[0], ap[0].in_from_wireless*/;
-    }
-
-    
-    for(int n = 0; n < 2; n++) {
-        sta[n].out_to_app_f.Connect(TGApp[n+2],(compcxx_component::Station_out_to_app_f_t)&compcxx_TrafficGeneratorApp_13::in) /*connect sta[n].out_to_app, TGApp[n+2].in*/;
-        TGApp[n+2].out_f.Connect(sta[n],(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Station_9::in_from_app) /*connect TGApp[n+2].out, sta[n].in_from_app*/;
-    }
-
-    
-    ap[0].out_packet_f.Connect(channel,(compcxx_component::AccessPoint_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect ap[0].out_packet, channel.in_frame*/;
-    channel.out_slot[0].Connect(ap[0],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_AccessPoint_8::in_slot) /*connect channel.out_slot[0], ap[0].in_slot*/;
-
-    for(int n = 0; n < 2; n++) {
-        sta[n].out_packet_f.Connect(channel,(compcxx_component::Station_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect sta[n].out_packet, channel.in_frame*/;
-        channel.out_slot[n+1].Connect(sta[n],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_Station_9::in_slot) /*connect channel.out_slot[n+1], sta[n].in_slot*/;
-    }
-
-    
-    ap[0].out_to_network_f.Connect(sink,(compcxx_component::AccessPoint_out_to_network_f_t)&compcxx_Sink_11::in) /*connect ap[0].out_to_network, sink.in*/;
-
-    printf("----- Simplified Wi-Fi Sim Setup completed -----\n");
+#line 288 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_4/*<trigger_t >*/::Set(trigger_t const & data, double time)
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.time = time;
+  m_event.data = data;
+  m_event.object = this;
+  m_event.active=true;
+  m_simeng->ScheduleEvent(&m_event);
 }
 
 
-#line 167 "SimpleSim.cc"
-void compcxx_SimpleSim_14::Start() {
+#line 300 "./COST/cost.h"
+
+#line 300 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_4/*<trigger_t >*/::Set(double time)
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.time = time;
+  m_event.object = this;
+  m_event.active=true;
+  m_simeng->ScheduleEvent(&m_event);
+}
+
+
+#line 311 "./COST/cost.h"
+
+#line 311 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_4/*<trigger_t >*/::Cancel()
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.active = false;
+}
+
+
+#line 319 "./COST/cost.h"
+
+#line 319 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_4/*<trigger_t >*/::activate(CostEvent*e)
+{
+  assert(e==&m_event);
+  m_event.active=false;
+  (p_compcxx_parent->new_packet(m_event.data));
+}
+
+
+
+
+#line 24 "./Models/TrafficGeneratorApp.h"
+
+#line 51 "./Models/TrafficGeneratorApp.h"
+void compcxx_TrafficGeneratorApp_11 :: Setup()
+{
+	printf("Traffic Generation APP Setup()\n");
+}
+#line 56 "./Models/TrafficGeneratorApp.h"
+void compcxx_TrafficGeneratorApp_11 :: Start()
+{
+	printf("Traffic Generation APP Source Start()\n");
+	
+
+	double epsilon = 0.1* Random(); 
+	tau = (double) L_data/Load;
+	printf("%f\n",tau);
+	inter_packet_timer.Set(SimTime()+Exponential(tau) + epsilon );
+
+}
+#line 68 "./Models/TrafficGeneratorApp.h"
+void compcxx_TrafficGeneratorApp_11 :: Stop()
+{
+	printf("------------------------ TGAPP %d Results ------------------------\n",id);
+	printf("GTAPP %d: Number of Generated Packets = %f | Number of Received Packets = %f\n",id,generated_packets,received_packets);
+	printf("GTAPP %d: Load = %f \n",id,generated_packets*L_data/SimTime());
+	printf("GTAPP %d: Received Traffic = %f \n",id,avLreceived/SimTime());
+	printf("Av. Packet Delay = %f\n",avDelay/received_packets);
+
+}
+#line 79 "./Models/TrafficGeneratorApp.h"
+void compcxx_TrafficGeneratorApp_11 :: new_packet(trigger_t &)
+{
+	data_packet new_gen_packet;
+	
+	
+	
+	
+	
+	
+	new_gen_packet.L_data = MAX(1, Exponential(L_data) ) ;
+	new_gen_packet.L = 100 + new_gen_packet.L_data;
+	
+	new_gen_packet.source = node_attached;
+	new_gen_packet.destination = destination;
+	new_gen_packet.source_app = source_app;
+	new_gen_packet.destination_app = destination_app;	
+	new_gen_packet.sent_time = SimTime();
+
+	new_gen_packet.ID_packet = generated_packets; 
+	if(traces_on==1) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] New Packet %.0f generated,to STA %d and app %d\n",SimTime(),id, new_gen_packet.ID_packet , destination,destination_app);
+
+	generated_packets++;
+	(out_f(new_gen_packet));
+
+	if(mode==0) inter_packet_timer.Set(SimTime()+Exponential(tau));	
+	else inter_packet_timer.Set(SimTime()+tau);
+}
+#line 107 "./Models/TrafficGeneratorApp.h"
+void compcxx_TrafficGeneratorApp_11 :: in(data_packet &packet)
+{
+	if(traces_on) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f Received from %d \n",SimTime(),id,packet.ID_packet, packet.source);
+	received_packets++;
+	avDelay += SimTime() - packet.sent_time;
+	
+	avLreceived += packet.L_data;
+
+}
+
+
+
+#line 288 "./COST/cost.h"
+
+#line 288 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_7/*<trigger_t >*/::Set(trigger_t const & data, double time)
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.time = time;
+  m_event.data = data;
+  m_event.object = this;
+  m_event.active=true;
+  m_simeng->ScheduleEvent(&m_event);
+}
+
+
+#line 300 "./COST/cost.h"
+
+#line 300 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_7/*<trigger_t >*/::Set(double time)
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.time = time;
+  m_event.object = this;
+  m_event.active=true;
+  m_simeng->ScheduleEvent(&m_event);
+}
+
+
+#line 311 "./COST/cost.h"
+
+#line 311 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_7/*<trigger_t >*/::Cancel()
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.active = false;
+}
+
+
+#line 319 "./COST/cost.h"
+
+#line 319 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_7/*<trigger_t >*/::activate(CostEvent*e)
+{
+  assert(e==&m_event);
+  m_event.active=false;
+  (p_compcxx_parent->reception_time(m_event.data));
+}
+
+
+
+
+#line 288 "./COST/cost.h"
+
+#line 288 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_6/*<trigger_t >*/::Set(trigger_t const & data, double time)
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.time = time;
+  m_event.data = data;
+  m_event.object = this;
+  m_event.active=true;
+  m_simeng->ScheduleEvent(&m_event);
+}
+
+
+#line 300 "./COST/cost.h"
+
+#line 300 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_6/*<trigger_t >*/::Set(double time)
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.time = time;
+  m_event.object = this;
+  m_event.active=true;
+  m_simeng->ScheduleEvent(&m_event);
+}
+
+
+#line 311 "./COST/cost.h"
+
+#line 311 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_6/*<trigger_t >*/::Cancel()
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.active = false;
+}
+
+
+#line 319 "./COST/cost.h"
+
+#line 319 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_6/*<trigger_t >*/::activate(CostEvent*e)
+{
+  assert(e==&m_event);
+  m_event.active=false;
+  (p_compcxx_parent->new_slot(m_event.data));
+}
+
+
+
+
+#line 39 "./Models/CSMACAChannel1.h"
+
+#line 40 "./Models/CSMACAChannel1.h"
+
+#line 48 "./Models/CSMACAChannel1.h"
+void compcxx_CSMACAChannel1_10 :: Setup()
+{
+	printf("CSMACAChannel1 Setup()\n");
+}
+#line 53 "./Models/CSMACAChannel1.h"
+void compcxx_CSMACAChannel1_10 :: Start()
+{
+	printf("CSMACAChannel1 Start()\n");
+
+	current_transmissions = 0;
+	sim_transmissions = 0;
+	tx_duration = 0;
+	slot_time.Set(SimTime());	
+}
+#line 63 "./Models/CSMACAChannel1.h"
+void compcxx_CSMACAChannel1_10 :: Stop()
+{
+	printf("CSMACAChannel1 Stop()\n");
+
+}
+#line 69 "./Models/CSMACAChannel1.h"
+void compcxx_CSMACAChannel1_10 :: new_slot(trigger_t &)
+{
+	SLOT_indicator slot;
+
+	slot.status=sim_transmissions;
+
+	
+
+	sim_transmissions = 0; 
+	current_transmissions = 0;	
+	tx_duration=0;
+
+	for(int n=0;n<NumNodes;n++) out_slot[n](slot);
+
+	rx_time.Set(SimTime());		
+}
+
+
+#line 86 "./Models/CSMACAChannel1.h"
+void compcxx_CSMACAChannel1_10 :: reception_time(trigger_t &)
+{
+	
+	if(sim_transmissions==0) slot_time.Set(SimTime()+SLOT);
+	if(sim_transmissions == 1) slot_time.Set(SimTime()+tx_duration);
+	if(sim_transmissions > 1) slot_time.Set(SimTime()+collision_duration);
+}
+
+
+
+#line 95 "./Models/CSMACAChannel1.h"
+void compcxx_CSMACAChannel1_10 :: in_frame(data_packet &packet)
+{
+	
+	if(packet.AMPDU_size > current_transmissions) current_transmissions = packet.AMPDU_size;
+	
+	sim_transmissions++;
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+	if(tx_duration < packet.T) 
+	{	
+		tx_duration = packet.T;
+	}
+	
+	collision_duration = packet.T_c;	
+	
+
+}
+
+
+
+#line 44 "./Models/Sink.h"
+void compcxx_Sink_13 :: Setup()
+{
+
+}
+#line 49 "./Models/Sink.h"
+void compcxx_Sink_13 :: Start()
+{
+	system_time = 0;
+	received_packets = 0;
+	subsample_timer = 0; 
+
+	queue_time_total = 0; 
+	service_time_total = 0; 
+	total_qs_time = 0. ; 
+}
+#line 60 "./Models/Sink.h"
+void compcxx_Sink_13 :: Stop()
+{	
+	
+	
+	
+
+	
+        
+}
+#line 97 "./Models/Sink.h"
+void compcxx_Sink_13 :: in(data_packet &ampdu_packet) 
+{	
+	PRINTF_COLOR(YELLOW,"%.6f [DBG SINK] AMPDU %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source);
+
+	
+
+	
+	
+	
+
+	
+	
+	
+	
+
+	
+	
+	
+    
+
+}
+#line 53 "SimpleSim.cc"
+void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st) {
+    BGLoad_ = BGLoad;
+    printf("---- Simplified Wi-Fi sim : Setup ----\n");
+
+    
+    
+    TGApp.SetSize(1);
+    TGApp[0].Load = BGLoad;
+    TGApp[0].L_data = LBG;
+    TGApp[0].id = 0;
+    TGApp[0].node_attached = 0;
+    TGApp[0].destination = 0;  
+    TGApp[0].mode = 0;
+    TGApp[0].source_app = 0;
+    TGApp[0].destination_app = 0;
+
+    
+    AP.SetSize(1);
+    AP[0].id = 0;
+    AP[0].x = 0;
+    AP[0].y = 0;
+    AP[0].z = 2;
+    AP[0].NumberStations = 1;
+    AP[0].Pt = 20;  
+    AP[0].qmin = 1;
+    AP[0].QL = 10000;
+    AP[0].MAX_AMPDU = 128;
+    AP[0].CWmin = 15;
+    AP[0].max_BEB_stages = 6;
+    AP[0].pe = 0;
+    AP[0].channel_width = 80;  
+    AP[0].SU_spatial_streams = 2;
+    AP[0].out_to_wireless.SetSize(1);
+    
+    x_AP[0] = AP[0].x;
+    y_AP[0] = AP[0].y;
+    z_AP[0] = AP[0].z;
+
+    
+    STA.SetSize(1);
+    STA[0].id = 0;
+    STA[0].x = 30;  
+    STA[0].y = 0;
+    STA[0].z = 2;
+    STA[0].NumberStations = 1;
+    STA[0].Pt = 20;  
+    STA[0].qmin = 1;
+    STA[0].QL = 150;
+    STA[0].MAX_AMPDU = 64;
+    STA[0].CWmin = 15;
+    STA[0].max_BEB_stages = 6;
+    STA[0].pe = 0;
+    STA[0].channel_width = 80;  
+    STA[0].SU_spatial_streams = 2;
+    STA[0].out_to_wireless.SetSize(1);
+
+    x_[0] = STA[0].x;
+    y_[0] = STA[0].y;
+    z_[0] = STA[0].z;
+
+    
+    Net.Rate = 1000E6;
+    Net.out_to_apps.SetSize(1);
+    Net.out_to_APs.SetSize(1);
+
+    
+    channel1.NumNodes = 2;  
+    channel1.out_slot.SetSize(2);
+
+    
+    
+    
+    TGApp[0].out_f.Connect(Net,(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Network_12::in_from_apps) /*connect TGApp[0].out, Net.in_from_apps*/;
+    Net.out_to_apps[0].Connect(TGApp[0],(compcxx_component::Network_out_to_apps_f_t)&compcxx_TrafficGeneratorApp_11::in) /*connect Net.out_to_apps[0], TGApp[0].in*/;
+
+    
+    Net.out_to_APs[0].Connect(AP[0],(compcxx_component::Network_out_to_APs_f_t)&compcxx_AccessPoint_8::in_from_network) /*connect Net.out_to_APs[0], AP[0].in_from_network*/;
+    AP[0].out_to_network_f.Connect(Net,(compcxx_component::AccessPoint_out_to_network_f_t)&compcxx_Network_12::in_from_APs) /*connect AP[0].out_to_network, Net.in_from_APs*/;
+
+    
+    AP[0].out_to_wireless[0].Connect(STA[0],(compcxx_component::AccessPoint_out_to_wireless_f_t)&compcxx_Station_9::in_from_wireless) /*connect AP[0].out_to_wireless[0], STA[0].in_from_wireless*/;
+    STA[0].out_to_wireless[0].Connect(AP[0],(compcxx_component::Station_out_to_wireless_f_t)&compcxx_AccessPoint_8::in_from_wireless) /*connect STA[0].out_to_wireless[0], AP[0].in_from_wireless*/;
+
+    
+    STA[0].out_to_app_f.Connect(sink,(compcxx_component::Station_out_to_app_f_t)&compcxx_Sink_13::in) /*connect STA[0].out_to_app, sink.in*/;
+
+    
+    AP[0].out_packet_f.Connect(channel1,(compcxx_component::AccessPoint_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect AP[0].out_packet, channel1.in_frame*/;
+    channel1.out_slot[0].Connect(AP[0],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_AccessPoint_8::in_slot) /*connect channel1.out_slot[0], AP[0].in_slot*/;
+    STA[0].out_packet_f.Connect(channel1,(compcxx_component::Station_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect STA[0].out_packet, channel1.in_frame*/;
+    channel1.out_slot[1].Connect(STA[0],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_Station_9::in_slot) /*connect channel1.out_slot[1], STA[0].in_slot*/;
+
+    printf("----- Simplified Wi-FiSim Setup completed -----\n");
+}
+
+
+#line 148 "SimpleSim.cc"
+void compcxx_SimplifiedWiFiSim_14::Start() {
     printf("Start\n");
 }
 
 
-#line 171 "SimpleSim.cc"
-void compcxx_SimpleSim_14::Stop() {
+#line 152 "SimpleSim.cc"
+void compcxx_SimplifiedWiFiSim_14::Stop() {
     printf("########################################################################\n");
-    printf("------------------------ Simplified Wi-Fi Results -----------------------\n");
-    printf("AP: RSSI = %f | Packet AP Delay = %f\n", RSSI[0], ap[0].queueing_service_delay/ap[0].successful);
-    printf("Av A-MPDU size = %f | Tx prob = %f | Coll prob = %f\n", 
-           ap[0].avAMPDU_size/ap[0].successful,
-           ap[0].transmission_attempts/ap[0].slots,
-           ap[0].collisions/ap[0].transmission_attempts);
-    printf("########################################################################\n");
+    printf("------------------------ Simplified Wi-Fisim Results ----------------------------\n");
+    printf("AP: RSSI = %f | Packet AP Delay = %f\n", RSSI[0], AP[0].queueing_service_delay/AP[0].successful);
+    printf("Av A-MPDU size = %f | Tx prob = %f | Coll prob = %f | Buffer size = %f\n",
+           AP[0].avAMPDU_size/AP[0].successful,
+           AP[0].transmission_attempts/AP[0].slots,
+           AP[0].collisions/AP[0].transmission_attempts,
+           AP[0].queue_occupation/AP[0].arrived);
 
-    
     FILE *results;
-    results = fopen("Results/SimpleSim.txt", "at");
-    fprintf(results, "%f %f %f %f %f\n",
-            ap[0].queueing_service_delay/ap[0].successful,
-            ap[0].avAMPDU_size/ap[0].successful,
-            ap[0].transmission_attempts/ap[0].slots,
-            ap[0].collisions/ap[0].transmission_attempts,
+    results = fopen("Results/SimplifiedWiFiSim.txt", "at");
+    fprintf(results, "%f %f %f %f %f %f %f\n",
+            BGLoad_,
+            AP[0].queueing_service_delay/AP[0].successful,
+            AP[0].avAMPDU_size/AP[0].successful,
+            AP[0].transmission_attempts/AP[0].slots,
+            AP[0].collisions/AP[0].transmission_attempts,
+            AP[0].queue_occupation/AP[0].arrived,
             RSSI[0]);
     fclose(results);
 }
 
 
-#line 193 "SimpleSim.cc"
+#line 175 "SimpleSim.cc"
 int main(int argc, char *argv[]) {
-    if(argc < 3) {
-        printf("Usage: %s <seed> <simulation_time>\n", argv[0]);
-        return 1;
-    }
-
     int seed = atoi(argv[1]);
     double STime = atof(argv[2]);
-    double bw_sta = atof(argv[3]); 
+    double BGLoad = atof(argv[3]);
+    int LBG = atoi(argv[4]);
 
-    printf("---- Simplified WiFi Simulation ----\n");
+    st_input_args.seed = seed;
+    st_input_args.STime = STime;
+    st_input_args.BGLoad = BGLoad;
+
+    printf("---- Simplified WiFiSim ----\n");
     printf("Seed = %d | SimTime = %f\n", seed, STime);
-    printf("Station distances: 1m and 30m\n");
+    printf("Input Parameters: BGLoad = %f | LBG = %d\n", BGLoad, LBG);
 
-    compcxx_SimpleSim_14 az;
-    az.Seed = seed;
-    az.StopTime(STime);
-    az.Setup(STime, seed, bw_sta);
+    compcxx_SimplifiedWiFiSim_14 sim;
+    sim.Seed = seed;
+    sim.StopTime(STime);
+    sim.Setup(BGLoad, LBG, st_input_args);
 
     printf("Run\n");
-    az.Run();
+    sim.Run();
 
     return 0;
 }

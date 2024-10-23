@@ -96,7 +96,7 @@ void Sink :: Stop()
 
 void Sink :: in(data_packet &ampdu_packet) // AMPDU version
 {	
-	PRINTF_COLOR(YELLOW, "%.6f [DBG SINK] AMPDU %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source, ampdu_packet.);
+	PRINTF_COLOR(YELLOW,"%.6f [DBG SINK] AMPDU %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source);
 
 	// for (const auto& packet : ampdu_packet.mpdu_packets) { // iterate through each received packet! 
 

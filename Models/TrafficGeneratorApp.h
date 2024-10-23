@@ -79,9 +79,15 @@ void TrafficGeneratorApp :: Stop()
 void TrafficGeneratorApp :: new_packet(trigger_t &)
 {
 	data_packet new_gen_packet;
-	new_gen_packet.L_data = L_data;
-	//new_gen_packet.L_data = 100;
-	new_gen_packet.L = 100 + L_data;
+	
+	
+	// deterministic size
+	// new_gen_packet.L_data = L_data;
+	// new_gen_packet.L = 100 + L_data;
+	
+	new_gen_packet.L_data = MAX(1, Exponential(L_data) ) ;
+	new_gen_packet.L = 100 + new_gen_packet.L_data;
+	
 	new_gen_packet.source = node_attached;
 	new_gen_packet.destination = destination;
 	new_gen_packet.source_app = source_app;

@@ -4,5 +4,6 @@ XRWiFi_P1
 XRWiFi_P1.cxx
 *.zip
 *.txt
-
+*.ans
+*.cxx
 

@@ -11,14 +11,14 @@ template <class T> class compcxx_functor {public:
 void Connect(compcxx_component&_c, T _f){ c.push_back(&_c); f.push_back(_f); } 
 protected: std::vector<compcxx_component*>c; std::vector<T> f; }; 
 class compcxx_component { public: 
-typedef void  (compcxx_component::*TrafficGeneratorApp_out_f_t)(data_packet &packet);
 typedef void  (compcxx_component::*AccessPoint_out_to_wireless_f_t)(data_packet &packet);
 typedef void  (compcxx_component::*AccessPoint_out_to_network_f_t)(data_packet &packet);
 typedef void  (compcxx_component::*AccessPoint_out_packet_f_t)(data_packet &frame);
-typedef void  (compcxx_component::*CSMACAChannel1_out_slot_f_t)(SLOT_indicator &slot);
 typedef void  (compcxx_component::*Network_out_to_apps_f_t)(data_packet &packet);
 typedef void  (compcxx_component::*Network_out_to_APs_f_t)(data_packet &packet);
 typedef void  (compcxx_component::*Station_out_to_wireless_f_t)(data_packet &packet);
 typedef void  (compcxx_component::*Station_out_to_app_f_t)(data_packet &packet);
 typedef void  (compcxx_component::*Station_out_packet_f_t)(data_packet &frame);
+typedef void  (compcxx_component::*TrafficGeneratorApp_out_f_t)(data_packet &packet);
+typedef void  (compcxx_component::*CSMACAChannel1_out_slot_f_t)(SLOT_indicator &slot);
 };

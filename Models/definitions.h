@@ -30,7 +30,24 @@
 #define MAGENTA "\033[35m"    // Magenta (closer to red)
 #define RED     "\033[31m"    // Red
 #define YELLOW 	"\033[33m]"
+// Light colors
+#define LIGHT_RED    "\033[91m"     // Light Red
+#define LIGHT_GREEN  "\033[92m"     // Light Green
+#define LIGHT_YELLOW "\033[93m"     // Light Yellow
+#define LIGHT_BLUE   "\033[94m"     // Light Blue
+#define LIGHT_MAGENTA "\033[95m"    // Light Magenta (purple hue)
+#define LIGHT_CYAN   "\033[96m"     // Light Cyan
+#define LIGHT_WHITE  "\033[97m"     // Light White (bright white)
 
+// Background colors
+#define BG_BLACK     "\033[40m"     // Black background
+#define BG_RED       "\033[41m"     // Red background
+#define BG_GREEN     "\033[42m"     // Green background
+#define BG_YELLOW    "\033[43m"     // Yellow background
+#define BG_BLUE      "\033[44m"     // Blue background
+#define BG_MAGENTA   "\033[45m"     // Magenta background
+#define BG_CYAN      "\033[46m"     // Cyan background
+#define BG_WHITE     "\033[47m"     // White background
 
 
 #define DEBUG_PRINTS 1 // to set up fancy output packet per packet

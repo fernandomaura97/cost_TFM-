@@ -3,7 +3,7 @@
 # Simulation parameters
 seed=1
 simTime=20
-bandwidth_STA=12E6
+bandwidth_STA=12E4
 clear
 
 # Function to show ellipsis while compiling
@@ -36,4 +36,4 @@ echo -e "\n\n********************************** COST results *******************
 # ./MM1K $seed $simTime $bandwidth_STA $bandwidth_departures $K_system $L_packets $PRINT_PROBABILITIES_SS $N_STAs $distance_STAs $SIMPLE_TX_MODEL $DBG_DETERMINISTIC_LOC | more
 
 rm out_log.ans
-./SimpleSim $seed $simTime $bandwidth_STA | tee -a out_log.ans # FOR LOGGING
+./SimpleSim $seed $simTime $bandwidth_STA 12000 | tee -a out_log.ans # FOR LOGGING

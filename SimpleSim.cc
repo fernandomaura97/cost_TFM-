@@ -3,214 +3,196 @@
 #include <time.h>
 #include <math.h>
 #include <iostream>
+
 #include "./COST/cost.h"
 #include <deque>
-
 #include "./Models/definitions.h"
 #include "./Models/Network.h"
+#include "./Models/TrafficGeneratorApp.h"
 #include "./Models/AccessPoint.h"
 #include "./Models/Station.h"
 #include "./Models/CSMACAChannel1.h"
 #include "./Models/Sink.h"
-#include "./Models/TrafficGeneratorApp.h"
 
 double x_AP[1];
 double y_AP[1];
 double z_AP[1];
 
-double x_[2];
-double y_[2];
-double z_[2];
+double x_[1];
+double y_[1];
+double z_[1];
 
-int traces_on = 1;
-double RSSI[2];
+double RSSI[1];
 
-component SimpleSim : public CostSimEng {
+struct input_arg_t {
+    int seed;
+    double STime;
+    double BGLoad;
+} st_input_args;
+
+bool traces_on = true; 
+
+component SimplifiedWiFiSim : public CostSimEng {
     public:
-        void Setup(double STime, int seed, double BW_STA);
-        void Start();        
+        void Setup(double BGLoad, int LBG, input_arg_t st);
+        void Start();
         void Stop();
-    
+
     public:
-        AccessPoint [] ap;
-        Station [] sta;
-        CSMACAChannel1 channel;
+        AccessPoint[] AP;
+        Station[] STA;
+        CSMACAChannel1 channel1;
+        TrafficGeneratorApp[] TGApp;
+        Network Net;
         Sink sink;
-        Network net;
-        TrafficGeneratorApp [] TGApp;  // Added traffic generators
+
+        // Input parameters
+        double BGLoad_ = 0;
 };
 
-void SimpleSim::Setup(double STime, int seed, double BW_STA ) {
+void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st) {
+    BGLoad_ = BGLoad;
     printf("---- Simplified Wi-Fi sim : Setup ----\n");
+
     
-    ap.SetSize(1);
-    sta.SetSize(2);
-    TGApp.SetSize(4);  // 2 for uplink, 2 for downlink
+    // Single background traffic source
+    TGApp.SetSize(1);
+    TGApp[0].Load = BGLoad;
+    TGApp[0].L_data = LBG;
+    TGApp[0].id = 0;
+    TGApp[0].node_attached = 0;
+    TGApp[0].destination = 0;  // To AP
+    TGApp[0].mode = 0;
+    TGApp[0].source_app = 0;
+    TGApp[0].destination_app = 0;
 
-    // Configure AP
-    ap[0].id = 0;
-    ap[0].x = 0;
-    ap[0].y = 0;
-    ap[0].z = 2;
-    ap[0].NumberStations = 2;
-    ap[0].Pt = 20;
-    ap[0].qmin = 1;
-    ap[0].QL = 10000;
-    ap[0].MAX_AMPDU = 64;
-    ap[0].CWmin = 15;
-    ap[0].max_BEB_stages = 6;
-    ap[0].pe = 0;
-    ap[0].channel_width = 80;
-    ap[0].SU_spatial_streams = 2;
-    ap[0].out_to_wireless.SetSize(2);
-
-    x_AP[0] = ap[0].x;
-    y_AP[0] = ap[0].y;
-    z_AP[0] = ap[0].z;
-
-    // Configure Traffic Generators
-    // Downlink traffic (AP to STAs)
-    for(int n = 0; n < 2; n++) {
-        TGApp[n].Load = BW_STA;  // 1 Mbps load
-        TGApp[n].L_data = 12000; 
-        TGApp[n].id = n;
-        TGApp[n].node_attached = 0;  // attached to AP
-        TGApp[n].destination = n;    // to respective STA
-        TGApp[n].mode = 0;
-        TGApp[n].source_app = n;
-        TGApp[n].destination_app = n;
-    }
-
-    // Uplink traffic (STAs to AP)
-    for(int n = 0; n < 2; n++) {
-        TGApp[n+2].Load = BW_STA;  // 1 Mbps load
-        TGApp[n+2].L_data = 12000;
-        TGApp[n+2].id = n+2;
-        TGApp[n+2].node_attached = n;  // attached to respective STA
-        TGApp[n+2].destination = 0;    // to AP
-        TGApp[n+2].mode = 0;
-        TGApp[n+2].source_app = n;
-        TGApp[n+2].destination_app = n;
-    }
-
-    // Configure Stations
-    double STA_X[2] = {1.0, 30.0};
+    // Single AP setup
+    AP.SetSize(1);
+    AP[0].id = 0;
+    AP[0].x = 0;
+    AP[0].y = 0;
+    AP[0].z = 2;
+    AP[0].NumberStations = 1;
+    AP[0].Pt = 20;  // dBm
+    AP[0].qmin = 1;
+    AP[0].QL = 10000;
+    AP[0].MAX_AMPDU = 128;
+    AP[0].CWmin = 15;
+    AP[0].max_BEB_stages = 6;
+    AP[0].pe = 0;
+    AP[0].channel_width = 80;  // MHz
+    AP[0].SU_spatial_streams = 2;
+    AP[0].out_to_wireless.SetSize(1);
     
-    for(int n = 0; n < 2; n++) {
-        sta[n].id = n;
-        sta[n].x = STA_X[n];
-        sta[n].y = 0;
-        sta[n].z = 2;
-        sta[n].NumberStations = 1;
-        sta[n].Pt = 20;
-        sta[n].qmin = 1;
-        sta[n].QL = 150;
-        sta[n].MAX_AMPDU = 64;
-        sta[n].CWmin = 15;
-        sta[n].max_BEB_stages = 6;
-        sta[n].pe = 0;
-        sta[n].channel_width = 80;
-        sta[n].SU_spatial_streams = 2;
-        sta[n].out_to_wireless.SetSize(1);
+    x_AP[0] = AP[0].x;
+    y_AP[0] = AP[0].y;
+    z_AP[0] = AP[0].z;
 
-        x_[n] = sta[n].x;
-        y_[n] = sta[n].y;
-        z_[n] = sta[n].z;
-    }
+    // Single Station setup
+    STA.SetSize(1);
+    STA[0].id = 0;
+    STA[0].x = 30;  // 30m distance from AP
+    STA[0].y = 0;
+    STA[0].z = 2;
+    STA[0].NumberStations = 1;
+    STA[0].Pt = 20;  // dBm
+    STA[0].qmin = 1;
+    STA[0].QL = 150;
+    STA[0].MAX_AMPDU = 64;
+    STA[0].CWmin = 15;
+    STA[0].max_BEB_stages = 6;
+    STA[0].pe = 0;
+    STA[0].channel_width = 80;  // MHz
+    STA[0].SU_spatial_streams = 2;
+    STA[0].out_to_wireless.SetSize(1);
 
-    // Configure Network
-    net.Rate = 1000E6;
-    net.out_to_APs.SetSize(1);
-    net.out_to_apps.SetSize(2);  // Added for traffic generators
+    x_[0] = STA[0].x;
+    y_[0] = STA[0].y;
+    z_[0] = STA[0].z;
 
-    // Configure Channel
-    channel.NumNodes = 3;  // 1 AP + 2 STAs
-    channel.out_slot.SetSize(3);
+    // Network setup
+    Net.Rate = 1000E6;
+    Net.out_to_apps.SetSize(1);
+    Net.out_to_APs.SetSize(1);
 
-    // Connect Traffic Generators to Network
-    for(int n = 0; n < 2; n++) {
-        connect TGApp[n].out, net.in_from_apps;
-        connect net.out_to_apps[n], TGApp[n].in;
-    }
+    // Channel setup
+    channel1.NumNodes = 2;  // AP + 1 STA
+    channel1.out_slot.SetSize(2);
 
-    // Connect Network to AP
-    connect net.out_to_APs[0], ap[0].in_from_network;
-    connect ap[0].out_to_network, net.in_from_APs;
+    // Connections
+    
+    // App to Network
+    connect TGApp[0].out, Net.in_from_apps;
+    connect Net.out_to_apps[0], TGApp[0].in;
 
-    // Connect AP to STAs
-    for(int n = 0; n < 2; n++) {
-        connect ap[0].out_to_wireless[n], sta[n].in_from_wireless;
-        connect sta[n].out_to_wireless[0], ap[0].in_from_wireless;
-    }
+    // Network to AP
+    connect Net.out_to_APs[0], AP[0].in_from_network;
+    connect AP[0].out_to_network, Net.in_from_APs;
 
-    // Connect STAs to Traffic Generators (uplink)
-    for(int n = 0; n < 2; n++) {
-        connect sta[n].out_to_app, TGApp[n+2].in;
-        connect TGApp[n+2].out, sta[n].in_from_app;
-    }
+    // AP to Station
+    connect AP[0].out_to_wireless[0], STA[0].in_from_wireless;
+    connect STA[0].out_to_wireless[0], AP[0].in_from_wireless;
 
-    // Connect to Channel
-    connect ap[0].out_packet, channel.in_frame;
-    connect channel.out_slot[0], ap[0].in_slot;
+    // Station to App
+    connect STA[0].out_to_app, sink.in;
 
-    for(int n = 0; n < 2; n++) {
-        connect sta[n].out_packet, channel.in_frame;
-        connect channel.out_slot[n+1], sta[n].in_slot;
-    }
+    // Channel connections
+    connect AP[0].out_packet, channel1.in_frame;
+    connect channel1.out_slot[0], AP[0].in_slot;
+    connect STA[0].out_packet, channel1.in_frame;
+    connect channel1.out_slot[1], STA[0].in_slot;
 
-    // Connect AP to Sink
-    connect ap[0].out_to_network, sink.in;
-
-    printf("----- Simplified Wi-Fi Sim Setup completed -----\n");
+    printf("----- Simplified Wi-FiSim Setup completed -----\n");
 }
 
-void SimpleSim::Start() {
+void SimplifiedWiFiSim::Start() {
     printf("Start\n");
 }
 
-void SimpleSim::Stop() {
+void SimplifiedWiFiSim::Stop() {
     printf("########################################################################\n");
-    printf("------------------------ Simplified Wi-Fi Results -----------------------\n");
-    printf("AP: RSSI = %f | Packet AP Delay = %f\n", RSSI[0], ap[0].queueing_service_delay/ap[0].successful);
-    printf("Av A-MPDU size = %f | Tx prob = %f | Coll prob = %f\n", 
-           ap[0].avAMPDU_size/ap[0].successful,
-           ap[0].transmission_attempts/ap[0].slots,
-           ap[0].collisions/ap[0].transmission_attempts);
-    printf("########################################################################\n");
+    printf("------------------------ Simplified Wi-Fisim Results ----------------------------\n");
+    printf("AP: RSSI = %f | Packet AP Delay = %f\n", RSSI[0], AP[0].queueing_service_delay/AP[0].successful);
+    printf("Av A-MPDU size = %f | Tx prob = %f | Coll prob = %f | Buffer size = %f\n",
+           AP[0].avAMPDU_size/AP[0].successful,
+           AP[0].transmission_attempts/AP[0].slots,
+           AP[0].collisions/AP[0].transmission_attempts,
+           AP[0].queue_occupation/AP[0].arrived);
 
-    // Save results to file
     FILE *results;
-    results = fopen("Results/SimpleSim.txt", "at");
-    fprintf(results, "%f %f %f %f %f\n",
-            ap[0].queueing_service_delay/ap[0].successful,
-            ap[0].avAMPDU_size/ap[0].successful,
-            ap[0].transmission_attempts/ap[0].slots,
-            ap[0].collisions/ap[0].transmission_attempts,
+    results = fopen("Results/SimplifiedWiFiSim.txt", "at");
+    fprintf(results, "%f %f %f %f %f %f %f\n",
+            BGLoad_,
+            AP[0].queueing_service_delay/AP[0].successful,
+            AP[0].avAMPDU_size/AP[0].successful,
+            AP[0].transmission_attempts/AP[0].slots,
+            AP[0].collisions/AP[0].transmission_attempts,
+            AP[0].queue_occupation/AP[0].arrived,
             RSSI[0]);
     fclose(results);
 }
 
 int main(int argc, char *argv[]) {
-    if(argc < 3) {
-        printf("Usage: %s <seed> <simulation_time>\n", argv[0]);
-        return 1;
-    }
-
     int seed = atoi(argv[1]);
     double STime = atof(argv[2]);
-    double bw_sta = atof(argv[3]); 
+    double BGLoad = atof(argv[3]);
+    int LBG = atoi(argv[4]);
 
-    printf("---- Simplified WiFi Simulation ----\n");
+    st_input_args.seed = seed;
+    st_input_args.STime = STime;
+    st_input_args.BGLoad = BGLoad;
+
+    printf("---- Simplified WiFiSim ----\n");
     printf("Seed = %d | SimTime = %f\n", seed, STime);
-    printf("Station distances: 1m and 30m\n");
+    printf("Input Parameters: BGLoad = %f | LBG = %d\n", BGLoad, LBG);
 
-    SimpleSim az;
-    az.Seed = seed;
-    az.StopTime(STime);
-    az.Setup(STime, seed, bw_sta);
+    SimplifiedWiFiSim sim;
+    sim.Seed = seed;
+    sim.StopTime(STime);
+    sim.Setup(BGLoad, LBG, st_input_args);
 
     printf("Run\n");
-    az.Run();
+    sim.Run();
 
     return 0;
 }
