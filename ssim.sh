@@ -4,9 +4,8 @@
 seed=1
 simTime=20
 bandwidth_STA=12E6
-distance=1
+distance=30
 clear
-
 # Function to show ellipsis while compiling
 show_dots() {
     while true

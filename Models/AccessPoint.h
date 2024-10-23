@@ -257,7 +257,7 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 					//{	
 						
 					//printf("%f - AP tranmits packet to STA %d (Video packet = %d)\n",SimTime(),frame_test.destination,frame_test.num_packet_in_the_frame);
-					PRINTF_COLOR(RED , "%.6f [AP OUT W]   (%d/%d) Packet %.0f to STA %d \n",SimTime(), q, current_ampdu_size, frame_test.ID_packet ,frame_test.destination);
+					PRINTF_COLOR(RED , "%.6f [AP OUT W]      Packet %.0f from STA %d (%d/%d)\n",SimTime(), frame_test.ID_packet ,frame_test.destination, q, current_ampdu_size);
 					
 					update_stats_AMPDU(frame_test, MAC_queue.QueueSize()); //al dequeued packets get statistics
 					
@@ -386,7 +386,6 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 			frame.T_c = T_c;
 			frame.T_q = queue_delay_per_packet; 
 
-
 			// PRINTF_COLOR(BG_YELLOW, "queue_before\n" ); 
 			// MAC_queue.PrintQueueContents();   
 
@@ -397,7 +396,7 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 				MAC_queue.PutPacketIn(packet, q); // put in the same position as before with changed field
 			}
 
-			PRINTF_COLOR(BG_CYAN ,"%.6f [AP_TXOP%d]    Packet %.0f, AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), attempts,  frame.ID_packet, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
+			PRINTF_COLOR(BG_CYAN ,"%.6f [AP_TXOP%d]    AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), attempts, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
 			attempts++; 
 			device_has_transmitted=1;
 			transmission_attempts++; // stat

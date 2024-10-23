@@ -2245,21 +2245,21 @@ double PathLoss(double d)
 
 
 
-#line 413 "./Models/AccessPoint.h"
+#line 412 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 426 "./Models/AccessPoint.h"
+#line 425 "./Models/AccessPoint.h"
 ;
 
 
-#line 539 "./Models/AccessPoint.h"
+#line 538 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 561 "./Models/AccessPoint.h"
+#line 560 "./Models/AccessPoint.h"
 #endif
 
 #line 12 "SimpleSim.cc"
@@ -3623,7 +3623,7 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 					
 						
 					
-					PRINTF_COLOR(RED , "%.6f [AP OUT W]   (%d/%d) Packet %.0f to STA %d \n",SimTime(), q, current_ampdu_size, frame_test.ID_packet ,frame_test.destination);
+					PRINTF_COLOR(RED , "%.6f [AP OUT W]      Packet %.0f from STA %d (%d/%d)\n",SimTime(), frame_test.ID_packet ,frame_test.destination, q, current_ampdu_size);
 					
 					update_stats_AMPDU(frame_test, MAC_queue.QueueSize()); 
 					
@@ -3752,7 +3752,6 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 			frame.T_c = T_c;
 			frame.T_q = queue_delay_per_packet; 
 
-
 			
 			
 
@@ -3763,7 +3762,7 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 				MAC_queue.PutPacketIn(packet, q); 
 			}
 
-			PRINTF_COLOR(BG_CYAN ,"%.6f [AP_TXOP%d]    Packet %.0f, AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), attempts,  frame.ID_packet, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
+			PRINTF_COLOR(BG_CYAN ,"%.6f [AP_TXOP%d]    AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), attempts, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
 			attempts++; 
 			device_has_transmitted=1;
 			transmission_attempts++; 
@@ -3777,7 +3776,7 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 	}
 
 }
-#line 416 "./Models/AccessPoint.h"
+#line 415 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
 {
 	
@@ -3785,13 +3784,13 @@ void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
 }
 
 
-#line 422 "./Models/AccessPoint.h"
+#line 421 "./Models/AccessPoint.h"
 int compcxx_AccessPoint_8 :: BinaryExponentialBackoff(int attempt)
 {
 	int CW = Random(MIN(pow(2,attempt),pow(2,max_BEB_stages))*(CWmin+1));
 	return CW;	
 }
-#line 428 "./Models/AccessPoint.h"
+#line 427 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
 {	
 
@@ -3904,7 +3903,7 @@ void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmi
 
 	
 }
-#line 542 "./Models/AccessPoint.h"
+#line 541 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
 
     double AMPDU_L = ampdu_packet.L; 
@@ -4873,7 +4872,7 @@ void compcxx_Sink_13 :: Stop()
 #line 97 "./Models/Sink.h"
 void compcxx_Sink_13 :: in(data_packet &ampdu_packet) 
 {	
-	PRINTF_COLOR(YELLOW,"%.6f [DBG SINK] Packet %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source);
+	PRINTF_COLOR(YELLOW,"%.6f[DBG SINK]      Packet %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source);
 	
 
 	
