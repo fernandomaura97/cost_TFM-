@@ -58,6 +58,30 @@
 #endif
 
 
+struct AMPDU_packet_t {
+    std::vector<data_packet> mpdu_packets; // Container for MPDU packets
+    int total_length; // Total length of aggregated packets
+	int dest_ID; // ID for the source STA 
+	int size;
+
+	// Method to print AMPDU_packet values
+    void print() const {
+        PRINTF_COLOR(BG_GREEN, "[AMPDU INFO] \t\tSize: %d, STA_ID: %d, Total Length: %d\n", 
+            size, STA_ID, total_length);
+        for (const auto& packet : mpdu_packets) {
+            PRINTF_COLOR(YELLOW, "\t\t\t\t\t\t\t- Packet ID: %.0Lf\n", packet.packet_ID);
+        }
+	}
+	 // Method to reinitialize all values
+    void reset() {
+        mpdu_packets.clear();        // Clear the vector of MPDU packets
+        total_length = 0;            // Reset total length
+        size = 0;                    // Reset size
+        STA_ID = -1;                 // Reset STA_ID (assuming -1 is an uninitialized value)
+    }
+}; 
+
+
 struct data_packet
 {
 	double L_data; // Packet (data) length

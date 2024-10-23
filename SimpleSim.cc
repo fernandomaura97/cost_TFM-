@@ -63,7 +63,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
         TGApp[i].L_data = LBG;
         TGApp[i].id = i;
         TGApp[i].node_attached = i;
-        TGApp[i].destination = 0;  // Both go to AP
+        TGApp[i].destination = i;  // Both go to AP
         TGApp[i].mode = 0;
         TGApp[i].source_app = i;
         TGApp[i].destination_app = i;
@@ -79,7 +79,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     AP[0].Pt = 20;
     AP[0].qmin = 1;
     AP[0].QL = 10000;
-    AP[0].MAX_AMPDU = 128;
+    AP[0].MAX_AMPDU = 64; // same as in MG1 sim
     AP[0].CWmin = 15;
     AP[0].max_BEB_stages = 6;
     AP[0].pe = 0;

@@ -47,6 +47,9 @@ component AccessPoint : public TypeII
 		double BitsSymbol[20];
 		double CodingRate[20];
 
+		const double MAX_T_AGG = 4.85E-3; // 4.85 ms limit for AMPDU
+
+
 		FIFO MAC_queue;
 		int qmin; // Minimum number of packets in the buffer to start a tx
 		int CWmin;
@@ -58,6 +61,8 @@ component AccessPoint : public TypeII
 		int current_ampdu_size; // Number of packets aggregated in current transmission
 		int current_destination;
 		int NumberStations;
+
+		AMPDU_packet_t aux_ampdu; 
 
 	private:
 		int mode; // 0: idle; 1: in transmission
@@ -128,7 +133,7 @@ void AccessPoint :: Start()
 	avAMPDU_size=0;
 	queue_occupation=0;
 
-
+	aux_ampdu.reset(); 
 
 };
 
@@ -336,6 +341,9 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 			// Random Packet in the buffer
 			//data_packet first_packet_in_buffer = MAC_queue.GetPacketAt(Random(BufferSize)); 
 
+			aux_ampdu.dest_ID = first_packet_in_buffer.destination; 
+
+
 			current_destination = first_packet_in_buffer.destination; 
 			
 			// 2. Select up to MAX_AMPDU packets to that STA.
@@ -349,6 +357,7 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 			double TotalBitsToBeTransmitted = 0;
 			
 			double queue_delay_per_packet = 0;
+			double packet_index_loop = 0; 
 
 			for(int q=0; q< MAC_queue.QueueSize(); q++) // iterate through whole queue
 			{
@@ -361,11 +370,27 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 					queue_delay_per_packet += (SimTime() - (packet_to_check.in_queue_time)); 
 					packet_to_check.T_q = SimTime() - packet_to_check.in_queue_time; 
 
+					FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_sta,current_destination);
+
+					if(T >= MAX_T_AGG){ // making sure that adding an extra packet will not exceed hard limit
+						break; 
+					}
+					
 					MAC_queue.DeletePacketIn(q);
-					MAC_queue.PutPacketIn(packet_to_check,current_ampdu_size_per_station);		
+					q -= 1; 
+					
+					aux_ampdu.mpdu_packets.push_back(packet_to_check); 
+					aux_ampdu.total_length += packet_to_check.L ; 
+					aux_ampdu.size += 1; 
+
+					// MAC_queue.PutPacketIn(packet_to_check,current_ampdu_size_per_station);		
 					TotalBitsToBeTransmitted+=packet_to_check.L;
 					current_ampdu_size_per_station++;
 				}
+			}
+
+			for (auto& packet : aux_ampdu.mpdu_packets) {
+				packet.service_end_time = last_service_end_time;
 			}
 			int current_ampdu_size_sta = MIN(current_ampdu_size_per_station,MAX_AMPDU);	
 

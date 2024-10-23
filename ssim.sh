@@ -2,9 +2,14 @@
 
 # Simulation parameters
 seed=1
-simTime=20
-bandwidth_STA=12E6
+simTime=1E3
 distance=30
+
+# Define bandwidth parameters
+start_bandwidth=2.5E6
+end_bandwidth=40E6
+step_bandwidth=2.5E6
+
 clear
 # Function to show ellipsis while compiling
 show_dots() {
@@ -23,18 +28,33 @@ dots_pid=$!
 
 # Compile the project
 ./build
-
 # Stop displaying dots once compilation is done
 kill $dots_pid
 wait $dots_pid 2>/dev/null
+
 echo "OK!"
+sleep 2
+
 echo -e "\n\n********************************** COST results **********************************\n"
 
-# Run the SimMM1K executable
-
-
-# ./MM1K $seed $simTime $bandwidth_STA $bandwidth_departures $K_system $L_packets $PRINT_PROBABILITIES_SS $N_STAs $distance_STAs $SIMPLE_TX_MODEL $DBG_DETERMINISTIC_LOC | more
-
+### Run the SimMM1K executable (once)
+bandwidth_STA=12E6
 rm out_log.ans
 ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance| tee -a out_log.ans # FOR LOGGING
-# ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance
+
+### Run the SimMM1K executable (loop)
+# for bandwidth_STA in $(seq $start_bandwidth $step_bandwidth $end_bandwidth); do
+#     echo -e "\n\n********************************** COST results for bandwidth_STA = $bandwidth_STA **********************************\n"
+#     ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance
+#      # Create a directory named after the current bandwidth_STA value with reduced decimals
+#     folder_name=$(echo "$bandwidth_STA" | awk '{printf "%.1fMbps\n", $1/1E6}')
+#     mkdir -p "Results/$folder_name"
+    
+#     # Move CSV files into the corresponding folder
+#     mv Results/*.csv "Results/$folder_name/"
+
+#      folder_list+=("Results/$folder_name") # To compress folders
+# done
+
+zip -r Results_TFM.zip "${folder_list[@]}"
+

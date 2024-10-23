@@ -2231,35 +2231,35 @@ double PathLoss(double d)
 ;
 
 
-#line 133 "./Models/AccessPoint.h"
+#line 131 "./Models/AccessPoint.h"
 ;
 
 
-#line 186 "./Models/AccessPoint.h"
-;
-
-
-
-#line 217 "./Models/AccessPoint.h"
+#line 184 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 412 "./Models/AccessPoint.h"
+#line 215 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 425 "./Models/AccessPoint.h"
-;
-
-
-#line 538 "./Models/AccessPoint.h"
+#line 410 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 560 "./Models/AccessPoint.h"
+#line 423 "./Models/AccessPoint.h"
+;
+
+
+#line 536 "./Models/AccessPoint.h"
+;
+
+
+
+#line 558 "./Models/AccessPoint.h"
 #endif
 
 #line 12 "SimpleSim.cc"
@@ -3495,10 +3495,8 @@ void compcxx_AccessPoint_8 :: Start()
 	avAMPDU_size=0;
 	queue_occupation=0;
 
-
-
 }
-#line 135 "./Models/AccessPoint.h"
+#line 133 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: Stop()
 {
 
@@ -3551,7 +3549,7 @@ void compcxx_AccessPoint_8 :: Stop()
     printf("Global CSV file has been created successfully.\n");
 
 }
-#line 189 "./Models/AccessPoint.h"
+#line 187 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_from_network(data_packet &packet)
 {
 
@@ -3581,7 +3579,7 @@ void compcxx_AccessPoint_8 :: in_from_network(data_packet &packet)
 	}
 
 }
-#line 220 "./Models/AccessPoint.h"
+#line 218 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 {
 
@@ -3775,7 +3773,7 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 	}
 
 }
-#line 415 "./Models/AccessPoint.h"
+#line 413 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
 {
 	
@@ -3783,13 +3781,13 @@ void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
 }
 
 
-#line 421 "./Models/AccessPoint.h"
+#line 419 "./Models/AccessPoint.h"
 int compcxx_AccessPoint_8 :: BinaryExponentialBackoff(int attempt)
 {
 	int CW = Random(MIN(pow(2,attempt),pow(2,max_BEB_stages))*(CWmin+1));
 	return CW;	
 }
-#line 427 "./Models/AccessPoint.h"
+#line 425 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
 {	
 
@@ -3902,7 +3900,7 @@ void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmi
 
 	
 }
-#line 541 "./Models/AccessPoint.h"
+#line 539 "./Models/AccessPoint.h"
 void compcxx_AccessPoint_8::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
 
     double AMPDU_L = ampdu_packet.L; 
@@ -4902,7 +4900,7 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
         TGApp[i].L_data = LBG;
         TGApp[i].id = i;
         TGApp[i].node_attached = i;
-        TGApp[i].destination = 0;  
+        TGApp[i].destination = i;  
         TGApp[i].mode = 0;
         TGApp[i].source_app = i;
         TGApp[i].destination_app = i;
@@ -4918,7 +4916,7 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
     AP[0].Pt = 20;
     AP[0].qmin = 1;
     AP[0].QL = 10000;
-    AP[0].MAX_AMPDU = 128;
+    AP[0].MAX_AMPDU = 64; 
     AP[0].CWmin = 15;
     AP[0].max_BEB_stages = 6;
     AP[0].pe = 0;
