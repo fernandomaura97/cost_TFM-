@@ -1266,7 +1266,7 @@ void CostSimEng::Run()
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -1451,7 +1451,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -1668,7 +1668,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -1875,7 +1875,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -2057,7 +2057,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -2317,39 +2317,39 @@ double PathLoss(double d)
 
 
 
-#line 109 "./Models/AccessPoint.h"
+#line 107 "./Models/AccessPoint.h"
 ;
 
 
-#line 138 "./Models/AccessPoint.h"
+#line 136 "./Models/AccessPoint.h"
 ;
 
 
-#line 191 "./Models/AccessPoint.h"
-;
-
-
-
-#line 222 "./Models/AccessPoint.h"
+#line 189 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 454 "./Models/AccessPoint.h"
+#line 220 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 467 "./Models/AccessPoint.h"
-;
-
-
-#line 580 "./Models/AccessPoint.h"
+#line 426 "./Models/AccessPoint.h"
 ;
 
 
 
-#line 602 "./Models/AccessPoint.h"
+#line 439 "./Models/AccessPoint.h"
+;
+
+
+#line 552 "./Models/AccessPoint.h"
+;
+
+
+
+#line 574 "./Models/AccessPoint.h"
 #endif
 
 #line 12 "SimpleSim.cc"
@@ -2382,7 +2382,7 @@ double PathLoss(double d)
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -2589,37 +2589,40 @@ double PathLoss(double d)
 #include <deque>
 
 
-#line 94 "./Models/Station.h"
+#line 111 "./Models/Station.h"
 ;
 
 
-#line 122 "./Models/Station.h"
+#line 140 "./Models/Station.h"
 ;
 
 
-#line 139 "./Models/Station.h"
-;
-
-
-
-#line 165 "./Models/Station.h"
+#line 157 "./Models/Station.h"
 ;
 
 
 
-#line 342 "./Models/Station.h"
+#line 183 "./Models/Station.h"
 ;
 
 
 
-#line 357 "./Models/Station.h"
+#line 381 "./Models/Station.h"
 ;
 
 
-#line 473 "./Models/Station.h"
+
+#line 396 "./Models/Station.h"
 ;
 
 
+#line 512 "./Models/Station.h"
+;
+
+
+
+
+#line 537 "./Models/Station.h"
 #endif
 
 #line 13 "SimpleSim.cc"
@@ -2652,7 +2655,7 @@ double PathLoss(double d)
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -2856,7 +2859,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -3080,6 +3083,10 @@ struct input_arg_t {
 
 bool traces_on = true; 
 
+
+#define DONWLINK_TRAFFIC    1 
+#define UPLINK_TRAFFIC      0
+
 #include "compcxx_SimpleSim.h"
 /*template <class test>
 */
@@ -3103,7 +3110,7 @@ class compcxx_FIFO_5 : public compcxx_component, public TypeII
 
 
 #line 17 "./Models/AccessPoint.h"
-class compcxx_AccessPoint_8 : public compcxx_component, public TypeII
+class compcxx_AccessPoint_9 : public compcxx_component, public TypeII
 {
 	public:
 		void Setup();
@@ -3176,8 +3183,6 @@ class compcxx_AccessPoint_8 : public compcxx_component, public TypeII
 		double successful; 
 		double queue_occupation;
 
-
-
 		struct csv_sink_t {
 			std::vector <double> timestamp;
             std::vector <double> L_ampdu; 
@@ -3191,7 +3196,7 @@ class compcxx_AccessPoint_8 : public compcxx_component, public TypeII
 
 };
 
-class compcxx_Network_12;/*template <class T> */
+class compcxx_Network_13;/*template <class T> */
 #line 267 "./COST/cost.h"
 class compcxx_Timer_2 : public compcxx_component, public TimerBase
 {
@@ -3212,9 +3217,9 @@ class compcxx_Timer_2 : public compcxx_component, public TimerBase
  private:
   CostSimEng* m_simeng;
   event_t m_event;
-public:compcxx_Network_12* p_compcxx_parent;};
+public:compcxx_Network_13* p_compcxx_parent;};
 
-class compcxx_Network_12;/*template <class T> */
+class compcxx_Network_13;/*template <class T> */
 #line 267 "./COST/cost.h"
 class compcxx_Timer_3 : public compcxx_component, public TimerBase
 {
@@ -3235,11 +3240,11 @@ class compcxx_Timer_3 : public compcxx_component, public TimerBase
  private:
   CostSimEng* m_simeng;
   event_t m_event;
-public:compcxx_Network_12* p_compcxx_parent;};
+public:compcxx_Network_13* p_compcxx_parent;};
 
 
 #line 12 "./Models/Network.h"
-class compcxx_Network_12 : public compcxx_component, public TypeII
+class compcxx_Network_13 : public compcxx_component, public TypeII
 {
 	public:
 		void Setup();
@@ -3260,7 +3265,7 @@ class compcxx_Network_12 : public compcxx_component, public TypeII
 		compcxx_Timer_3 /*<trigger_t> */transmission_time_UL;
 		/*inport */inline void end_packet_transmission_UL(trigger_t& t); 
 
-		compcxx_Network_12 () { 
+		compcxx_Network_13 () { 
 			transmission_time_UL.p_compcxx_parent=this /*connect transmission_time_UL.to_component,*/;
 			transmission_time_DL.p_compcxx_parent=this /*connect transmission_time_DL.to_component,*/; }				 
 
@@ -3277,16 +3282,37 @@ class compcxx_Network_12 : public compcxx_component, public TypeII
 	
 };
 
+/*template <class test>
+*/
+#line 15 "./Models/FIFO.h"
+class compcxx_FIFO_6 : public compcxx_component, public TypeII
+{	
+	private:
+		std::deque <data_packet> m_queue;
+		
+	public:
+		data_packet GetFirstPacket();
+		data_packet GetPacketAt(int n);
+		void DelFirstPacket();		
+		void DeletePacketIn(int i);
+		void PutPacket(data_packet &packet);	
+		void PutPacketFront(data_packet &packet);	
+		void PutPacketIn(data_packet &packet, int);	
+		int QueueSize();
+		void PrintQueueContents(); 
+};
+
 
 #line 13 "./Models/Station.h"
-class compcxx_Station_9 : public compcxx_component, public TypeII
+class compcxx_Station_10 : public compcxx_component, public TypeII
 {
 	public:
 		void Setup();
 		void Start();
 		void Stop();		
 		int BinaryExponentialBackoff(int attempt);	
-		double FrameTransmissionDelay(double TotalBitsToBeTransmitted,int NMPDUs, int station_id);
+		void FrameTransmissionDelay(double TotalBitsToBeTransmitted,int NMPDUs, int station_id);
+		void update_stats_AMPDU(data_packet &ampdu_packet, int queue_size); 
 
 	public: 
 		/*inport */void in_from_app(data_packet &packet);
@@ -3325,12 +3351,28 @@ class compcxx_Station_9 : public compcxx_component, public TypeII
 
 
 		
-		std::deque <data_packet> MAC_queue;
+		compcxx_FIFO_6 MAC_queue;
 		int qmin; 
 
 		int current_ampdu_size; 
 		int current_destination;
 		int NumberStations;
+
+		AMPDU_packet_t aux_ampdu; 
+
+		struct csv_STA_t {
+			std::vector <double> timestamp;
+            std::vector <double> L_ampdu; 
+            std::vector <int>    destination; 
+            std::vector <int>    source; 
+            std::vector <double> T_s; 
+            std::vector <double> T_q;  
+			std::vector <double> queue_size;
+			std::vector <double> throughput;  
+        }STAcsv; 
+
+		const double MAX_T_AGG = 4.85E-3; 
+
 
 	private:
 		int mode; 
@@ -3356,7 +3398,7 @@ class compcxx_Station_9 : public compcxx_component, public TypeII
 		double queue_occupation;	
 };
 
-class compcxx_TrafficGeneratorApp_11;/*template <class T> */
+class compcxx_TrafficGeneratorApp_12;/*template <class T> */
 #line 267 "./COST/cost.h"
 class compcxx_Timer_4 : public compcxx_component, public TimerBase
 {
@@ -3377,11 +3419,11 @@ class compcxx_Timer_4 : public compcxx_component, public TimerBase
  private:
   CostSimEng* m_simeng;
   event_t m_event;
-public:compcxx_TrafficGeneratorApp_11* p_compcxx_parent;};
+public:compcxx_TrafficGeneratorApp_12* p_compcxx_parent;};
 
 
 #line 10 "./Models/TrafficGeneratorApp.h"
-class compcxx_TrafficGeneratorApp_11 : public compcxx_component, public TypeII
+class compcxx_TrafficGeneratorApp_12 : public compcxx_component, public TypeII
 {
 	
 	public: 
@@ -3397,7 +3439,7 @@ class compcxx_TrafficGeneratorApp_11 : public compcxx_component, public TypeII
 		compcxx_Timer_4 /*<trigger_t> */inter_packet_timer;
 		/*inport */inline void new_packet(trigger_t& t); 
 
-		compcxx_TrafficGeneratorApp_11 () { inter_packet_timer.p_compcxx_parent=this /*connect inter_packet_timer.to_component,*/; }
+		compcxx_TrafficGeneratorApp_12 () { inter_packet_timer.p_compcxx_parent=this /*connect inter_packet_timer.to_component,*/; }
 
 
 	public: 
@@ -3422,7 +3464,30 @@ class compcxx_TrafficGeneratorApp_11 : public compcxx_component, public TypeII
 
 };
 
-class compcxx_CSMACAChannel1_10;/*template <class T> */
+class compcxx_CSMACAChannel1_11;/*template <class T> */
+#line 267 "./COST/cost.h"
+class compcxx_Timer_8 : public compcxx_component, public TimerBase
+{
+ public:
+  struct event_t : public CostEvent { trigger_t data; };
+  
+
+  compcxx_Timer_8() { m_simeng = CostSimEng::Instance(); m_event.active= false; }
+  inline void Set(trigger_t const &, double );
+  inline void Set(double );
+  inline double GetTime() { return m_event.time; }
+  inline bool Active() { return m_event.active; }
+  inline trigger_t & GetData() { return m_event.data; }
+  inline void SetData(trigger_t const &d) { m_event.data = d; }
+  void Cancel();
+  /*outport void to_component(trigger_t &)*/;
+  void activate(CostEvent*);
+ private:
+  CostSimEng* m_simeng;
+  event_t m_event;
+public:compcxx_CSMACAChannel1_11* p_compcxx_parent;};
+
+class compcxx_CSMACAChannel1_11;/*template <class T> */
 #line 267 "./COST/cost.h"
 class compcxx_Timer_7 : public compcxx_component, public TimerBase
 {
@@ -3443,34 +3508,11 @@ class compcxx_Timer_7 : public compcxx_component, public TimerBase
  private:
   CostSimEng* m_simeng;
   event_t m_event;
-public:compcxx_CSMACAChannel1_10* p_compcxx_parent;};
-
-class compcxx_CSMACAChannel1_10;/*template <class T> */
-#line 267 "./COST/cost.h"
-class compcxx_Timer_6 : public compcxx_component, public TimerBase
-{
- public:
-  struct event_t : public CostEvent { trigger_t data; };
-  
-
-  compcxx_Timer_6() { m_simeng = CostSimEng::Instance(); m_event.active= false; }
-  inline void Set(trigger_t const &, double );
-  inline void Set(double );
-  inline double GetTime() { return m_event.time; }
-  inline bool Active() { return m_event.active; }
-  inline trigger_t & GetData() { return m_event.data; }
-  inline void SetData(trigger_t const &d) { m_event.data = d; }
-  void Cancel();
-  /*outport void to_component(trigger_t &)*/;
-  void activate(CostEvent*);
- private:
-  CostSimEng* m_simeng;
-  event_t m_event;
-public:compcxx_CSMACAChannel1_10* p_compcxx_parent;};
+public:compcxx_CSMACAChannel1_11* p_compcxx_parent;};
 
 
 #line 12 "./Models/CSMACAChannel1.h"
-class compcxx_CSMACAChannel1_10 : public compcxx_component, public TypeII
+class compcxx_CSMACAChannel1_11 : public compcxx_component, public TypeII
 {
 	public:
 		void Setup();
@@ -3494,13 +3536,13 @@ class compcxx_CSMACAChannel1_10 : public compcxx_component, public TypeII
 		/*inport */void in_frame(data_packet &packet);
 
 		
-		compcxx_Timer_6 /*<trigger_t> */slot_time;
-		compcxx_Timer_7 /*<trigger_t> */rx_time;
+		compcxx_Timer_7 /*<trigger_t> */slot_time;
+		compcxx_Timer_8 /*<trigger_t> */rx_time;
 
 		/*inport */inline void new_slot(trigger_t& t1);
 		/*inport */inline void reception_time(trigger_t& t2);
 
-		compcxx_CSMACAChannel1_10 () { 
+		compcxx_CSMACAChannel1_11 () { 
 			slot_time.p_compcxx_parent=this /*connect slot_time.to_component,*/; 
 			rx_time.p_compcxx_parent=this /*connect rx_time.to_component,*/; }
 	
@@ -3508,7 +3550,7 @@ class compcxx_CSMACAChannel1_10 : public compcxx_component, public TypeII
 
 
 #line 11 "./Models/Sink.h"
-class compcxx_Sink_13 : public compcxx_component, public TypeII
+class compcxx_Sink_14 : public compcxx_component, public TypeII
 {
 	public:
 		
@@ -3542,20 +3584,20 @@ class compcxx_Sink_13 : public compcxx_component, public TypeII
 };
 
 
-#line 35 "SimpleSim.cc"
-class compcxx_SimplifiedWiFiSim_14 : public compcxx_component, public CostSimEng {
+#line 39 "SimpleSim.cc"
+class compcxx_SimplifiedWiFiSim_15 : public compcxx_component, public CostSimEng {
     public:
         void Setup(double BGLoad, int LBG, input_arg_t st, double distance);
         void Start();
         void Stop();
 
     public:
-        compcxx_array<compcxx_AccessPoint_8 >AP;
-        compcxx_array<compcxx_Station_9 >STA;  
-        compcxx_CSMACAChannel1_10 channel1;
-        compcxx_array<compcxx_TrafficGeneratorApp_11 >TGApp;  
-        compcxx_Network_12 Net;
-        compcxx_Sink_13 sink;
+        compcxx_array<compcxx_AccessPoint_9 >AP;
+        compcxx_array<compcxx_Station_10 >STA;  
+        compcxx_CSMACAChannel1_11 channel1;
+        compcxx_array<compcxx_TrafficGeneratorApp_12 >TGApp;  
+        compcxx_Network_13 Net;
+        compcxx_Sink_14 sink;
 
         double BGLoad_ = 0;
         double distance_X = 0; 
@@ -3612,14 +3654,14 @@ void compcxx_FIFO_5 :: PrintQueueContents()
 				  << ", T_q: " << std::setprecision(3) << m_queue[i].T_q << ", T_s: "<< std::setprecision(3) << m_queue[i].T << std::endl;
     }
 }
-#line 105 "./Models/AccessPoint.h"
-void compcxx_AccessPoint_8 :: Setup()
+#line 103 "./Models/AccessPoint.h"
+void compcxx_AccessPoint_9 :: Setup()
 {
 	printf("Access Point Setup()\n");
 
 }
-#line 111 "./Models/AccessPoint.h"
-void compcxx_AccessPoint_8 :: Start()
+#line 109 "./Models/AccessPoint.h"
+void compcxx_AccessPoint_9 :: Start()
 {
 	printf("Access Point Start()\n");
 
@@ -3647,8 +3689,8 @@ void compcxx_AccessPoint_8 :: Start()
 	aux_ampdu.reset(); 
 
 }
-#line 140 "./Models/AccessPoint.h"
-void compcxx_AccessPoint_8 :: Stop()
+#line 138 "./Models/AccessPoint.h"
+void compcxx_AccessPoint_9 :: Stop()
 {
 
 
@@ -3700,8 +3742,8 @@ void compcxx_AccessPoint_8 :: Stop()
     printf("Global CSV file has been created successfully.\n");
 
 }
-#line 194 "./Models/AccessPoint.h"
-void compcxx_AccessPoint_8 :: in_from_network(data_packet &packet)
+#line 192 "./Models/AccessPoint.h"
+void compcxx_AccessPoint_9 :: in_from_network(data_packet &packet)
 {
 
 	if(traces_on) PRINTF_COLOR(LIGHT_MAGENTA,"%.6f [AP IN]     Packet %.0f from network %d directed to STA %d | AP Tx Buffer = %d \n",SimTime(),packet.ID_packet ,packet.source, packet.destination,MAC_queue.QueueSize());
@@ -3730,8 +3772,8 @@ void compcxx_AccessPoint_8 :: in_from_network(data_packet &packet)
 	}
 
 }
-#line 225 "./Models/AccessPoint.h"
-void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
+#line 223 "./Models/AccessPoint.h"
+void compcxx_AccessPoint_9 :: in_slot(SLOT_indicator &slot)
 {
 
 	slots++;
@@ -3760,46 +3802,17 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 			{	
 				mpdu_counter += 1; 
 				if (Random() > pe){
+
 					queueing_service_delay_aux += (SimTime() - packet_iter.queueing_service_delay - SLOT); 
 					update_stats_AMPDU(packet_iter, MAC_queue.QueueSize() - mpdu_counter); 
 				
 					PRINTF_COLOR(RED , "%.6f [AP OUT W]      Packet %.0f from STA %d (%.0f/%d)\n",SimTime(), packet_iter.ID_packet ,packet_iter.destination, mpdu_counter, current_ampdu_size);
-
 					out_to_wireless[packet_iter.destination](packet_iter); 
 				}
 				else{
 					printf("%f - AP - Packet to STA %d with errors (packet ID = %.0f, PER = %.2f)\n",SimTime(),packet_iter.destination,packet_iter.ID_packet, pe );
 				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
-			
-			
-						
-			
-			
-					
-			
-					
-			
-			
-			
-			
-			
-			
-			
-			
-
-			
 
 			queueing_service_delay_aux = queueing_service_delay_aux / current_ampdu_size;
 			queueing_service_delay += queueing_service_delay_aux;
@@ -3888,14 +3901,17 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 
 				if(current_destination == packet_to_check.destination && current_ampdu_size_per_station < MAX_AMPDU)
 				{				
-					queue_delay_per_packet += (SimTime() - (packet_to_check.in_queue_time)); 
-					packet_to_check.T_q = SimTime() - packet_to_check.in_queue_time; 
-
+					
 					FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_per_station,current_destination);
 
 					if(T >= MAX_T_AGG){ 
 						break; 
 					}
+					
+					queue_delay_per_packet += (SimTime() - (packet_to_check.in_queue_time)); 
+					packet_to_check.T_q = SimTime() - packet_to_check.in_queue_time; 
+
+					
 					
 					MAC_queue.DeletePacketIn(q);
 					q -= 1; 
@@ -3961,22 +3977,22 @@ void compcxx_AccessPoint_8 :: in_slot(SLOT_indicator &slot)
 	}
 
 }
-#line 457 "./Models/AccessPoint.h"
-void compcxx_AccessPoint_8 :: in_from_wireless(data_packet &packet)
+#line 429 "./Models/AccessPoint.h"
+void compcxx_AccessPoint_9 :: in_from_wireless(data_packet &packet)
 {
 	
 	(out_to_network_f(packet));	
 }
 
 
-#line 463 "./Models/AccessPoint.h"
-int compcxx_AccessPoint_8 :: BinaryExponentialBackoff(int attempt)
+#line 435 "./Models/AccessPoint.h"
+int compcxx_AccessPoint_9 :: BinaryExponentialBackoff(int attempt)
 {
 	int CW = Random(MIN(pow(2,attempt),pow(2,max_BEB_stages))*(CWmin+1));
 	return CW;	
 }
-#line 469 "./Models/AccessPoint.h"
-void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
+#line 441 "./Models/AccessPoint.h"
+void compcxx_AccessPoint_9 :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
 {	
 
 	
@@ -3995,7 +4011,7 @@ void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmi
 		
 		BitsSymbol[station_id] = 1;
 		CodingRate[station_id] = (double) 1/2;
-		pe = 0.9;
+		
 	}
 
 	if( Pr >= -82 && Pr < -79)
@@ -4088,8 +4104,8 @@ void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmi
 
 	
 }
-#line 583 "./Models/AccessPoint.h"
-void compcxx_AccessPoint_8::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
+#line 555 "./Models/AccessPoint.h"
+void compcxx_AccessPoint_9::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
 
     double AMPDU_L = ampdu_packet.L; 
 	double now = SimTime(); 
@@ -4228,23 +4244,23 @@ void compcxx_AccessPoint_8::update_stats_AMPDU(data_packet &ampdu_packet, int qu
 #line 31 "./Models/Network.h"
 
 #line 50 "./Models/Network.h"
-void compcxx_Network_12 :: Setup()
+void compcxx_Network_13 :: Setup()
 {
 	printf("Network Setup()\n");
 
 }
 #line 56 "./Models/Network.h"
-void compcxx_Network_12 :: Start()
+void compcxx_Network_13 :: Start()
 {
 	printf("Network Start()\n");
 }
 #line 61 "./Models/Network.h"
-void compcxx_Network_12 :: Stop()
+void compcxx_Network_13 :: Stop()
 {
 	printf("Network Stop()\n");
 }
 #line 66 "./Models/Network.h"
-void compcxx_Network_12 :: in_from_apps(data_packet &packet)
+void compcxx_Network_13 :: in_from_apps(data_packet &packet)
 {
 	
 	PRINTF_COLOR(CYAN, "%.6f [NET]     Packet %.0f from %d (DL) arrives to the Network. Packets in the buffer = %lu\n",SimTime(), packet.ID_packet ,packet.source, TxBuffer_UL.size()) ;
@@ -4264,7 +4280,7 @@ void compcxx_Network_12 :: in_from_apps(data_packet &packet)
 	}
 }
 #line 86 "./Models/Network.h"
-void compcxx_Network_12 :: end_packet_transmission_DL(trigger_t &)
+void compcxx_Network_13 :: end_packet_transmission_DL(trigger_t &)
 {
 	
 	data_packet tx_packet = TxBuffer_DL.front();
@@ -4278,7 +4294,7 @@ void compcxx_Network_12 :: end_packet_transmission_DL(trigger_t &)
 
 }
 #line 100 "./Models/Network.h"
-void compcxx_Network_12 :: in_from_APs(data_packet &packet)
+void compcxx_Network_13 :: in_from_APs(data_packet &packet)
 {
 	
 	
@@ -4301,7 +4317,7 @@ void compcxx_Network_12 :: in_from_APs(data_packet &packet)
 	
 }
 #line 123 "./Models/Network.h"
-void compcxx_Network_12 :: end_packet_transmission_UL(trigger_t &)
+void compcxx_Network_13 :: end_packet_transmission_UL(trigger_t &)
 {
 	
 		
@@ -4316,14 +4332,64 @@ void compcxx_Network_12 :: end_packet_transmission_UL(trigger_t &)
 
 
 }
-#line 90 "./Models/Station.h"
-void compcxx_Station_9 :: Setup()
+#line 33 "./Models/FIFO.h"
+data_packet compcxx_FIFO_6 :: GetFirstPacket()
+{
+	return(m_queue.front());	
+}
+#line 38 "./Models/FIFO.h"
+data_packet compcxx_FIFO_6 :: GetPacketAt(int n)
+{
+	return(m_queue.at(n));	
+}
+#line 44 "./Models/FIFO.h"
+void compcxx_FIFO_6 :: DelFirstPacket()
+{
+	m_queue.pop_front();
+}
+#line 49 "./Models/FIFO.h"
+void compcxx_FIFO_6 :: PutPacket(data_packet &packet)
+{	
+	m_queue.push_back(packet);
+}
+#line 54 "./Models/FIFO.h"
+void compcxx_FIFO_6 :: PutPacketFront(data_packet &packet)
+{	
+	m_queue.push_front(packet);
+}
+#line 59 "./Models/FIFO.h"
+int compcxx_FIFO_6 :: QueueSize()
+{
+	return(m_queue.size());
+}
+#line 64 "./Models/FIFO.h"
+void compcxx_FIFO_6 :: PutPacketIn(data_packet &packet,int i)
+{
+	m_queue.insert(m_queue.begin()+i,packet);
+}
+#line 69 "./Models/FIFO.h"
+void compcxx_FIFO_6 :: DeletePacketIn(int i)
+{
+	m_queue.erase(m_queue.begin()+i);
+}
+#line 74 "./Models/FIFO.h"
+void compcxx_FIFO_6 :: PrintQueueContents()
+{
+	 std::cout << "Packet IDs in the queue:" << std::endl;
+    for (size_t i = 0; i < m_queue.size(); ++i)
+    {
+        std::cout << "Packet " << i + 1 << ", ID: " << m_queue[i].ID_packet 
+				  << ", T_q: " << std::setprecision(3) << m_queue[i].T_q << ", T_s: "<< std::setprecision(3) << m_queue[i].T << std::endl;
+    }
+}
+#line 107 "./Models/Station.h"
+void compcxx_Station_10 :: Setup()
 {
 	printf("Station Setup()\n");
 
 }
-#line 96 "./Models/Station.h"
-void compcxx_Station_9 :: Start()
+#line 113 "./Models/Station.h"
+void compcxx_Station_10 :: Start()
 {
 	printf("Station Start()\n");
 
@@ -4348,10 +4414,11 @@ void compcxx_Station_9 :: Start()
 	av_MPDUsize=0;
 	queue_occupation=0;
 
+	aux_ampdu.reset(); 
 
 }
-#line 124 "./Models/Station.h"
-void compcxx_Station_9 :: Stop()
+#line 142 "./Models/Station.h"
+void compcxx_Station_10 :: Stop()
 {
 
 
@@ -4367,13 +4434,13 @@ void compcxx_Station_9 :: Stop()
 
 
 }
-#line 142 "./Models/Station.h"
-void compcxx_Station_9 :: in_from_app(data_packet &packet)
+#line 160 "./Models/Station.h"
+void compcxx_Station_10 :: in_from_app(data_packet &packet)
 {
 	
 
 	arrived++;
-	int QueueSize = MAC_queue.size();
+	int QueueSize = MAC_queue.QueueSize();
 	queue_occupation+=QueueSize;
 	
 	if(QueueSize >= qmin) 
@@ -4384,7 +4451,7 @@ void compcxx_Station_9 :: in_from_app(data_packet &packet)
 	if(QueueSize < QL)
 	{
 		packet.queueing_service_delay = SimTime();
-		MAC_queue.push_back(packet);
+		MAC_queue.PutPacket(packet);
 	}
 	else
 	{
@@ -4392,8 +4459,8 @@ void compcxx_Station_9 :: in_from_app(data_packet &packet)
 	}
 
 }
-#line 168 "./Models/Station.h"
-void compcxx_Station_9 :: in_slot(SLOT_indicator &slot)
+#line 186 "./Models/Station.h"
+void compcxx_Station_10 :: in_slot(SLOT_indicator &slot)
 {
 
 	
@@ -4419,26 +4486,23 @@ void compcxx_Station_9 :: in_slot(SLOT_indicator &slot)
 			
 			data_packet frame_test;
 			double queueing_service_delay_aux=0; 
-			int packet_queue_index = 0;
-			for(int q=0;q<current_ampdu_size;q++)
+			double mpdu_counter = 0; 
+
+			
+			for(auto& packet_iter : aux_ampdu.mpdu_packets)
 			{
+				mpdu_counter += 1; 
+				if(Random() > pe){
+					queueing_service_delay_aux += (SimTime() - packet_iter.queueing_service_delay - SLOT) ; 
 				
-				frame_test = MAC_queue.at(packet_queue_index);
-				
-				
-				if(Random()>pe)
-				{	
-					
-					MAC_queue.erase(MAC_queue.begin()+packet_queue_index);	
-					queueing_service_delay_aux += (SimTime()-frame_test.queueing_service_delay-SLOT);
-					
-					
-					out_to_wireless[frame_test.destination](frame_test);
+					update_stats_AMPDU(packet_iter, MAC_queue.QueueSize() - mpdu_counter); 
+					PRINTF_COLOR(RED , "%.6f [STA OUT W]      Packet %.0f from STA %d (%.0f/%d)\n",SimTime(), packet_iter.ID_packet ,packet_iter.destination, mpdu_counter, current_ampdu_size);
+					out_to_wireless[packet_iter.destination](frame_test); 				
 				}
-				else
-				{
-					packet_queue_index++;
-					
+
+				else{
+					printf("%f - STA - Packet to %d with errors (packet ID = %.0f, PER = %.2f)\n",SimTime(),packet_iter.destination,packet_iter.ID_packet, pe );
+
 				}
 
 			}
@@ -4451,9 +4515,7 @@ void compcxx_Station_9 :: in_slot(SLOT_indicator &slot)
 			service_time += (SimTime()-aux_service_time-SLOT);
 			successful++;
 			mode = 0;
-
 		}
-
 	}
 	if(slot.status > 1) 
 	{
@@ -4481,7 +4543,7 @@ void compcxx_Station_9 :: in_slot(SLOT_indicator &slot)
 
 	if(mode == 0) 
 	{
-		int QueueSize = MAC_queue.size();
+		int QueueSize = MAC_queue.QueueSize();
 		
 		if(QueueSize >= qmin)
 		{
@@ -4503,34 +4565,64 @@ void compcxx_Station_9 :: in_slot(SLOT_indicator &slot)
 			
 			
 			
-			current_ampdu_size = MIN((int)MAC_queue.size(),MAX_AMPDU);
+
+			aux_ampdu.reset(); 
+			current_ampdu_size = MIN((int)MAC_queue.QueueSize(),MAX_AMPDU);
 
 			
-			data_packet first_packet_in_buffer = MAC_queue.front();
+			data_packet first_packet_in_buffer = MAC_queue.GetFirstPacket();
+			
+			
+			aux_ampdu.dest_ID = first_packet_in_buffer.destination; 	
 			current_destination = first_packet_in_buffer.destination; 
 			
 			
-			int BufferSize = MAC_queue.size();			
 			int current_ampdu_size_per_station = 0;		
-		
-			
-			
-			
-
 			double TotalBitsToBeTransmitted = 0;
-			for(int q=0;q<BufferSize;q++)
+			double queue_delay_per_packet = 0; 
+
+			for(int q = 0 ; q < MAC_queue.QueueSize(); q++)
 			{
-				data_packet packet_to_check = MAC_queue.at(q); 
+				data_packet packet_to_check = MAC_queue.GetPacketAt(q); 
 				if(current_destination == packet_to_check.destination && current_ampdu_size_per_station < MAX_AMPDU)
 				{				
-					MAC_queue.erase(MAC_queue.begin()+q);
-					MAC_queue.insert(MAC_queue.begin()+current_ampdu_size_per_station,packet_to_check); 
+					FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_per_station,current_destination);
+
+					if(T >= MAX_T_AGG){ 
+						break; 
+					}
+
+					queue_delay_per_packet += ( SimTime() - packet_to_check.in_queue_time) ; 
+					packet_to_check.T_q = 		SimTime() - packet_to_check.in_queue_time; 
+
+					MAC_queue.DeletePacketIn(q); 
+					q -= 1; 
+
+					aux_ampdu.mpdu_packets.push_back(packet_to_check); 
+					aux_ampdu.total_length += packet_to_check.L; 
+					aux_ampdu.size += 1; 
+
+
+					
 					
 					TotalBitsToBeTransmitted+=packet_to_check.L;
 					current_ampdu_size_per_station++;
 				}
 			}
 			int current_ampdu_size_sta = MIN(current_ampdu_size_per_station,MAX_AMPDU);	
+
+
+			FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_sta,current_destination);
+			data_packet frame;
+			frame.AMPDU_size = current_ampdu_size_sta;
+			frame.source=id;
+			frame.T = T;
+			frame.T_c = T_c;
+			frame.T_q = queue_delay_per_packet; 
+
+			for (auto& packet: aux_ampdu.mpdu_packets){
+				packet.scheduled_time = SimTime() + T; 
+			}
 			
 
 			
@@ -4546,19 +4638,15 @@ void compcxx_Station_9 :: in_slot(SLOT_indicator &slot)
 			
 			
 			
-
-			FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_sta,current_destination);
+			PRINTF_COLOR(BG_CYAN, "%.6f [STA%d_TXOP%d] AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), id ,attempts, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
+			aux_ampdu.print(); 
 			
-			data_packet frame;
-			frame.AMPDU_size = current_ampdu_size_sta;
-			frame.source=id;
-			frame.T = T;
-			frame.T_c = T_c;
-			
-			(out_packet_f(frame)); 
 			attempts++; 
-			device_has_transmitted=1;
+ 			device_has_transmitted=1;
 			transmission_attempts++; 
+
+			(out_packet_f(frame)); 
+
 		}
 		else
 		{
@@ -4568,8 +4656,8 @@ void compcxx_Station_9 :: in_slot(SLOT_indicator &slot)
 	}
 
 }
-#line 345 "./Models/Station.h"
-void compcxx_Station_9 :: in_from_wireless(data_packet &packet)
+#line 384 "./Models/Station.h"
+void compcxx_Station_10 :: in_from_wireless(data_packet &packet)
 {
 	
 	if(packet.destination == id) (out_to_app_f(packet));	
@@ -4577,15 +4665,15 @@ void compcxx_Station_9 :: in_from_wireless(data_packet &packet)
 
 
 
-#line 352 "./Models/Station.h"
-int compcxx_Station_9 :: BinaryExponentialBackoff(int attempt)
+#line 391 "./Models/Station.h"
+int compcxx_Station_10 :: BinaryExponentialBackoff(int attempt)
 {
 	int CW = Random(MIN(pow(2,attempt),pow(2,max_BEB_stages))*(CWmin+1));
 	
 	return CW;	
 }
-#line 359 "./Models/Station.h"
-double compcxx_Station_9 :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
+#line 398 "./Models/Station.h"
+void compcxx_Station_10 :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
 {	
 
 	
@@ -4607,7 +4695,7 @@ double compcxx_Station_9 :: FrameTransmissionDelay(double TotalBitsToBeTransmitt
 		
 		BitsSymbol[station_id] = 1;
 		CodingRate[station_id] = (double) 1/2;
-		pe = 0.9;
+		
 	}
 
 	if( Pr >= -82 && Pr < -79)
@@ -4698,8 +4786,31 @@ double compcxx_Station_9 :: FrameTransmissionDelay(double TotalBitsToBeTransmitt
 	T_c = T_RTS + SIFS + T_CTS + DIFS + SLOT;
 	
 
-	return T;
+	
 }
+#line 516 "./Models/Station.h"
+void compcxx_Station_10 ::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
+
+    double AMPDU_L = ampdu_packet.L; 
+	double now = SimTime(); 
+    double T_s = ampdu_packet.T; 
+    double T_q = ampdu_packet.T_q; 
+	double throughput = AMPDU_L / (T_s + T_q); 
+
+	PRINTF_COLOR(BG_RED, "%.6f [DBG STATS]    Packet %.0f from src %d to dest %d | T_s = %.3f ms, T_q = %.3f ms | L_packet = %.0f\n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
+
+	STAcsv.timestamp.push_back(now); 
+    STAcsv.L_ampdu.push_back(AMPDU_L);
+    STAcsv.T_s.push_back(T_s);
+    STAcsv.T_q.push_back(T_q);
+    STAcsv.destination.push_back(ampdu_packet.destination);
+    STAcsv.source.push_back(ampdu_packet.source);
+	STAcsv.queue_size.push_back(queue_size); 
+	STAcsv.throughput.push_back(throughput);
+} 
+
+
+
 #line 288 "./COST/cost.h"
 
 #line 288 "./COST/cost.h"
@@ -4760,12 +4871,12 @@ double compcxx_Station_9 :: FrameTransmissionDelay(double TotalBitsToBeTransmitt
 #line 24 "./Models/TrafficGeneratorApp.h"
 
 #line 51 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_11 :: Setup()
+void compcxx_TrafficGeneratorApp_12 :: Setup()
 {
 	printf("Traffic Generation APP Setup()\n");
 }
 #line 56 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_11 :: Start()
+void compcxx_TrafficGeneratorApp_12 :: Start()
 {
 	printf("Traffic Generation APP Source Start()\n");
 	
@@ -4777,7 +4888,7 @@ void compcxx_TrafficGeneratorApp_11 :: Start()
 
 }
 #line 68 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_11 :: Stop()
+void compcxx_TrafficGeneratorApp_12 :: Stop()
 {
 	printf("------------------------ TGAPP %d Results ------------------------\n",id);
 	printf("GTAPP %d: Number of Generated Packets = %f | Number of Received Packets = %f\n",id,generated_packets,received_packets);
@@ -4787,7 +4898,7 @@ void compcxx_TrafficGeneratorApp_11 :: Stop()
 
 }
 #line 79 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_11 :: new_packet(trigger_t &)
+void compcxx_TrafficGeneratorApp_12 :: new_packet(trigger_t &)
 {
 	data_packet new_gen_packet;
 
@@ -4813,7 +4924,7 @@ void compcxx_TrafficGeneratorApp_11 :: new_packet(trigger_t &)
 	else inter_packet_timer.Set(SimTime()+tau);
 }
 #line 105 "./Models/TrafficGeneratorApp.h"
-void compcxx_TrafficGeneratorApp_11 :: in(data_packet &packet)
+void compcxx_TrafficGeneratorApp_12 :: in(data_packet &packet)
 {
 	if(traces_on) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f Received from %d \n",SimTime(),id,packet.ID_packet, packet.source);
 	received_packets++;
@@ -4822,6 +4933,63 @@ void compcxx_TrafficGeneratorApp_11 :: in(data_packet &packet)
 	avLreceived += packet.L_data;
 
 }
+
+
+
+#line 288 "./COST/cost.h"
+
+#line 288 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_8/*<trigger_t >*/::Set(trigger_t const & data, double time)
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.time = time;
+  m_event.data = data;
+  m_event.object = this;
+  m_event.active=true;
+  m_simeng->ScheduleEvent(&m_event);
+}
+
+
+#line 300 "./COST/cost.h"
+
+#line 300 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_8/*<trigger_t >*/::Set(double time)
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.time = time;
+  m_event.object = this;
+  m_event.active=true;
+  m_simeng->ScheduleEvent(&m_event);
+}
+
+
+#line 311 "./COST/cost.h"
+
+#line 311 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_8/*<trigger_t >*/::Cancel()
+{
+  if(m_event.active)
+    m_simeng->CancelEvent(&m_event);
+  m_event.active = false;
+}
+
+
+#line 319 "./COST/cost.h"
+
+#line 319 "./COST/cost.h"
+/*template <class T>
+*/void compcxx_Timer_8/*<trigger_t >*/::activate(CostEvent*e)
+{
+  assert(e==&m_event);
+  m_event.active=false;
+  (p_compcxx_parent->reception_time(m_event.data));
+}
+
 
 
 
@@ -4876,63 +5044,6 @@ void compcxx_TrafficGeneratorApp_11 :: in(data_packet &packet)
 {
   assert(e==&m_event);
   m_event.active=false;
-  (p_compcxx_parent->reception_time(m_event.data));
-}
-
-
-
-
-#line 288 "./COST/cost.h"
-
-#line 288 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_6/*<trigger_t >*/::Set(trigger_t const & data, double time)
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.time = time;
-  m_event.data = data;
-  m_event.object = this;
-  m_event.active=true;
-  m_simeng->ScheduleEvent(&m_event);
-}
-
-
-#line 300 "./COST/cost.h"
-
-#line 300 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_6/*<trigger_t >*/::Set(double time)
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.time = time;
-  m_event.object = this;
-  m_event.active=true;
-  m_simeng->ScheduleEvent(&m_event);
-}
-
-
-#line 311 "./COST/cost.h"
-
-#line 311 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_6/*<trigger_t >*/::Cancel()
-{
-  if(m_event.active)
-    m_simeng->CancelEvent(&m_event);
-  m_event.active = false;
-}
-
-
-#line 319 "./COST/cost.h"
-
-#line 319 "./COST/cost.h"
-/*template <class T>
-*/void compcxx_Timer_6/*<trigger_t >*/::activate(CostEvent*e)
-{
-  assert(e==&m_event);
-  m_event.active=false;
   (p_compcxx_parent->new_slot(m_event.data));
 }
 
@@ -4944,12 +5055,12 @@ void compcxx_TrafficGeneratorApp_11 :: in(data_packet &packet)
 #line 40 "./Models/CSMACAChannel1.h"
 
 #line 48 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: Setup()
+void compcxx_CSMACAChannel1_11 :: Setup()
 {
 	printf("CSMACAChannel1 Setup()\n");
 }
 #line 53 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: Start()
+void compcxx_CSMACAChannel1_11 :: Start()
 {
 	printf("CSMACAChannel1 Start()\n");
 
@@ -4959,13 +5070,13 @@ void compcxx_CSMACAChannel1_10 :: Start()
 	slot_time.Set(SimTime());	
 }
 #line 63 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: Stop()
+void compcxx_CSMACAChannel1_11 :: Stop()
 {
 	printf("CSMACAChannel1 Stop()\n");
 
 }
 #line 69 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: new_slot(trigger_t &)
+void compcxx_CSMACAChannel1_11 :: new_slot(trigger_t &)
 {
 	SLOT_indicator slot;
 
@@ -4984,7 +5095,7 @@ void compcxx_CSMACAChannel1_10 :: new_slot(trigger_t &)
 
 
 #line 86 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: reception_time(trigger_t &)
+void compcxx_CSMACAChannel1_11 :: reception_time(trigger_t &)
 {
 	
 	if(sim_transmissions==0) slot_time.Set(SimTime()+SLOT);
@@ -4995,7 +5106,7 @@ void compcxx_CSMACAChannel1_10 :: reception_time(trigger_t &)
 
 
 #line 95 "./Models/CSMACAChannel1.h"
-void compcxx_CSMACAChannel1_10 :: in_frame(data_packet &packet)
+void compcxx_CSMACAChannel1_11 :: in_frame(data_packet &packet)
 {
 	
 	if(packet.AMPDU_size > current_transmissions) current_transmissions = packet.AMPDU_size;
@@ -5029,12 +5140,12 @@ void compcxx_CSMACAChannel1_10 :: in_frame(data_packet &packet)
 
 
 #line 44 "./Models/Sink.h"
-void compcxx_Sink_13 :: Setup()
+void compcxx_Sink_14 :: Setup()
 {
 
 }
 #line 49 "./Models/Sink.h"
-void compcxx_Sink_13 :: Start()
+void compcxx_Sink_14 :: Start()
 {
 	system_time = 0;
 	received_packets = 0;
@@ -5045,7 +5156,7 @@ void compcxx_Sink_13 :: Start()
 	total_qs_time = 0. ; 
 }
 #line 60 "./Models/Sink.h"
-void compcxx_Sink_13 :: Stop()
+void compcxx_Sink_14 :: Stop()
 {	
 	
 	
@@ -5055,7 +5166,7 @@ void compcxx_Sink_13 :: Stop()
         
 }
 #line 97 "./Models/Sink.h"
-void compcxx_Sink_13 :: in(data_packet &ampdu_packet) 
+void compcxx_Sink_14 :: in(data_packet &ampdu_packet) 
 {	
 	PRINTF_COLOR(YELLOW,"%.6f[DBG SINK]      Packet %.0f received at Sink from STA%d \n", SimTime(), ampdu_packet.ID_packet, ampdu_packet.source);
 	
@@ -5074,8 +5185,8 @@ void compcxx_Sink_13 :: in(data_packet &ampdu_packet)
 	
     
 }
-#line 53 "SimpleSim.cc"
-void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st, double distance) {
+#line 57 "SimpleSim.cc"
+void compcxx_SimplifiedWiFiSim_15::Setup(double BGLoad, int LBG, input_arg_t st, double distance) {
     BGLoad_ = BGLoad;
     distance_X = distance; 
 
@@ -5119,9 +5230,6 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
     
     STA.SetSize(2);
 
-
-    
-
     for(int i = 0; i < 2; i++) {
         STA[i].id = i;
         if (i == 0) {
@@ -5160,48 +5268,64 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
     channel1.out_slot.SetSize(3);  
 
     
+
     
+    Net.out_to_APs[0].Connect(AP[0],(compcxx_component::Network_out_to_APs_f_t)&compcxx_AccessPoint_9::in_from_network) /*connect Net.out_to_APs[0], AP[0].in_from_network*/;
+    AP[0].out_to_network_f.Connect(Net,(compcxx_component::AccessPoint_out_to_network_f_t)&compcxx_Network_13::in_from_APs) /*connect AP[0].out_to_network, Net.in_from_APs*/;
+
+
     
-    for(int i = 0; i < 2; i++) {
-        TGApp[i].out_f.Connect(Net,(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Network_12::in_from_apps) /*connect TGApp[i].out, Net.in_from_apps*/;
-        Net.out_to_apps[i].Connect(TGApp[i],(compcxx_component::Network_out_to_apps_f_t)&compcxx_TrafficGeneratorApp_11::in) /*connect Net.out_to_apps[i], TGApp[i].in*/;
+    AP[0].out_packet_f.Connect(channel1,(compcxx_component::AccessPoint_out_packet_f_t)&compcxx_CSMACAChannel1_11::in_frame) /*connect AP[0].out_packet, channel1.in_frame*/;
+    channel1.out_slot[0].Connect(AP[0],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_AccessPoint_9::in_slot) /*connect channel1.out_slot[0], AP[0].in_slot*/;
+
+       
+    for(int i = 0; i < 2; i++) { 
+        STA[i].out_packet_f.Connect(channel1,(compcxx_component::Station_out_packet_f_t)&compcxx_CSMACAChannel1_11::in_frame) /*connect STA[i].out_packet, channel1.in_frame*/;
+        channel1.out_slot[i+1].Connect(STA[i],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_Station_10::in_slot) /*connect channel1.out_slot[i+1], STA[i].in_slot*/;
     }
 
     
-    Net.out_to_APs[0].Connect(AP[0],(compcxx_component::Network_out_to_APs_f_t)&compcxx_AccessPoint_8::in_from_network) /*connect Net.out_to_APs[0], AP[0].in_from_network*/;
-    AP[0].out_to_network_f.Connect(Net,(compcxx_component::AccessPoint_out_to_network_f_t)&compcxx_Network_12::in_from_APs) /*connect AP[0].out_to_network, Net.in_from_APs*/;
-
-    
     for(int i = 0; i < 2; i++) {
-        AP[0].out_to_wireless[i].Connect(STA[i],(compcxx_component::AccessPoint_out_to_wireless_f_t)&compcxx_Station_9::in_from_wireless) /*connect AP[0].out_to_wireless[i], STA[i].in_from_wireless*/;
-        STA[i].out_to_wireless[0].Connect(AP[0],(compcxx_component::Station_out_to_wireless_f_t)&compcxx_AccessPoint_8::in_from_wireless) /*connect STA[i].out_to_wireless[0], AP[0].in_from_wireless*/;
+        AP[0].out_to_wireless[i].Connect(STA[i],(compcxx_component::AccessPoint_out_to_wireless_f_t)&compcxx_Station_10::in_from_wireless) /*connect AP[0].out_to_wireless[i], STA[i].in_from_wireless*/;
+        STA[i].out_to_wireless[0].Connect(AP[0],(compcxx_component::Station_out_to_wireless_f_t)&compcxx_AccessPoint_9::in_from_wireless) /*connect STA[i].out_to_wireless[0], AP[0].in_from_wireless*/;
     }
 
-    
-    for(int i = 0; i < 2; i++) {
-        STA[i].out_to_app_f.Connect(sink,(compcxx_component::Station_out_to_app_f_t)&compcxx_Sink_13::in) /*connect STA[i].out_to_app, sink.in*/;
-    }
+    #if DOWNLINK_TRAFFIC // AP transmits to both STAs
+        
+        for(int i = 0; i < 2; i++) {
+            TGApp[i].out_f.Connect(Net,(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Network_13::in_from_apps) /*connect TGApp[i].out, Net.in_from_apps*/;
+            Net.out_to_apps[i].Connect(TGApp[i],(compcxx_component::Network_out_to_apps_f_t)&compcxx_TrafficGeneratorApp_12::in) /*connect Net.out_to_apps[i], TGApp[i].in*/;
 
-    
-    AP[0].out_packet_f.Connect(channel1,(compcxx_component::AccessPoint_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect AP[0].out_packet, channel1.in_frame*/;
-    channel1.out_slot[0].Connect(AP[0],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_AccessPoint_8::in_slot) /*connect channel1.out_slot[0], AP[0].in_slot*/;
-    for(int i = 0; i < 2; i++) {
-        STA[i].out_packet_f.Connect(channel1,(compcxx_component::Station_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect STA[i].out_packet, channel1.in_frame*/;
-        channel1.out_slot[i+1].Connect(STA[i],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_Station_9::in_slot) /*connect channel1.out_slot[i+1], STA[i].in_slot*/;
-    }
+            
+            STA[i].out_to_app_f.Connect(sink,(compcxx_component::Station_out_to_app_f_t)&compcxx_Sink_14::in) /*connect STA[i].out_to_app, sink.in*/;
+        }
+
+    #elif UPLINK_TRAFFIC // both STAs transmit to AP
+
+        for(int i = 0; i<2; i++ ){ 
+            TGApp[i].out_f.Connect(STA[i],(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Station_10::in_from_app) /*connect TGApp[i].out, STA[i].in_from_app*/; 
+            STA[i].out_to_app_f.Connect(TGApp[i],(compcxx_component::Station_out_to_app_f_t)&compcxx_TrafficGeneratorApp_12::in) /*connect STA[i].out_to_app, TGApp[i].in*/;
+            
+            
+            Net.out_to_apps[i].Connect(sink,(compcxx_component::Network_out_to_apps_f_t)&compcxx_Sink_14::in) /*connect Net.out_to_apps[i], sink.in*/;  
+        }
+
+    #endif
+
+
 
     printf("----- Simplified Wi-FiSim Setup completed -----\n");
 }
 
 
-#line 171 "SimpleSim.cc"
-void compcxx_SimplifiedWiFiSim_14::Start() {
+#line 188 "SimpleSim.cc"
+void compcxx_SimplifiedWiFiSim_15::Start() {
     printf("Start\n");
 }
 
 
-#line 175 "SimpleSim.cc"
-void compcxx_SimplifiedWiFiSim_14::Stop() {
+#line 192 "SimpleSim.cc"
+void compcxx_SimplifiedWiFiSim_15::Stop() {
     printf("########################################################################\n");
     printf("------------------------ Simplified Wi-Fisim Results ----------------------------\n");
     
@@ -5210,7 +5334,7 @@ void compcxx_SimplifiedWiFiSim_14::Stop() {
         printf("STA%d: RSSI = %f | Packet AP Delay = %f\n", 
                i, RSSI[i], AP[0].queueing_service_delay/AP[0].successful);
     }
-    
+
     printf("AP Stats:\n");
     printf("Av A-MPDU size = %f | Tx prob = %f | Coll prob = %f | Buffer size = %f\n",
            AP[0].avAMPDU_size/AP[0].successful,
@@ -5236,8 +5360,7 @@ void compcxx_SimplifiedWiFiSim_14::Stop() {
 }
 
 
-
-#line 210 "SimpleSim.cc"
+#line 226 "SimpleSim.cc"
 int main(int argc, char *argv[]) {
     int seed = atoi(argv[1]);
     double STime = atof(argv[2]);
@@ -5253,7 +5376,7 @@ int main(int argc, char *argv[]) {
     printf("Seed = %d | SimTime = %f\n", seed, STime);
     printf("Input Parameters: BGLoad = %f | LBG = %d\n", BGLoad, LBG);
 
-    compcxx_SimplifiedWiFiSim_14 sim;
+    compcxx_SimplifiedWiFiSim_15 sim;
     sim.Seed = seed;
     sim.StopTime(STime);
     sim.Setup(BGLoad, LBG, st_input_args, distance_X);

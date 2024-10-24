@@ -87,8 +87,6 @@ component AccessPoint : public TypeII
 		double successful; // Number of successful transmissions
 		double queue_occupation;
 
-
-
 		struct csv_sink_t {
 			std::vector <double> timestamp;
             std::vector <double> L_ampdu; 
@@ -251,46 +249,17 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 			{	
 				mpdu_counter += 1; 
 				if (Random() > pe){
+
 					queueing_service_delay_aux += (SimTime() - packet_iter.queueing_service_delay - SLOT); 
 					update_stats_AMPDU(packet_iter, MAC_queue.QueueSize() - mpdu_counter); // although in this case the queue
 				
 					PRINTF_COLOR(RED , "%.6f [AP OUT W]      Packet %.0f from STA %d (%.0f/%d)\n",SimTime(), packet_iter.ID_packet ,packet_iter.destination, mpdu_counter, current_ampdu_size);
-
 					out_to_wireless[packet_iter.destination](packet_iter); 
 				}
 				else{
 					printf("%f - AP - Packet to STA %d with errors (packet ID = %.0f, PER = %.2f)\n",SimTime(),packet_iter.destination,packet_iter.ID_packet, pe );
 				}
 			}
-			// for(int q=0;q<current_ampdu_size;q++)
-			// {
-			// 	//frame_test = MAC_queue.GetFirstPacket();
-			// 	frame_test = MAC_queue.GetPacketAt(packet_queue_index);				
-			// 	if(Random()>=pe)
-			// 	{				
-			// 		// To implement here channel errors (not collisions)
-			// 		//MAC_queue.DelFirstPacket();			
-			// 		MAC_queue.DeletePacketIn(packet_queue_index);
-			// 		queueing_service_delay_aux += (SimTime()-frame_test.queueing_service_delay-SLOT);
-
-			// 		//for(int n=0;n<NumberStations;n++) 
-			// 		//{	
-						
-			// 		//printf("%f - AP tranmits packet to STA %d (Video packet = %d)\n",SimTime(),frame_test.destination,frame_test.num_packet_in_the_frame);
-			// 		PRINTF_COLOR(RED , "%.6f [AP OUT W]      Packet %.0f from STA %d (%d/%d)\n",SimTime(), frame_test.ID_packet ,frame_test.destination, q, current_ampdu_size);
-					
-			// 		update_stats_AMPDU(frame_test, MAC_queue.QueueSize()); //al dequeued packets get statistics
-					
-			// 		out_to_wireless[frame_test.destination](frame_test); // We send each packet to all stations (no broadcast)		
-			// 		//}
-			// 	}
-			// 	else
-			// 	{
-			// 		packet_queue_index++;
-			// 		//printf("%f - AP - Packet to STA %d with errors (Video packet = %d)\n",SimTime(),frame_test.destination,frame_test.num_packet_in_the_frame);
-			// 	}
-
-			// }
 
 			queueing_service_delay_aux = queueing_service_delay_aux / current_ampdu_size;
 			queueing_service_delay += queueing_service_delay_aux;
@@ -379,14 +348,17 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 
 				if(current_destination == packet_to_check.destination && current_ampdu_size_per_station < MAX_AMPDU)
 				{				
-					queue_delay_per_packet += (SimTime() - (packet_to_check.in_queue_time)); 
-					packet_to_check.T_q = SimTime() - packet_to_check.in_queue_time; 
-
+					
 					FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_per_station,current_destination);
 
 					if(T >= MAX_T_AGG){ // making sure that adding an extra packet will not exceed hard limit
 						break; 
 					}
+					
+					queue_delay_per_packet += (SimTime() - (packet_to_check.in_queue_time)); 
+					packet_to_check.T_q = SimTime() - packet_to_check.in_queue_time; 
+
+					
 					
 					MAC_queue.DeletePacketIn(q);
 					q -= 1; 

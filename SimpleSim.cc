@@ -32,6 +32,10 @@ struct input_arg_t {
 
 bool traces_on = true; 
 
+
+#define DONWLINK_TRAFFIC    1 
+#define UPLINK_TRAFFIC      0
+
 component SimplifiedWiFiSim : public CostSimEng {
     public:
         void Setup(double BGLoad, int LBG, input_arg_t st, double distance);
@@ -94,9 +98,6 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     // Modified for two stations
     STA.SetSize(2);
 
-
-    
-
     for(int i = 0; i < 2; i++) {
         STA[i].id = i;
         if (i == 0) {
@@ -135,16 +136,21 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     channel1.out_slot.SetSize(3);  // Changed to 3
 
     // Connections
-    
-    // Apps to Network
-    for(int i = 0; i < 2; i++) {
-        connect TGApp[i].out, Net.in_from_apps;
-        connect Net.out_to_apps[i], TGApp[i].in;
-    }
 
     // Network to AP
     connect Net.out_to_APs[0], AP[0].in_from_network;
     connect AP[0].out_to_network, Net.in_from_APs;
+
+
+    // Channel connections
+    connect AP[0].out_packet, channel1.in_frame;
+    connect channel1.out_slot[0], AP[0].in_slot;
+
+       
+    for(int i = 0; i < 2; i++) { // connect STAs to the shared channel
+        connect STA[i].out_packet, channel1.in_frame;
+        connect channel1.out_slot[i+1], STA[i].in_slot;
+    }
 
     // AP to Stations
     for(int i = 0; i < 2; i++) {
@@ -152,18 +158,29 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
         connect STA[i].out_to_wireless[0], AP[0].in_from_wireless;
     }
 
-    // Stations to Sink
-    for(int i = 0; i < 2; i++) {
-        connect STA[i].out_to_app, sink.in;
-    }
+    #if DOWNLINK_TRAFFIC // AP transmits to both STAs
+        // Apps to Network
+        for(int i = 0; i < 2; i++) {
+            connect TGApp[i].out, Net.in_from_apps;
+            connect Net.out_to_apps[i], TGApp[i].in;
 
-    // Channel connections
-    connect AP[0].out_packet, channel1.in_frame;
-    connect channel1.out_slot[0], AP[0].in_slot;
-    for(int i = 0; i < 2; i++) {
-        connect STA[i].out_packet, channel1.in_frame;
-        connect channel1.out_slot[i+1], STA[i].in_slot;
-    }
+            // app to sink
+            connect STA[i].out_to_app, sink.in;
+        }
+
+    #elif UPLINK_TRAFFIC // both STAs transmit to AP
+
+        for(int i = 0; i<2; i++ ){ // TGApp to STA
+            connect TGApp[i].out, STA[i].in_from_app; // Now STAs are the ones transmitting 
+            connect STA[i].out_to_app, TGApp[i].in;
+            
+            // app in AP/nwk, to sink
+            connect Net.out_to_apps[i], sink.in;  // also connect the network side of AP corresponding to each STA to the sink 
+        }
+
+    #endif
+
+
 
     printf("----- Simplified Wi-FiSim Setup completed -----\n");
 }
@@ -181,7 +198,7 @@ void SimplifiedWiFiSim::Stop() {
         printf("STA%d: RSSI = %f | Packet AP Delay = %f\n", 
                i, RSSI[i], AP[0].queueing_service_delay/AP[0].successful);
     }
-    
+
     printf("AP Stats:\n");
     printf("Av A-MPDU size = %f | Tx prob = %f | Coll prob = %f | Buffer size = %f\n",
            AP[0].avAMPDU_size/AP[0].successful,
@@ -206,7 +223,6 @@ void SimplifiedWiFiSim::Stop() {
     fclose(results);
 }
 
-// Main function remains the same
 int main(int argc, char *argv[]) {
     int seed = atoi(argv[1]);
     double STime = atof(argv[2]);

@@ -17,7 +17,8 @@ component Station : public TypeII
 		void Start();
 		void Stop();		
 		int BinaryExponentialBackoff(int attempt);	
-		double FrameTransmissionDelay(double TotalBitsToBeTransmitted,int NMPDUs, int station_id);
+		void FrameTransmissionDelay(double TotalBitsToBeTransmitted,int NMPDUs, int station_id);
+		void update_stats_AMPDU(data_packet &ampdu_packet, int queue_size); 
 
 	public: // Connections
 		inport void in_from_app(data_packet &packet);
@@ -56,12 +57,28 @@ component Station : public TypeII
 
 
 		//FIFO test_queue;
-		std::deque <data_packet> MAC_queue;
+		FIFO MAC_queue;
 		int qmin; // Minimum number of packets in the buffer to start a tx
 
 		int current_ampdu_size; // Number of packets aggregated in current transmission
 		int current_destination;
 		int NumberStations;
+
+		AMPDU_packet_t aux_ampdu; 
+
+		struct csv_STA_t {
+			std::vector <double> timestamp;
+            std::vector <double> L_ampdu; 
+            std::vector <int>    destination; 
+            std::vector <int>    source; 
+            std::vector <double> T_s; 
+            std::vector <double> T_q;  
+			std::vector <double> queue_size;
+			std::vector <double> throughput;  
+        }STAcsv; 
+
+		const double MAX_T_AGG = 4.85E-3; // 4.85 ms limit for AMPDU
+
 
 	private:
 		int mode; // 0: idle; 1: in transmission
@@ -118,6 +135,7 @@ void Station :: Start()
 	av_MPDUsize=0;
 	queue_occupation=0;
 
+	aux_ampdu.reset(); 
 
 };
 
@@ -144,7 +162,7 @@ void Station :: in_from_app(data_packet &packet)
 	//printf("%f - New packet (to %d) arrives to Station %d. Packets in the buffer = %d \n",SimTime(),packet.destination,id,(int)MAC_queue.size());
 
 	arrived++;
-	int QueueSize = MAC_queue.size();
+	int QueueSize = MAC_queue.QueueSize();
 	queue_occupation+=QueueSize;
 	//printf("%f - New frame. Queue Size = %d \n",SimTime(),QueueSize);
 	if(QueueSize >= qmin) 
@@ -155,7 +173,7 @@ void Station :: in_from_app(data_packet &packet)
 	if(QueueSize < QL)
 	{
 		packet.queueing_service_delay = SimTime();
-		MAC_queue.push_back(packet);
+		MAC_queue.PutPacket(packet);
 	}
 	else
 	{
@@ -191,26 +209,23 @@ void Station :: in_slot(SLOT_indicator &slot)
 			// We remove from the buffer the batch of successful received packets
 			data_packet frame_test;
 			double queueing_service_delay_aux=0; // to calculate the queueing service delay of each packet
-			int packet_queue_index = 0;
-			for(int q=0;q<current_ampdu_size;q++)
+			double mpdu_counter = 0; 
+
+			
+			for(auto& packet_iter : aux_ampdu.mpdu_packets)
 			{
-				//frame_test = MAC_queue.front();
-				frame_test = MAC_queue.at(packet_queue_index);
-				// To implement here channel errors (not collisions)
+				mpdu_counter += 1; 
+				if(Random() > pe){
+					queueing_service_delay_aux += (SimTime() - packet_iter.queueing_service_delay - SLOT) ; 
 				
-				if(Random()>pe)
-				{	
-					//MAC_queue.pop_front();		
-					MAC_queue.erase(MAC_queue.begin()+packet_queue_index);	
-					queueing_service_delay_aux += (SimTime()-frame_test.queueing_service_delay-SLOT);
-					//printf("%f - STA - Packet to AP %d without errors\n",SimTime(),frame_test.destination);
-					//for(int n=0;n<NumberStations;n++) out_to_wireless[n](frame_test); // We send each packet to the corresponding destination		
-					out_to_wireless[frame_test.destination](frame_test);
+					update_stats_AMPDU(packet_iter, MAC_queue.QueueSize() - mpdu_counter); 
+					PRINTF_COLOR(RED , "%.6f [STA OUT W]      Packet %.0f from STA %d (%.0f/%d)\n",SimTime(), packet_iter.ID_packet ,packet_iter.destination, mpdu_counter, current_ampdu_size);
+					out_to_wireless[packet_iter.destination](frame_test); 				
 				}
-				else
-				{
-					packet_queue_index++;
-					//printf("%f - STA - Packet to AP %d with errors\n",SimTime(),frame_test.destination);
+
+				else{
+					printf("%f - STA - Packet to %d with errors (packet ID = %.0f, PER = %.2f)\n",SimTime(),packet_iter.destination,packet_iter.ID_packet, pe );
+
 				}
 
 			}
@@ -223,9 +238,7 @@ void Station :: in_slot(SLOT_indicator &slot)
 			service_time += (SimTime()-aux_service_time-SLOT);
 			successful++;
 			mode = 0;
-
 		}
-
 	}
 	if(slot.status > 1) // Collision
 	{
@@ -253,7 +266,7 @@ void Station :: in_slot(SLOT_indicator &slot)
 
 	if(mode == 0) // Not in transmission mode
 	{
-		int QueueSize = MAC_queue.size();
+		int QueueSize = MAC_queue.QueueSize();
 		//if((QueueSize >= qmin && continuation==0 && QueueSize >= smin)||(QueueSize >= smin && continuation==1))
 		if(QueueSize >= qmin)
 		{
@@ -275,34 +288,64 @@ void Station :: in_slot(SLOT_indicator &slot)
 			//printf("%f - @@@@@@@@@@@@@@@@@@@@@@@Station %d is going to start a transmission with buffer size %li-------------------------------------------------------------\n",SimTime(),id,MAC_queue.size());
 			//printf("%f-Node %d backoff = 0\n",SimTime(),id);
 			// Time to sent a frame
-			current_ampdu_size = MIN((int)MAC_queue.size(),MAX_AMPDU);
+
+			aux_ampdu.reset(); 
+			current_ampdu_size = MIN((int)MAC_queue.QueueSize(),MAX_AMPDU);
 
 			// 1. Pick the first packet in the buffer. Identify the STA.
-			data_packet first_packet_in_buffer = MAC_queue.front();
+			data_packet first_packet_in_buffer = MAC_queue.GetFirstPacket();
+			
+			
+			aux_ampdu.dest_ID = first_packet_in_buffer.destination; 	
 			current_destination = first_packet_in_buffer.destination; 
 			
-			// 2. Select up to MAX_AMPDU packets to that STA.
-			int BufferSize = MAC_queue.size();			
+			// 2. Select up to MAX_AMPDU packets to that STA.			
 			int current_ampdu_size_per_station = 0;		
-		
-			// [0|1|0|1|] -->
-			// q = 1; c=0; [0|0|1] --> [1|0|0|1] --> c=1;
-			// q = 3; c=1; [1|0|0] [1|1|0|0]; --> c=2  	
-
 			double TotalBitsToBeTransmitted = 0;
-			for(int q=0;q<BufferSize;q++)
+			double queue_delay_per_packet = 0; 
+
+			for(int q = 0 ; q < MAC_queue.QueueSize(); q++)
 			{
-				data_packet packet_to_check = MAC_queue.at(q); 
+				data_packet packet_to_check = MAC_queue.GetPacketAt(q); 
 				if(current_destination == packet_to_check.destination && current_ampdu_size_per_station < MAX_AMPDU)
 				{				
-					MAC_queue.erase(MAC_queue.begin()+q);
-					MAC_queue.insert(MAC_queue.begin()+current_ampdu_size_per_station,packet_to_check); //.PutPacketIn(packet_to_check,current_ampdu_size_per_station);		
+					FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_per_station,current_destination);
+
+					if(T >= MAX_T_AGG){ // making sure that adding an extra packet will not exceed hard limit
+						break; 
+					}
+
+					queue_delay_per_packet += ( SimTime() - packet_to_check.in_queue_time) ; 
+					packet_to_check.T_q = 		SimTime() - packet_to_check.in_queue_time; 
+
+					MAC_queue.DeletePacketIn(q); 
+					q -= 1; 
+
+					aux_ampdu.mpdu_packets.push_back(packet_to_check); 
+					aux_ampdu.total_length += packet_to_check.L; 
+					aux_ampdu.size += 1; 
+
+
+					//.PutPacketIn(packet_to_check,current_ampdu_size_per_station);		
 					//printf("************** Removed from %d, and added to %d\n",q,current_ampdu_size_per_station);					
 					TotalBitsToBeTransmitted+=packet_to_check.L;
 					current_ampdu_size_per_station++;
 				}
 			}
 			int current_ampdu_size_sta = MIN(current_ampdu_size_per_station,MAX_AMPDU);	
+
+
+			FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_sta,current_destination);
+			data_packet frame;
+			frame.AMPDU_size = current_ampdu_size_sta;
+			frame.source=id;
+			frame.T = T;
+			frame.T_c = T_c;
+			frame.T_q = queue_delay_per_packet; 
+
+			for (auto& packet: aux_ampdu.mpdu_packets){
+				packet.scheduled_time = SimTime() + T; 
+			}
 			//printf("%f-STA %d | Destination %d | W/O STA = %d | W STA = %d\n",SimTime(),id,current_destination,current_ampdu_size,current_ampdu_size_sta);
 
 			/*
@@ -318,19 +361,15 @@ void Station :: in_slot(SLOT_indicator &slot)
 			//-------------------------
 			// Packets that will be transmitted
 			
-
-			FrameTransmissionDelay(TotalBitsToBeTransmitted,current_ampdu_size_sta,current_destination);
-			//double T_duration = 10E-3;			
-			data_packet frame;
-			frame.AMPDU_size = current_ampdu_size_sta;
-			frame.source=id;
-			frame.T = T;
-			frame.T_c = T_c;
-			//frame.L = Data_length;
-			out_packet(frame); // To the channel!!!
+			PRINTF_COLOR(BG_CYAN, "%.6f [STA%d_TXOP%d] AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), id ,attempts, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
+			aux_ampdu.print(); 
+			
 			attempts++; 
-			device_has_transmitted=1;
+ 			device_has_transmitted=1;
 			transmission_attempts++; // stat
+
+			out_packet(frame); // To the channel!!!
+
 		}
 		else
 		{
@@ -356,7 +395,7 @@ int Station :: BinaryExponentialBackoff(int attempt)
 	return CW;	
 };
 
-double Station :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
+void Station :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_MPDUs, int station_id)
 {	
 
 	// station = 0 (AP) in all cases. To improve.
@@ -469,8 +508,30 @@ double Station :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int N_
 	T_c = T_RTS + SIFS + T_CTS + DIFS + SLOT;
 	//printf("0000 Data Rate = %f (%f) and The value of T = %f (T_DATA = %f)| NMPDUS = %d\n",ORate,OBasicRate,T,T_DATA,N_MPDUs);
 
-	return T;
+	// return T;
 };
+
+
+
+void Station ::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
+
+    double AMPDU_L = ampdu_packet.L; 
+	double now = SimTime(); 
+    double T_s = ampdu_packet.T; 
+    double T_q = ampdu_packet.T_q; 
+	double throughput = AMPDU_L / (T_s + T_q); 
+
+	PRINTF_COLOR(BG_RED, "%.6f [DBG STATS]    Packet %.0f from src %d to dest %d | T_s = %.3f ms, T_q = %.3f ms | L_packet = %.0f\n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
+
+	STAcsv.timestamp.push_back(now); 
+    STAcsv.L_ampdu.push_back(AMPDU_L);
+    STAcsv.T_s.push_back(T_s);
+    STAcsv.T_q.push_back(T_q);
+    STAcsv.destination.push_back(ampdu_packet.destination);
+    STAcsv.source.push_back(ampdu_packet.source);
+	STAcsv.queue_size.push_back(queue_size); 
+	STAcsv.throughput.push_back(throughput);
+} 
 
 
 #endif
