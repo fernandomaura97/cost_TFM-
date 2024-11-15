@@ -24,6 +24,11 @@ double y_[2];
 double z_[2];  
 double RSSI[2];
 
+int NBG = 2; 
+int NXR = 0; 
+
+
+
 struct input_arg_t {
     int seed;
     double STime;
@@ -50,23 +55,33 @@ component SimplifiedWiFiSim : public CostSimEng {
         double distance_X = 0; 
 };
 
-void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double distance) {
+void SimplifiedWiFiSim::Setup(double BGLoad_UL, double BGLoad_DL, int LBG, input_arg_t st, double distance) {
     BGLoad_ = BGLoad;
     distance_X = distance; 
 
     printf("---- Simplified Wi-Fi sim : Setup ----\n");
-    
-    // Modified for two traffic sources
-    TGApp.SetSize(2);
-    for(int i = 0; i < 2; i++) {
-        TGApp[i].Load = BGLoad;
+
+    TGApp.SetSize(2*NBG); // explanation: UL and DL 
+    for(int i = 0; i < NBG; i++) {
+        TGApp[i].Load = BGLoad_DL;
         TGApp[i].L_data = LBG;
         TGApp[i].id = i;
         TGApp[i].node_attached = i;
-        TGApp[i].destination = i;  // Both go to AP
+        TGApp[i].destination = i;  // Goes to DL STA 
         TGApp[i].mode = 0;
         TGApp[i].source_app = i;
         TGApp[i].destination_app = i;
+    }
+
+     for(int i = 0; i < NBG; i++) {
+        TGApp[NBG + i].Load = BGLoad_UL;
+        TGApp[NBG + i].L_data = LBG;
+        TGApp[NBG + i].id = i;
+        TGApp[NBG + i].node_attached = i;
+        TGApp[NBG + i].destination = 0;   // goes to AP 
+        TGApp[NBG + i].mode = 0;
+        TGApp[NBG + i].source_app = i;
+        TGApp[NBG + i].destination_app = i;
     }
 
     // Single AP setup
@@ -92,12 +107,9 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     z_AP[0] = AP[0].z;
 
     // Modified for two stations
-    STA.SetSize(2);
+    STA.SetSize(NBG);
 
-
-    
-
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < NBG; i++) {
         STA[i].id = i;
         if (i == 0) {
             STA[i].x = 1;  // STA0 at 1 meter
@@ -137,10 +149,11 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     // Connections
     
     // Apps to Network
-    for(int i = 0; i < 2; i++) {
-        connect TGApp[i].out, Net.in_from_apps;
-        connect Net.out_to_apps[i], TGApp[i].in;
-    }
+	for(int n=0;n<NBG;n++)
+	{
+		connect TGApp[n].out,Net.in_from_apps;
+		connect Net.out_to_apps[NXR+n],TGApp[n].in;
+	}
 
     // Network to AP
     connect Net.out_to_APs[0], AP[0].in_from_network;
@@ -152,15 +165,22 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
         connect STA[i].out_to_wireless[0], AP[0].in_from_wireless;
     }
 
-    // Stations to Sink
-    for(int i = 0; i < 2; i++) {
-        connect STA[i].out_to_app, sink.in;
+
+    for (int n = 0; n<NBG; n++){
+        connect STA[n].out_to_app, TGApp[NBG + n].in, 
+        connect TGApp[NBG + n].out, STA[n].in_from_app; 
     }
+
+    // // Stations to Sink
+    // for(int i = 0; i < 2; i++) {
+    //     connect STA[i].out_to_app, sink.in;
+    // }
 
     // Channel connections
     connect AP[0].out_packet, channel1.in_frame;
     connect channel1.out_slot[0], AP[0].in_slot;
-    for(int i = 0; i < 2; i++) {
+
+    for(int i = 0; i < NBG; i++) {
         connect STA[i].out_packet, channel1.in_frame;
         connect channel1.out_slot[i+1], STA[i].in_slot;
     }
