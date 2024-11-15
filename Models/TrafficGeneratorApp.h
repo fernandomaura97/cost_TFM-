@@ -35,6 +35,7 @@ component TrafficGeneratorApp : public TypeII
 		int node_attached;
 		int source_app;
 		int destination_app;
+		bool does_transmit; 
 
 
 	private:
@@ -78,28 +79,31 @@ void TrafficGeneratorApp :: Stop()
 
 void TrafficGeneratorApp :: new_packet(trigger_t &)
 {
-	data_packet new_gen_packet;
+	if (does_transmit){
+		data_packet new_gen_packet;
 
-	new_gen_packet.L_data = L_data;   								// deterministic packet size
-	new_gen_packet.L = 100 + L_data;
-	
-	// new_gen_packet.L_data = MAX(1, (int) Exponential(L_data) ) ; // exponentially distributed packet size
-	// new_gen_packet.L = 100 + new_gen_packet.L_data;
-	
-	new_gen_packet.source = node_attached;
-	new_gen_packet.destination = destination;
-	new_gen_packet.source_app = source_app;
-	new_gen_packet.destination_app = destination_app;	
-	new_gen_packet.sent_time = SimTime();
+		new_gen_packet.L_data = L_data;   								// deterministic packet size
+		new_gen_packet.L = 100 + L_data;
+		
+		// new_gen_packet.L_data = MAX(1, (int) Exponential(L_data) ) ; // exponentially distributed packet size
+		// new_gen_packet.L = 100 + new_gen_packet.L_data;
+		
+		new_gen_packet.source = node_attached;
+		new_gen_packet.destination = destination;
+		new_gen_packet.source_app = source_app;
+		new_gen_packet.destination_app = destination_app;	
+		new_gen_packet.sent_time = SimTime();
 
-	new_gen_packet.ID_packet = generated_packets; 
-	if(traces_on==1) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f generated, destination STA %d and app %d\n",SimTime(),id, new_gen_packet.ID_packet , destination,destination_app);
+		new_gen_packet.ID_packet = generated_packets; 
+		if(traces_on==1) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f generated, destination STA %d and app %d\n",SimTime(),id, new_gen_packet.ID_packet , destination,destination_app);
 
-	generated_packets++;
-	out(new_gen_packet);
+		generated_packets++;
+		out(new_gen_packet);
 
-	if(mode==0) inter_packet_timer.Set(SimTime()+Exponential(tau));	
-	else inter_packet_timer.Set(SimTime()+tau);
+		if(mode==0) inter_packet_timer.Set(SimTime()+Exponential(tau));	
+		else inter_packet_timer.Set(SimTime()+tau);
+
+	}
 };
 
 void TrafficGeneratorApp :: in(data_packet &packet)

@@ -1266,7 +1266,7 @@ void CostSimEng::Run()
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -1451,7 +1451,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -1668,7 +1668,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -1825,24 +1825,24 @@ struct info
 
 
 
-#line 54 "./Models/TrafficGeneratorApp.h"
+#line 55 "./Models/TrafficGeneratorApp.h"
 ;
 
 
-#line 66 "./Models/TrafficGeneratorApp.h"
+#line 67 "./Models/TrafficGeneratorApp.h"
 ;
 	
 
-#line 76 "./Models/TrafficGeneratorApp.h"
+#line 77 "./Models/TrafficGeneratorApp.h"
 ;
 
 
 
-#line 103 "./Models/TrafficGeneratorApp.h"
+#line 107 "./Models/TrafficGeneratorApp.h"
 ;
 
 
-#line 116 "./Models/TrafficGeneratorApp.h"
+#line 120 "./Models/TrafficGeneratorApp.h"
 #endif
 
 #line 11 "SimpleSim.cc"
@@ -1875,7 +1875,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -2057,7 +2057,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -2382,7 +2382,7 @@ double PathLoss(double d)
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -2652,7 +2652,7 @@ double PathLoss(double d)
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -2856,7 +2856,7 @@ struct info
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -3062,7 +3062,6 @@ struct info
 #line 15 "SimpleSim.cc"
 
 
-
 double x_AP[1];
 double y_AP[1];
 double z_AP[1];
@@ -3072,11 +3071,17 @@ double y_[2];
 double z_[2];  
 double RSSI[2];
 
+int NBG = 2; 
+int NXR = 0; 
+
 struct input_arg_t {
     int seed;
     double STime;
     double BGLoad;
 } st_input_args;
+
+#define DL_TRAFFIC_BOOL 0
+#define UL_TRAFFIC_BOOL 1
 
 bool traces_on = true; 
 
@@ -3409,6 +3414,7 @@ class compcxx_TrafficGeneratorApp_11 : public compcxx_component, public TypeII
 		int node_attached;
 		int source_app;
 		int destination_app;
+		bool does_transmit; 
 
 
 	private:
@@ -3542,10 +3548,10 @@ class compcxx_Sink_13 : public compcxx_component, public TypeII
 };
 
 
-#line 35 "SimpleSim.cc"
+#line 40 "SimpleSim.cc"
 class compcxx_SimplifiedWiFiSim_14 : public compcxx_component, public CostSimEng {
     public:
-        void Setup(double BGLoad, int LBG, input_arg_t st, double distance);
+        void Setup(double BGLoad_UL, double BGLoad_DL, int LBG, input_arg_t st, double distance);
         void Start();
         void Stop();
 
@@ -3995,7 +4001,7 @@ void compcxx_AccessPoint_8 :: FrameTransmissionDelay(double TotalBitsToBeTransmi
 		
 		BitsSymbol[station_id] = 1;
 		CodingRate[station_id] = (double) 1/2;
-		pe = 0.9;
+		
 	}
 
 	if( Pr >= -82 && Pr < -79)
@@ -4607,7 +4613,7 @@ double compcxx_Station_9 :: FrameTransmissionDelay(double TotalBitsToBeTransmitt
 		
 		BitsSymbol[station_id] = 1;
 		CodingRate[station_id] = (double) 1/2;
-		pe = 0.9;
+		
 	}
 
 	if( Pr >= -82 && Pr < -79)
@@ -4759,12 +4765,12 @@ double compcxx_Station_9 :: FrameTransmissionDelay(double TotalBitsToBeTransmitt
 
 #line 24 "./Models/TrafficGeneratorApp.h"
 
-#line 51 "./Models/TrafficGeneratorApp.h"
+#line 52 "./Models/TrafficGeneratorApp.h"
 void compcxx_TrafficGeneratorApp_11 :: Setup()
 {
 	printf("Traffic Generation APP Setup()\n");
 }
-#line 56 "./Models/TrafficGeneratorApp.h"
+#line 57 "./Models/TrafficGeneratorApp.h"
 void compcxx_TrafficGeneratorApp_11 :: Start()
 {
 	printf("Traffic Generation APP Source Start()\n");
@@ -4776,7 +4782,7 @@ void compcxx_TrafficGeneratorApp_11 :: Start()
 	inter_packet_timer.Set(SimTime()+Exponential(tau) + epsilon );
 
 }
-#line 68 "./Models/TrafficGeneratorApp.h"
+#line 69 "./Models/TrafficGeneratorApp.h"
 void compcxx_TrafficGeneratorApp_11 :: Stop()
 {
 	printf("------------------------ TGAPP %d Results ------------------------\n",id);
@@ -4786,33 +4792,36 @@ void compcxx_TrafficGeneratorApp_11 :: Stop()
 	printf("Av. Packet Delay = %f\n",avDelay/received_packets);
 
 }
-#line 79 "./Models/TrafficGeneratorApp.h"
+#line 80 "./Models/TrafficGeneratorApp.h"
 void compcxx_TrafficGeneratorApp_11 :: new_packet(trigger_t &)
 {
-	data_packet new_gen_packet;
+	if (does_transmit){
+		data_packet new_gen_packet;
 
-	new_gen_packet.L_data = L_data;   								
-	new_gen_packet.L = 100 + L_data;
-	
-	
-	
-	
-	new_gen_packet.source = node_attached;
-	new_gen_packet.destination = destination;
-	new_gen_packet.source_app = source_app;
-	new_gen_packet.destination_app = destination_app;	
-	new_gen_packet.sent_time = SimTime();
+		new_gen_packet.L_data = L_data;   								
+		new_gen_packet.L = 100 + L_data;
+		
+		
+		
+		
+		new_gen_packet.source = node_attached;
+		new_gen_packet.destination = destination;
+		new_gen_packet.source_app = source_app;
+		new_gen_packet.destination_app = destination_app;	
+		new_gen_packet.sent_time = SimTime();
 
-	new_gen_packet.ID_packet = generated_packets; 
-	if(traces_on==1) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f generated, destination STA %d and app %d\n",SimTime(),id, new_gen_packet.ID_packet , destination,destination_app);
+		new_gen_packet.ID_packet = generated_packets; 
+		if(traces_on==1) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f generated, destination STA %d and app %d\n",SimTime(),id, new_gen_packet.ID_packet , destination,destination_app);
 
-	generated_packets++;
-	(out_f(new_gen_packet));
+		generated_packets++;
+		(out_f(new_gen_packet));
 
-	if(mode==0) inter_packet_timer.Set(SimTime()+Exponential(tau));	
-	else inter_packet_timer.Set(SimTime()+tau);
+		if(mode==0) inter_packet_timer.Set(SimTime()+Exponential(tau));	
+		else inter_packet_timer.Set(SimTime()+tau);
+
+	}
 }
-#line 105 "./Models/TrafficGeneratorApp.h"
+#line 109 "./Models/TrafficGeneratorApp.h"
 void compcxx_TrafficGeneratorApp_11 :: in(data_packet &packet)
 {
 	if(traces_on) PRINTF_COLOR(BLUE, "%.6f [TGAPP%d] Packet %.0f Received from %d \n",SimTime(),id,packet.ID_packet, packet.source);
@@ -5074,24 +5083,38 @@ void compcxx_Sink_13 :: in(data_packet &ampdu_packet)
 	
     
 }
-#line 53 "SimpleSim.cc"
-void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st, double distance) {
-    BGLoad_ = BGLoad;
+#line 58 "SimpleSim.cc"
+void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad_UL, double BGLoad_DL, int LBG, input_arg_t st, double distance) {
+    BGLoad_ = BGLoad_DL;
     distance_X = distance; 
 
     printf("---- Simplified Wi-Fi sim : Setup ----\n");
-    
-    
-    TGApp.SetSize(2);
-    for(int i = 0; i < 2; i++) {
-        TGApp[i].Load = BGLoad;
+
+    #define CONST_UL_ID 10
+    #define CONST_DL_ID 30
+    TGApp.SetSize(2*NBG); 
+    for(int i = 0; i < NBG; i++) {
+        TGApp[i].Load = BGLoad_DL;
         TGApp[i].L_data = LBG;
-        TGApp[i].id = i;
+        TGApp[i].id = i + CONST_DL_ID;  
         TGApp[i].node_attached = i;
         TGApp[i].destination = i;  
         TGApp[i].mode = 0;
         TGApp[i].source_app = i;
         TGApp[i].destination_app = i;
+        TGApp[i].does_transmit = DL_TRAFFIC_BOOL; 
+    }
+
+     for(int i = 0; i < NBG; i++) {
+        TGApp[NBG + i].Load = BGLoad_UL;
+        TGApp[NBG + i].L_data = LBG;
+        TGApp[NBG + i].id = i + CONST_UL_ID;  
+        TGApp[NBG + i].node_attached = i + NBG;
+        TGApp[NBG + i].destination = 0;   
+        TGApp[NBG + i].mode = 0;
+        TGApp[NBG + i].source_app = i + NBG;
+        TGApp[NBG + i].destination_app = i + NBG;
+        TGApp[NBG + i].does_transmit = UL_TRAFFIC_BOOL; 
     }
 
     
@@ -5111,25 +5134,20 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
     AP[0].channel_width = 80;
     AP[0].SU_spatial_streams = 2;
     AP[0].out_to_wireless.SetSize(2);  
-    
+
     x_AP[0] = AP[0].x;
     y_AP[0] = AP[0].y;
     z_AP[0] = AP[0].z;
 
-    
-    STA.SetSize(2);
+    STA.SetSize(NBG);
 
-
-    
-
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < NBG; i++) {
         STA[i].id = i;
         if (i == 0) {
             STA[i].x = 1;  
         }
         else{
             STA[i].x = distance_X;  
-
         }
         STA[i].y = 0;
         STA[i].z = 2;
@@ -5152,7 +5170,7 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
 
     
     Net.Rate = 1000E6;
-    Net.out_to_apps.SetSize(2);  
+    Net.out_to_apps.SetSize(2*NBG);  
     Net.out_to_APs.SetSize(1);
 
     
@@ -5160,32 +5178,29 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
     channel1.out_slot.SetSize(3);  
 
     
-    
-    
-    for(int i = 0; i < 2; i++) {
-        TGApp[i].out_f.Connect(Net,(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Network_12::in_from_apps) /*connect TGApp[i].out, Net.in_from_apps*/;
-        Net.out_to_apps[i].Connect(TGApp[i],(compcxx_component::Network_out_to_apps_f_t)&compcxx_TrafficGeneratorApp_11::in) /*connect Net.out_to_apps[i], TGApp[i].in*/;
+    for(int n=0;n<2*NBG;n++)
+    {
+        TGApp[n].out_f.Connect(Net,(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Network_12::in_from_apps) /*connect TGApp[n].out,Net.in_from_apps*/;
+        Net.out_to_apps[n].Connect(TGApp[n],(compcxx_component::Network_out_to_apps_f_t)&compcxx_TrafficGeneratorApp_11::in) /*connect Net.out_to_apps[n],TGApp[n].in*/;
     }
 
-    
     Net.out_to_APs[0].Connect(AP[0],(compcxx_component::Network_out_to_APs_f_t)&compcxx_AccessPoint_8::in_from_network) /*connect Net.out_to_APs[0], AP[0].in_from_network*/;
     AP[0].out_to_network_f.Connect(Net,(compcxx_component::AccessPoint_out_to_network_f_t)&compcxx_Network_12::in_from_APs) /*connect AP[0].out_to_network, Net.in_from_APs*/;
 
-    
     for(int i = 0; i < 2; i++) {
         AP[0].out_to_wireless[i].Connect(STA[i],(compcxx_component::AccessPoint_out_to_wireless_f_t)&compcxx_Station_9::in_from_wireless) /*connect AP[0].out_to_wireless[i], STA[i].in_from_wireless*/;
         STA[i].out_to_wireless[0].Connect(AP[0],(compcxx_component::Station_out_to_wireless_f_t)&compcxx_AccessPoint_8::in_from_wireless) /*connect STA[i].out_to_wireless[0], AP[0].in_from_wireless*/;
     }
 
-    
-    for(int i = 0; i < 2; i++) {
-        STA[i].out_to_app_f.Connect(sink,(compcxx_component::Station_out_to_app_f_t)&compcxx_Sink_13::in) /*connect STA[i].out_to_app, sink.in*/;
+    for (int n = 0; n<NBG; n++){
+        STA[n].out_to_app_f.Connect(TGApp[NBG + n],(compcxx_component::Station_out_to_app_f_t)&compcxx_TrafficGeneratorApp_11::in) /*connect STA[n].out_to_app, TGApp[NBG + n].in*/;  
+        TGApp[NBG + n].out_f.Connect(STA[n],(compcxx_component::TrafficGeneratorApp_out_f_t)&compcxx_Station_9::in_from_app) /*connect TGApp[NBG + n].out, STA[n].in_from_app*/; 
     }
 
-    
     AP[0].out_packet_f.Connect(channel1,(compcxx_component::AccessPoint_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect AP[0].out_packet, channel1.in_frame*/;
     channel1.out_slot[0].Connect(AP[0],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_AccessPoint_8::in_slot) /*connect channel1.out_slot[0], AP[0].in_slot*/;
-    for(int i = 0; i < 2; i++) {
+
+    for(int i = 0; i < NBG; i++) {
         STA[i].out_packet_f.Connect(channel1,(compcxx_component::Station_out_packet_f_t)&compcxx_CSMACAChannel1_10::in_frame) /*connect STA[i].out_packet, channel1.in_frame*/;
         channel1.out_slot[i+1].Connect(STA[i],(compcxx_component::CSMACAChannel1_out_slot_f_t)&compcxx_Station_9::in_slot) /*connect channel1.out_slot[i+1], STA[i].in_slot*/;
     }
@@ -5194,17 +5209,16 @@ void compcxx_SimplifiedWiFiSim_14::Setup(double BGLoad, int LBG, input_arg_t st,
 }
 
 
-#line 171 "SimpleSim.cc"
+#line 182 "SimpleSim.cc"
 void compcxx_SimplifiedWiFiSim_14::Start() {
     printf("Start\n");
 }
 
 
-#line 175 "SimpleSim.cc"
+#line 186 "SimpleSim.cc"
 void compcxx_SimplifiedWiFiSim_14::Stop() {
     printf("########################################################################\n");
     printf("------------------------ Simplified Wi-Fisim Results ----------------------------\n");
-    
     
     for(int i = 0; i < 2; i++) {
         printf("STA%d: RSSI = %f | Packet AP Delay = %f\n", 
@@ -5220,7 +5234,6 @@ void compcxx_SimplifiedWiFiSim_14::Stop() {
 
     FILE *results;
     results = fopen("Results/SimplifiedWiFiSim.txt", "at");
-    
     for(int i = 0; i < 2; i++) {
         fprintf(results, "%f %f %f %f %f %f %f %d\n",
                 BGLoad_,
@@ -5236,8 +5249,7 @@ void compcxx_SimplifiedWiFiSim_14::Stop() {
 }
 
 
-
-#line 210 "SimpleSim.cc"
+#line 218 "SimpleSim.cc"
 int main(int argc, char *argv[]) {
     int seed = atoi(argv[1]);
     double STime = atof(argv[2]);
@@ -5249,6 +5261,9 @@ int main(int argc, char *argv[]) {
     st_input_args.STime = STime;
     st_input_args.BGLoad = BGLoad;
 
+    double BGLoad_UL = BGLoad; 
+    double BGLoad_DL = BGLoad; 
+
     printf("---- Simplified WiFiSim ----\n");
     printf("Seed = %d | SimTime = %f\n", seed, STime);
     printf("Input Parameters: BGLoad = %f | LBG = %d\n", BGLoad, LBG);
@@ -5256,7 +5271,7 @@ int main(int argc, char *argv[]) {
     compcxx_SimplifiedWiFiSim_14 sim;
     sim.Seed = seed;
     sim.StopTime(STime);
-    sim.Setup(BGLoad, LBG, st_input_args, distance_X);
+    sim.Setup(BGLoad_UL, BGLoad_DL, LBG, st_input_args, distance_X);
 
     printf("Run\n");
     sim.Run();

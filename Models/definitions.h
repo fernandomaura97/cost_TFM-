@@ -15,7 +15,7 @@
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
