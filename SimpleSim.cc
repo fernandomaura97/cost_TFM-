@@ -14,6 +14,10 @@
 #include "./Models/CSMACAChannel1.h"
 #include "./Models/Sink.h"
 
+#include <thread>
+#include <chrono>
+
+
 // Modified arrays to support 2 stations
 double x_AP[1];
 double y_AP[1];
@@ -67,6 +71,14 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
         TGApp[i].mode = 0;
         TGApp[i].source_app = i;
         TGApp[i].destination_app = i;
+
+        std::cout << "TGApp[" << i << "] DOWNLINK initialized: "
+                  << "Load = " << TGApp[i].Load
+				  << ", DEST: " << TGApp[i].destination
+				  << ", SRC_app: " <<  TGApp[i].source_app 
+				  << ", DEST_app: " << TGApp[i].destination_app << std::endl
+                  << ", L_data=" << TGApp[i].L_data
+                  << ", id=" << TGApp[i].id << std::endl << std::flush;;
     }
 
     // Single AP setup
@@ -91,12 +103,14 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     y_AP[0] = AP[0].y;
     z_AP[0] = AP[0].z;
 
+
+    std::cout << "AP[" << 0 << "] initialized with id=" << AP[0].id
+                << ", x=" << AP[0].x << ", y=" << AP[0].y
+                << ", z=" << AP[0].z << std::endl;
+
+
     // Modified for two stations
     STA.SetSize(2);
-
-
-    
-
     for(int i = 0; i < 2; i++) {
         STA[i].id = i;
         if (i == 0) {
@@ -123,6 +137,11 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
         x_[i] = STA[i].x;
         y_[i] = STA[i].y;
         z_[i] = STA[i].z;
+
+
+		std::cout << "STA[" << i << "] initialized: x=" << STA[i].x
+				<< ", y=" << STA[i].y << ", z=" << STA[i].z
+				<< ", Pt=" << STA[i].Pt << std::endl;
     }
 
     // Network setup
@@ -134,27 +153,40 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     channel1.NumNodes = 3;  // AP + 2 STAs
     channel1.out_slot.SetSize(3);  // Changed to 3
 
+
+    printf("\n\n****CONNECTIONS****\n"); 
+
     // Connections
     
     // Apps to Network
     for(int i = 0; i < 2; i++) {
         connect TGApp[i].out, Net.in_from_apps;
         connect Net.out_to_apps[i], TGApp[i].in;
+
+        std::cout << "Connected TGApp[" << i << "].out to Net.in_from_apps" << std::endl;
+        std::cout << "Connected Net.out_to_apps[" << (i) << "] to TGApp[" << i << "].in" << std::endl;
     }
 
     // Network to AP
     connect Net.out_to_APs[0], AP[0].in_from_network;
     connect AP[0].out_to_network, Net.in_from_APs;
 
+	std::cout << "Connected Net.out_to_APs[0] to AP[0].in_from_network" << std::endl;
+    std::cout << "Connected AP[0].out_to_network to Net.in_from_APs" << std::endl;
+
     // AP to Stations
     for(int i = 0; i < 2; i++) {
         connect AP[0].out_to_wireless[i], STA[i].in_from_wireless;
         connect STA[i].out_to_wireless[0], AP[0].in_from_wireless;
+
+        std::cout << "Connected AP[0].out_to_wireless[" << i << "] to STA[" << i << "].in_from_wireless" << std::endl;
+        std::cout << "Connected STA[" << i << "].out_to_wireless[0] to AP[0].in_from_wireless" << std::endl;
     }
 
     // Stations to Sink
     for(int i = 0; i < 2; i++) {
         connect STA[i].out_to_app, sink.in;
+        
     }
 
     // Channel connections
@@ -163,9 +195,15 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     for(int i = 0; i < 2; i++) {
         connect STA[i].out_packet, channel1.in_frame;
         connect channel1.out_slot[i+1], STA[i].in_slot;
+
+        std::cout << "Connected STA[" << i << "].out_packet to channel1.in_frame" << std::endl;
+        std::cout << "Connected channel1.out_slot[" << (i + 1) << "] to STA[" << i << "].in_slot" << std::endl<<std::flush;
+
+
     }
 
     printf("----- Simplified Wi-FiSim Setup completed -----\n");
+	std::this_thread::sleep_for(std::chrono::seconds(10)); 
 }
 
 void SimplifiedWiFiSim::Start() {

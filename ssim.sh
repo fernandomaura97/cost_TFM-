@@ -39,24 +39,18 @@ echo -e "\n\n********************************** COST results *******************
 
 ### Run the SimMM1K executable (once) ###
 
-bandwidth_STA=50E6
-
 # rm out_log.ans
 # ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance| tee -a out_log.ans # FOR LOGGING
 
 ### Run the SimMM1K executable (loop) ###
-
+rm out_log.ans
 for bandwidth_STA in $(seq $start_bandwidth $step_bandwidth $end_bandwidth); do
     echo -e "\n\n********************************** COST results for bandwidth_STA = $bandwidth_STA **********************************\n"
-    ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance
+    ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance | tee out_log.ans
      # Create a directory named after the current bandwidth_STA value with reduced decimals
     folder_name=$(echo "$bandwidth_STA" | awk '{printf "%.1fMbps\n", $1/1E6}')
     mkdir -p "Results/$folder_name"
     
-    # Move CSV files into the corresponding folder
-    mv Results/*.csv "Results/$folder_name/"
-
-     folder_list+=("Results/$folder_name") # To compress folders
 done
 
 
