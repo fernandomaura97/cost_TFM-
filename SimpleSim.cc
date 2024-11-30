@@ -186,6 +186,8 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     // Stations to Sink
     for(int i = 0; i < 2; i++) {
         connect STA[i].out_to_app, sink.in;
+
+        std::cout << "Connected STA[" << i << "].out_to_app to sink.in" << std::endl;
         
     }
 
@@ -203,7 +205,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     }
 
     printf("----- Simplified Wi-FiSim Setup completed -----\n");
-	std::this_thread::sleep_for(std::chrono::seconds(10)); 
+	std::this_thread::sleep_for(std::chrono::seconds(5)); 
 }
 
 void SimplifiedWiFiSim::Start() {
