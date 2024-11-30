@@ -212,8 +212,6 @@ void AccessPoint :: Stop()
 void AccessPoint :: in_from_network(data_packet &packet)
 {
 
-	if(traces_on) PRINTF_COLOR(LIGHT_MAGENTA,"%.6f [AP IN]     Packet %.0f from network %d directed to STA %d | AP Tx Buffer = %d \n",SimTime(),packet.ID_packet ,packet.source, packet.destination,MAC_queue.QueueSize());
-
 	arrived++;
 	int QueueSize = MAC_queue.QueueSize();
 	queue_occupation+=QueueSize;
@@ -229,6 +227,8 @@ void AccessPoint :: in_from_network(data_packet &packet)
 		
 		packet.in_queue_time = SimTime(); 
 		MAC_queue.PutPacket(packet);
+		PRINTF_COLOR(LIGHT_MAGENTA,"%.6f [AP IN]     Packet %.0f from network %d directed to STA %d | AP Tx Buffer = %d \n",SimTime(),packet.ID_packet ,packet.source, packet.destination,MAC_queue.QueueSize());
+
 
 	}
 	else
@@ -270,8 +270,7 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 				mpdu_counter += 1; 
 				if (Random() > pe){
 					queueing_service_delay_aux += (SimTime() - packet_iter.queueing_service_delay - SLOT); 
-					update_stats_AMPDU(packet_iter, MAC_queue.QueueSize() - mpdu_counter); // although in this case the queue
-				
+					update_stats_AMPDU(packet_iter, packet_iter.queue_length_when_out);
 					PRINTF_COLOR(RED , "%.6f [AP OUT W]      Packet %.0f from STA %d (%.0f/%d)\n",SimTime(), packet_iter.ID_packet ,packet_iter.destination, mpdu_counter, current_ampdu_size);
 
 					out_to_wireless[packet_iter.destination](packet_iter); 
@@ -408,7 +407,7 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 					
 					MAC_queue.DeletePacketIn(q);
 					q -= 1; 
-					
+					packet_to_check.queue_length_when_out = MAC_queue.QueueSize(); 
 					aux_ampdu.mpdu_packets.push_back(packet_to_check); 
 					aux_ampdu.total_length += packet_to_check.L ; 
 					aux_ampdu.size += 1; 
@@ -606,7 +605,7 @@ void AccessPoint::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
     double T_q = ampdu_packet.T_q; 
 	double throughput = AMPDU_L / (T_s + T_q); 
 
-	PRINTF_COLOR(BG_RED, "%.6f [DBG STATS]    Packet %.0f from src %d to dest %d | T_s = %.3f ms, T_q = %.3f ms | L_packet = %.0f\n", SimTime(), ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
+	PRINTF_COLOR(BG_RED, "%.6f [DBG STATS]   Q = %d,  Packet %.0f from src %d to dest %d | T_s = %.3f ms, T_q = %.3f ms | L_packet = %.0f\n", SimTime(), queue_size, ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
 
 	sinkcsv.timestamp.push_back(now); 
     sinkcsv.L_ampdu.push_back(AMPDU_L);

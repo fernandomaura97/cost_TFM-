@@ -15,7 +15,7 @@
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
+#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -66,6 +66,7 @@ struct data_packet
 	double scheduled_time; // Time at which the packet is selected for transmission	
 	double queueing_service_delay;
 
+	int queue_length_when_out; 
 
 	double in_queue_time; 
 
