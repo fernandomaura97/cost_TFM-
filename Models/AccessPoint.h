@@ -12,6 +12,7 @@
 #include <vector>
 #include <iomanip>
 #include <iostream>
+#include <filesystem>
 
 
 component AccessPoint : public TypeII
@@ -100,6 +101,9 @@ component AccessPoint : public TypeII
 			std::vector <double> throughput;  
         }sinkcsv; 
 
+		std::string output_folder = "Results/"; // Default folder
+
+
 };
 
 void AccessPoint :: Setup()
@@ -159,7 +163,21 @@ void AccessPoint :: Stop()
 	filename << "T" << std::fixed << std::setprecision(0) << StopTime() << "CSV_AMPDU.csv"; 
 	// std::string filename = "CSV_AMPDU_.csv"
 	
-	std::string filename_final = "Results/" + filename.str(); 
+	std::string filename_final = output_folder + filename.str(); 
+	
+
+	try {
+		if (std::filesystem::create_directory(output_folder)) {
+			std::cout << "Directory created successfully: " << output_folder << std::endl;
+		} else {
+			std::cout << "Directory already exists or could not be created." << std::endl;
+		}
+		} catch (const std::filesystem::filesystem_error& e) {
+			std::cerr << "Error: " << e.what() << std::endl;
+		}
+
+
+
 
 	std::ofstream file(filename_final);
 

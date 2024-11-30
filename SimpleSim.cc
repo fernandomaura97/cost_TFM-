@@ -34,6 +34,37 @@ struct input_arg_t {
     double BGLoad;
 } st_input_args;
 
+static const int N_BG = 1; 
+
+std::string generateOutputFolder(input_arg_t &inputArgs, int NBG, int AP_id ) {
+    std::ostringstream folderName;
+
+    std::ostringstream folder1;
+    folder1 << "Results_NBG" << NBG << "/";
+
+    try {
+		if (std::filesystem::create_directory(folder1.str())) {
+			std::cout << "Directory created successfully: " << folder1.str() << std::endl;
+		} else {
+			std::cout << "Directory already exists or could not be created." << std::endl;
+		}
+		} catch (const std::filesystem::filesystem_error& e) {
+			std::cerr << "Error: " << e.what() << std::endl;
+		}
+
+
+
+    folderName << folder1.str()
+			//    << "AP" << AP_id		
+            //    << "_NBG" << NBG 
+               <<  inputArgs.BGLoad/1e6 
+			   << "Mbps" 
+            //    << "_Seed" << inputArgs.seed
+			   << "/";
+    
+    return folderName.str();
+}
+
 bool traces_on = true; 
 
 component SimplifiedWiFiSim : public CostSimEng {
@@ -61,8 +92,8 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     printf("---- Simplified Wi-Fi sim : Setup ----\n");
     
     // Modified for two traffic sources
-    TGApp.SetSize(2);
-    for(int i = 0; i < 2; i++) {
+    TGApp.SetSize(N_BG);
+    for(int i = 0; i < N_BG; i++) {
         TGApp[i].Load = BGLoad;
         TGApp[i].L_data = LBG;
         TGApp[i].id = i;
@@ -87,7 +118,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     AP[0].x = 0;
     AP[0].y = 0;
     AP[0].z = 2;
-    AP[0].NumberStations = 2;  // Changed to 2 stations
+    AP[0].NumberStations = N_BG;  // Changed to N_BG stations
     AP[0].Pt = 20;
     AP[0].qmin = 1;
     AP[0].QL = 10000;
@@ -97,11 +128,20 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     AP[0].pe = 0;
     AP[0].channel_width = 80;
     AP[0].SU_spatial_streams = 2;
-    AP[0].out_to_wireless.SetSize(2);  // Changed to 2 for two stations
+    AP[0].out_to_wireless.SetSize(N_BG);  // Changed to N_BG stations
     
     x_AP[0] = AP[0].x;
     y_AP[0] = AP[0].y;
     z_AP[0] = AP[0].z;
+
+    std::string outputFolder = generateOutputFolder(st_input_args, N_BG, 0 ); 
+
+
+    std::cout << "FILENAME AP: " << outputFolder.c_str() << std::endl; 
+
+    AP[0].output_folder = outputFolder; 
+
+
 
 
     std::cout << "AP[" << 0 << "] initialized with id=" << AP[0].id
@@ -110,8 +150,8 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
 
 
     // Modified for two stations
-    STA.SetSize(2);
-    for(int i = 0; i < 2; i++) {
+    STA.SetSize(N_BG);
+    for(int i = 0; i < N_BG; i++) {
         STA[i].id = i;
         if (i == 0) {
             STA[i].x = 1;  // STA0 at 1 meter
@@ -146,12 +186,12 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
 
     // Network setup
     Net.Rate = 1000E6;
-    Net.out_to_apps.SetSize(2);  // Changed to 2
+    Net.out_to_apps.SetSize(N_BG);  // Changed to 2
     Net.out_to_APs.SetSize(1);
 
     // Channel setup
-    channel1.NumNodes = 3;  // AP + 2 STAs
-    channel1.out_slot.SetSize(3);  // Changed to 3
+    channel1.NumNodes = N_BG + 1;  // AP + 2 STAs
+    channel1.out_slot.SetSize(N_BG + 1);  // Changed to 3
 
 
     printf("\n\n****CONNECTIONS****\n"); 
@@ -159,7 +199,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     // Connections
     
     // Apps to Network
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < N_BG; i++) {
         connect TGApp[i].out, Net.in_from_apps;
         connect Net.out_to_apps[i], TGApp[i].in;
 
@@ -175,7 +215,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     std::cout << "Connected AP[0].out_to_network to Net.in_from_APs" << std::endl;
 
     // AP to Stations
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < N_BG; i++) {
         connect AP[0].out_to_wireless[i], STA[i].in_from_wireless;
         connect STA[i].out_to_wireless[0], AP[0].in_from_wireless;
 
@@ -184,7 +224,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     }
 
     // Stations to Sink
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < N_BG; i++) {
         connect STA[i].out_to_app, sink.in;
 
         std::cout << "Connected STA[" << i << "].out_to_app to sink.in" << std::endl;
@@ -194,7 +234,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     // Channel connections
     connect AP[0].out_packet, channel1.in_frame;
     connect channel1.out_slot[0], AP[0].in_slot;
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < N_BG; i++) {
         connect STA[i].out_packet, channel1.in_frame;
         connect channel1.out_slot[i+1], STA[i].in_slot;
 
@@ -217,7 +257,7 @@ void SimplifiedWiFiSim::Stop() {
     printf("------------------------ Simplified Wi-Fisim Results ----------------------------\n");
     
     // Modified to show results for both stations
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < N_BG; i++) {
         printf("STA%d: RSSI = %f | Packet AP Delay = %f\n", 
                i, RSSI[i], AP[0].queueing_service_delay/AP[0].successful);
     }
@@ -232,7 +272,7 @@ void SimplifiedWiFiSim::Stop() {
     FILE *results;
     results = fopen("Results/SimplifiedWiFiSim.txt", "at");
     // Modified to log results for both stations
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < N_BG; i++) {
         fprintf(results, "%f %f %f %f %f %f %f %d\n",
                 BGLoad_,
                 AP[0].queueing_service_delay/AP[0].successful,

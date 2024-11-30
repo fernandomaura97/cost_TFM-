@@ -1,4 +1,17 @@
 #!/bin/bash
+SERIAL=0 ## to control serial or parallel execution
+NUM_JOBS=8 ## to control nº of threads in parallel
+
+# Define the function to execute on Ctrl+C
+handle_interrupt() {
+    echo "Simulation interrupted."
+    exit 1;
+}
+
+# Set up the trap for SIGINT (Ctrl+C)
+trap handle_interrupt SIGINT
+NUMBER_OF_JOBS=8
+
 
 # Simulation parameters
 seed=1
@@ -44,15 +57,22 @@ echo -e "\n\n********************************** COST results *******************
 
 ### Run the SimMM1K executable (loop) ###
 rm out_log.ans
+
+temp_file=$(mktemp)
+
 for bandwidth_STA in $(seq $start_bandwidth $step_bandwidth $end_bandwidth); do
     echo -e "\n\n********************************** COST results for bandwidth_STA = $bandwidth_STA **********************************\n"
-    ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance | tee out_log.ans
-     # Create a directory named after the current bandwidth_STA value with reduced decimals
-    folder_name=$(echo "$bandwidth_STA" | awk '{printf "%.1fMbps\n", $1/1E6}')
-    mkdir -p "Results/$folder_name"
+    
+    if [ "$SERIAL" ]; then
+        ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance
+    fi
+    echo ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance >> "$temp_file"    
+
     
 done
 
 
-zip -r Results_TFM.zip "${folder_list[@]}"
+parallel -j "$NUMBER_OF_JOBS" < "$temp_file"
+rm "$temp_file"
 
+echo "ALL SIMS COMPLETED!!!"
