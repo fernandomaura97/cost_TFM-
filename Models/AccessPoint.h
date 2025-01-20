@@ -228,8 +228,6 @@ void AccessPoint :: in_from_network(data_packet &packet)
 		packet.in_queue_time = SimTime(); 
 		MAC_queue.PutPacket(packet);
 		PRINTF_COLOR(LIGHT_MAGENTA,"%.6f [AP IN]     Packet %.0f from network %d directed to STA %d | AP Tx Buffer = %d \n",SimTime(),packet.ID_packet ,packet.source, packet.destination,MAC_queue.QueueSize());
-
-
 	}
 	else
 	{
@@ -244,10 +242,8 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 {
 
 	slots++;
-
 	// ######################################################################################################
 	// Implications of the last slot: idle (0), successful (1) or collision (>1)
-	
 	if(slot.status == 0) // Idle
 	{
 		//printf("%f - Channel Empty - Mode = %d - BO = %d\n",SimTime(),mode,backoff_counter);
@@ -591,7 +587,7 @@ void AccessPoint :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int 
 	//double T = T_RTS + SIFS + T_CTS + SIFS + T_DATA + SIFS + T_ACK + DIFS + SLOT;
 	T = T_RTS + SIFS + T_CTS + SIFS + T_DATA + SIFS + T_ACK + DIFS + SLOT;
 	T_c = T_RTS + SIFS + T_CTS + DIFS + SLOT;	
-	//printf("%f - AP : Data Rate = %f | Basic Rate = %f | T = %f (T_DATA = %f) T_c = %f | NMPDUS = %d\n",SimTime(),ORate,OBasicRate,T,T_DATA,T_c,N_MPDUs);
+	// printf("%.3f - AP : Data Rate = %.3f | Basic Rate = %.3f | T = %.5f (T_DATA = %.5f) T_c = %.5f | NMPDUS = %d\n",SimTime(),ORate,OBasicRate,T,T_DATA,T_c,N_MPDUs);
 
 	//return T;
 };

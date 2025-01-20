@@ -17,6 +17,8 @@
 #include <thread>
 #include <chrono>
 
+static int N_BG; 
+
 
 // Modified arrays to support 2 stations
 double x_AP[1];
@@ -34,7 +36,6 @@ struct input_arg_t {
     double BGLoad;
 } st_input_args;
 
-static const int N_BG = 1; 
 
 std::string generateOutputFolder(input_arg_t &inputArgs, int NBG, int AP_id ) {
     std::ostringstream folderName;
@@ -69,7 +70,7 @@ bool traces_on = true;
 
 component SimplifiedWiFiSim : public CostSimEng {
     public:
-        void Setup(double BGLoad, int LBG, input_arg_t st, double distance);
+        void Setup(double BGLoad, int LBG, input_arg_t st, double distance, int N_bg_arg);
         void Start();
         void Stop();
 
@@ -85,7 +86,7 @@ component SimplifiedWiFiSim : public CostSimEng {
         double distance_X = 0; 
 };
 
-void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double distance) {
+void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double distance, int N_bg_arg) {
     BGLoad_ = BGLoad;
     distance_X = distance; 
 
@@ -125,7 +126,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     AP[0].MAX_AMPDU = 64; // same as in MG1 sim
     AP[0].CWmin = 15;
     AP[0].max_BEB_stages = 6;
-    AP[0].pe = 0;
+    AP[0].pe = 0.0;
     AP[0].channel_width = 80;
     AP[0].SU_spatial_streams = 2;
     AP[0].out_to_wireless.SetSize(N_BG);  // Changed to N_BG stations
@@ -141,9 +142,6 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
 
     AP[0].output_folder = outputFolder; 
 
-
-
-
     std::cout << "AP[" << 0 << "] initialized with id=" << AP[0].id
                 << ", x=" << AP[0].x << ", y=" << AP[0].y
                 << ", z=" << AP[0].z << std::endl;
@@ -158,7 +156,6 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
         }
         else{
             STA[i].x = distance_X;  // STA 1 at distance of input arg. 
-
         }
         STA[i].y = 0;
         STA[i].z = 2;
@@ -293,6 +290,9 @@ int main(int argc, char *argv[]) {
     double BGLoad = atof(argv[3]);
     int LBG = atoi(argv[4]);
     double distance_X = atof(argv[5]); 
+    int N_BG_arg = atoi(argv[6]);
+
+    N_BG = N_BG_arg; 
 
     st_input_args.seed = seed;
     st_input_args.STime = STime;
@@ -300,12 +300,12 @@ int main(int argc, char *argv[]) {
 
     printf("---- Simplified WiFiSim ----\n");
     printf("Seed = %d | SimTime = %f\n", seed, STime);
-    printf("Input Parameters: BGLoad = %f | LBG = %d\n", BGLoad, LBG);
+    printf("Input Parameters: BGLoad = %f | LBG = %d, distance = %.2f\n", BGLoad, LBG, distance_X);
 
     SimplifiedWiFiSim sim;
     sim.Seed = seed;
     sim.StopTime(STime);
-    sim.Setup(BGLoad, LBG, st_input_args, distance_X);
+    sim.Setup(BGLoad, LBG, st_input_args, distance_X, N_BG);
 
     printf("Run\n");
     sim.Run();

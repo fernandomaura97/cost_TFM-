@@ -1,6 +1,6 @@
 #!/bin/bash
 SERIAL=0 ## to control serial or parallel execution
-NUM_JOBS=8 ## to control nº of threads in parallel
+NUMBER_OF_JOBS=8 ## to control nº of threads in parallel
 
 # Define the function to execute on Ctrl+C
 handle_interrupt() {
@@ -10,18 +10,18 @@ handle_interrupt() {
 
 # Set up the trap for SIGINT (Ctrl+C)
 trap handle_interrupt SIGINT
-NUMBER_OF_JOBS=8
 
 
 # Simulation parameters
 seed=1
 simTime=1E3
-distance=30
+distance=20
+N_BG=(1)
 
 # Define bandwidth parameters
-start_bandwidth=2.5E6
-end_bandwidth=40E6
-step_bandwidth=2.5E6
+start_bandwidth=10E6
+end_bandwidth=80E6
+step_bandwidth=10E6
 
 clear
 # Function to show ellipsis while compiling
@@ -56,19 +56,22 @@ echo -e "\n\n********************************** COST results *******************
 # ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance| tee -a out_log.ans # FOR LOGGING
 
 ### Run the SimMM1K executable (loop) ###
-rm out_log.ans
+# rm out_log.ans
 
 temp_file=$(mktemp)
+for num_stas in "${N_BG[@]}"; do 
 
-for bandwidth_STA in $(seq $start_bandwidth $step_bandwidth $end_bandwidth); do
-    echo -e "\n\n********************************** COST results for bandwidth_STA = $bandwidth_STA **********************************\n"
-    
-    if [ "$SERIAL" ]; then
-        ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance
-    fi
-    echo ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance >> "$temp_file"    
+    for bandwidth_STA in $(seq $start_bandwidth $step_bandwidth $end_bandwidth); do
+        echo -e "\n\n********************************** COST results for bandwidth_STA = $bandwidth_STA **********************************\n"
+        
+        if [ "$SERIAL" == 1 ]; then
+            echo "SERIAL with out_log!!!!\n"
+            sleep 1
+            ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance $num_stas | tee out_log.ans
+        fi
+        echo ./SimpleSim $seed $simTime $bandwidth_STA 12000 $distance $num_stas >> "$temp_file"    
 
-    
+    done
 done
 
 

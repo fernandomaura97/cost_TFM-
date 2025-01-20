@@ -15,7 +15,6 @@
 #define DIFS 31E-6
 #define SIFS 16E-6
 
-#define DEBUG_PRINTS 1 // to set up fancy output packet per packet
 
 	#define RESET   "\033[0m"
 	#define BLUE    "\033[34m"    // Blue
@@ -41,6 +40,9 @@
 	#define BG_MAGENTA   "\033[45m"     // Magenta background
 	#define BG_CYAN      "\033[46m"     // Cyan background
 	#define BG_WHITE     "\033[47m"     // White background
+	
+	
+	#define DEBUG_PRINTS 0 // to set up fancy output packet per packet
 
 	#if DEBUG_PRINTS
 		#define PRINTF_COLOR(color, format, ...) printf(color format RESET, ##__VA_ARGS__)
