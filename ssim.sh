@@ -14,15 +14,15 @@ trap handle_interrupt SIGINT
 
 # Simulation parameters
 seed=1
-simTime=1E3
+simTime=1E2
 distance=20
-N_BG=(1)
-
+# N_BG=(1 2 3 4 5 6 7 8 9 10) 
+N_BG=(4)
+alt_bandwidths=(10E6 50E6 100E6 200E6)
 # Define bandwidth parameters
-start_bandwidth=10E6
-end_bandwidth=80E6
-step_bandwidth=10E6
-
+# start_bandwidth=10E6
+# end_bandwidth=80E6
+# step_bandwidth=10E6
 clear
 # Function to show ellipsis while compiling
 show_dots() {
@@ -61,7 +61,8 @@ echo -e "\n\n********************************** COST results *******************
 temp_file=$(mktemp)
 for num_stas in "${N_BG[@]}"; do 
 
-    for bandwidth_STA in $(seq $start_bandwidth $step_bandwidth $end_bandwidth); do
+    # for bandwidth_STA in $(seq $start_bandwidth $step_bandwidth $end_bandwidth); do
+    for bandwidth_STA in "${alt_bandwidths[@]}"; do
         echo -e "\n\n********************************** COST results for bandwidth_STA = $bandwidth_STA **********************************\n"
         
         if [ "$SERIAL" == 1 ]; then
