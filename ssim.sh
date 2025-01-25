@@ -15,10 +15,12 @@ trap handle_interrupt SIGINT
 # Simulation parameters
 seed=1
 simTime=1E2
-distance=20
+distance=10
 # N_BG=(1 2 3 4 5 6 7 8 9 10) 
-N_BG=(4)
-alt_bandwidths=(10E6 50E6 100E6 200E6)
+N_BG=(2 3 4)
+# alt_bandwidths=(10E6 50E6 100E6 200E6)
+alt_bandwidths=(10E6 20E6 30E6 40E6 50E6 60E6 70E6 80E6 90E6 100E6)
+
 # Define bandwidth parameters
 # start_bandwidth=10E6
 # end_bandwidth=80E6

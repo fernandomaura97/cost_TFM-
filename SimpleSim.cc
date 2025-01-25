@@ -41,7 +41,7 @@ std::string generateOutputFolder(input_arg_t &inputArgs, int NBG, int AP_id ) {
     std::ostringstream folderName;
 
     std::ostringstream folder1;
-    folder1 << "Results_NBG" << NBG << "/";
+    folder1 << "COST_DL_" << NBG << "/";
 
     try {
 		if (std::filesystem::create_directory(folder1.str())) {
@@ -159,7 +159,7 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
         }
         STA[i].y = 0;
         STA[i].z = 2;
-        STA[i].NumberStations = 2;  // Total number of stations
+        STA[i].NumberStations = N_BG;  // Total number of stations
         STA[i].Pt = 20;
         STA[i].qmin = 1;
         STA[i].QL = 150;
