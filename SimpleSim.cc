@@ -25,10 +25,10 @@ double x_AP[1];
 double y_AP[1];
 double z_AP[1];
 
-double x_[2];  
-double y_[2];  
-double z_[2];  
-double RSSI[2];
+double x_[10];  
+double y_[10];  
+double z_[10];  
+double RSSI[10];
 
 struct input_arg_t {
     int seed;
@@ -152,13 +152,14 @@ void SimplifiedWiFiSim::Setup(double BGLoad, int LBG, input_arg_t st, double dis
     for(int i = 0; i < N_BG; i++) {
         STA[i].id = i;
         if (i == 0) {
-            STA[i].x = 1;  // STA0 at 1 meter
+            STA[i].x = 1.0 ;  // STA0 at 1 meter
         }
         else{
             STA[i].x = distance_X;  // STA 1 at distance of input arg. 
         }
-        STA[i].y = 0;
-        STA[i].z = 2;
+        STA[i].y = 0.0;
+        STA[i].z = 2.0;
+        
         STA[i].NumberStations = N_BG;  // Total number of stations
         STA[i].Pt = 20;
         STA[i].qmin = 1;

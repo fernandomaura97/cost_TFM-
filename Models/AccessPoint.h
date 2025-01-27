@@ -450,7 +450,7 @@ void AccessPoint :: in_slot(SLOT_indicator &slot)
 				// MAC_queue.PutPacketIn(packet, q); // put in the same position as before with changed field
 			// }
 
-			PRINTF_COLOR(BG_CYAN ,"%.6f [AP_TXOP%d]    AMPDU_size = %d | Destination %d | T_s = %.3f ms | TotalBits = %.0f\n",SimTime(), attempts, current_ampdu_size_sta, current_destination, T * 1000, TotalBitsToBeTransmitted);
+			PRINTF_COLOR(BG_CYAN ,"%.6f [AP_TXOP%d]    AMPDU_size = %d | Destination %d | T_s = %.3f ms, T_q = %.3f ms| TotalBits = %.0f\n",SimTime(), attempts, current_ampdu_size_sta, current_destination, T * 1000, queue_delay_per_packet,  TotalBitsToBeTransmitted);
 			aux_ampdu.print(); 
 			attempts++; 
 			device_has_transmitted=1;
@@ -491,8 +491,8 @@ void AccessPoint :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int 
 	double PL = PathLoss(distance);
 	double Pr = effPt - PL;
 
-	//printf("AP to STA %d: I'm at %f,%f,%f and you are at %f,%f,%f | Distance = %f | PL = %f\n",station_id,x,y,z,x_[station_id],y_[station_id],z_[station_id],distance,PL);
-
+	// printf("AP to STA %d: I'm at %.0f,%.0f,%.0f and you are at %.0f,%.0f,%.0f | Distance = %.2f |P_tx = %.2f,  PL = %.2f, P_rx = %.1f\n",
+	// 			station_id,	 x, y, z, 	 	x_[station_id], y_[station_id], z_[station_id],  distance, Pt, PL, Pr);
 	if (Pr < -82)
 	{
 		//printf("************************* There is no conectivity ************************* [We assume MCS 1 and pe = 1]\n");
@@ -500,7 +500,6 @@ void AccessPoint :: FrameTransmissionDelay(double TotalBitsToBeTransmitted, int 
 		CodingRate[station_id] = (double) 1/2;
 		// pe = 0.9;
 	}
-
 	if( Pr >= -82 && Pr < -79)
 	{
 		BitsSymbol[station_id] = 1;
@@ -601,7 +600,7 @@ void AccessPoint::update_stats_AMPDU(data_packet &ampdu_packet, int queue_size){
     double T_q = ampdu_packet.T_q; 
 	double throughput = AMPDU_L / (T_s + T_q); 
 
-	PRINTF_COLOR(BG_RED, "%.6f [DBG STATS]   Q = %d,  Packet %.0f from src %d to dest %d | T_s = %.3f ms, T_q = %.3f ms | L_packet = %.0f\n", SimTime(), queue_size, ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
+	// PRINTF_COLOR(BG_RED, "%.6f [DBG STATS]   Q = %d,  Packet %.0f from src %d to dest %d | T_s = %.3f ms, T_q = %.3f ms | L_packet = %.0f\n", SimTime(), queue_size, ampdu_packet.ID_packet,  ampdu_packet.source, ampdu_packet.destination, T_s * 1000, T_q * 1000, AMPDU_L ); 
 
 	sinkcsv.timestamp.push_back(now); 
     sinkcsv.L_ampdu.push_back(AMPDU_L);
